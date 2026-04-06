@@ -43,7 +43,7 @@ def _score_with_llm(task: str, question: str, state: str, candidate: str, runtim
         completion = complete_text(
             prompt=prompt,
             runtime=runtime,
-            max_new_tokens=32,
+            max_new_tokens=8,
             do_sample=False,
         )
         return _parse_score(completion)
@@ -59,8 +59,12 @@ def score_candidate(
     candidate: str,
     n_samples: int = 2,
     strict_llm: bool = False,
+    model_name: str | None = None,
 ) -> float:
-    runtime = GenerationRuntime(allow_fallback=not strict_llm)
+    runtime = GenerationRuntime(
+        model_name=model_name or GenerationRuntime().model_name,
+        allow_fallback=not strict_llm,
+    )
     scores: list[float] = []
     for _ in range(max(1, n_samples)):
         llm_score = _score_with_llm(task=task, question=question, state=state, candidate=candidate, runtime=runtime)

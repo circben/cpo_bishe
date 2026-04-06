@@ -1,0 +1,20 @@
+{
+  "run_id": "qwen3-8b_444_idx01180_01189_20260322_203004",
+  "task": "gsm8k",
+  "split": "train",
+  "storage_tag": "qwen3-8b_444",
+  "storage_group": "Qwen3-8B_444",
+  "start_index": 1180,
+  "questions_seen": 10,
+  "successful_questions": 6,
+  "avg_nodes_per_question": 19.6,
+  "raw_pairs": 42,
+  "raw_pairs_after_placeholder_filter": 42,
+  "removed_placeholder_pairs": 0,
+  "filtered_pairs": 28,
+  "wrote_outputs": true,
+  "model_name": "qwen3-8b",
+  "max_depth": 4,
+  "width": 4,
+  "beam": 4
+}

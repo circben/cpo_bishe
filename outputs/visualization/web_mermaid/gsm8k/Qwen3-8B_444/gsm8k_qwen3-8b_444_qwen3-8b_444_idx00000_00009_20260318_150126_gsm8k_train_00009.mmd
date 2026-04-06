@@ -1,0 +1,38 @@
+graph TD
+    root["root | d=0 s=0.0"]
+    n1["n1 | d=1 s=8.0 | First, calculate her regular pay for the first 8 hours of eac..."]
+    n2["n2 | d=1 s=1.0 | First, calculate Tina's regular pay for the first 8 hours of ..."]
+    n3["n3 | d=1 s=7.0 | First, calculate her regular hours and overtime hours. She wo..."]
+    n4["n4 | d=1 s=3.0 | First, calculate Tina's regular pay for the first 8 hours of ..."]
+    n5["n5 | d=2 s=8.0 | First, calculate her regular pay for the first 8 hours of eac..."]
+    n6["n6 | d=2 s=1.0 | Tina works 10 hours each day for 5 days, so she works a total..."]
+    n7["n7 | d=2 s=9.0 | The answer is 135."]
+    n8["n8 | d=2 s=1.0 | The overtime pay is $18.00 + \frac{1}{2} \times 18.00 = 27.00..."]
+    n9["n9 | d=2 s=2.0 | The answer is 135.00."]
+    n10["n10 | d=2 s=10.0 | Overtime pay is her hourly wage plus half of her hourly wage,..."]
+    n11["n11 | d=2 s=1.0 | Tina works 10 hours each day for 5 days, so she works a total..."]
+    n12["n12 | d=2 s=1.0 | Tina's regular pay for the first 8 hours of each shift is $18..."]
+    n13["n13 | d=2 s=10.0 | Tina's regular pay for the first 8 hours of each shift is $18..."]
+    n14["n14 | d=2 s=10.0 | Tina works 10 hours per day for 5 days, so she works a total ..."]
+    n15["n15 | d=2 s=1.0 | Tina works 10 hours each day for 5 days, so she works a total..."]
+    n16["n16 | d=2 s=7.0 | Tina's regular pay for the first 8 hours of each day is $18.0..."]
+    root --> n1
+    root --> n2
+    root --> n3
+    root --> n4
+    n1 --> n5
+    n1 --> n6
+    n2 --> n15
+    n2 --> n16
+    n3 --> n7
+    n3 --> n8
+    n3 --> n9
+    n3 --> n10
+    n4 --> n11
+    n4 --> n12
+    n4 --> n13
+    n4 --> n14
+    style root fill:#e8f4ff,stroke:#1976d2,stroke-width:2px
+    style n7 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n9 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n10 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px

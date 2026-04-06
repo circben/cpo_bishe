@@ -1,0 +1,35 @@
+{
+  "run_id": "stage3_gsm8k_qwen3-8b_full_sp_dpo_b0p1_sall_ms800_20260403_111352",
+  "run_root": "outputs/checkpoints/stage3_gsm8k_qwen3-8b_full_sp_dpo_b0p1_sall_ms800_20260403_111352",
+  "created_at": "2026-04-03T03:13:52Z",
+  "task_runs": [
+    {
+      "task": "gsm8k",
+      "base_model": "/root/autodl-tmp/llm/Qwen3-8B",
+      "ts_sft_data_path": "data/interim/success_paths/gsm8k_success_paths_sft.jsonl",
+      "cpo_data_path": "data/processed/dpo/gsm8k/gsm8k_train.jsonl",
+      "ts_sft_output_dir": "outputs/checkpoints/stage3_gsm8k_qwen3-8b_full_sp_dpo_b0p1_sall_ms800_20260403_111352/gsm8k/ts_sft_gsm8k_qwen3",
+      "cpo_output_dir": "outputs/checkpoints/stage3_gsm8k_qwen3-8b_full_sp_dpo_b0p1_sall_ms800_20260403_111352/gsm8k/cpo_gsm8k_qwen3",
+      "ts_sft_final_checkpoint": "outputs/checkpoints/stage3_gsm8k_qwen3-8b_full_sp_dpo_b0p1_sall_ms800_20260403_111352/gsm8k/ts_sft_gsm8k_qwen3/final_checkpoint",
+      "cpo_final_checkpoint": "outputs/checkpoints/stage3_gsm8k_qwen3-8b_full_sp_dpo_b0p1_sall_ms800_20260403_111352/gsm8k/cpo_gsm8k_qwen3/final_checkpoint",
+      "stage3_config": {
+        "task": "gsm8k",
+        "base_model": "/root/autodl-tmp/llm/Qwen3-8B",
+        "max_steps": 800,
+        "eval_steps": 50,
+        "save_steps": 100,
+        "logging_steps": 20,
+        "train_batch_size": 1,
+        "eval_batch_size": 1,
+        "grad_accum": 8,
+        "ts_sft_learning_rate": 1e-05,
+        "cpo_learning_rate": 5e-06,
+        "cpo_beta": 0.1,
+        "max_seq_length": 1024,
+        "max_prompt_length": 512,
+        "max_length": 1024,
+        "report_to": "none"
+      }
+    }
+  ]
+}

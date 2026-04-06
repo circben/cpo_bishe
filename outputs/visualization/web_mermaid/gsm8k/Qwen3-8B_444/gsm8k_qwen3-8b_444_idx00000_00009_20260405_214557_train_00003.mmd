@@ -1,0 +1,19 @@
+graph TD
+    root["root | d=0 s=0.0"]
+    n1["n1 | d=1 s=4.0 | Julie read 12 pages yesterday and twice as many today, so she..."]
+    n2["n2 | d=1 s=5.0 | Julie read 12 pages yesterday and 24 pages today, so she has ..."]
+    n3["n3 | d=1 s=4.0 | Julie read 12 pages yesterday and 24 pages today, so she has ..."]
+    n4["n4 | d=2 s=8.0 | The answer is 42."]
+    n5["n5 | d=2 s=2.0 | 84 pages remaining. If she wants to read half of the remainin..."]
+    n6["n6 | d=2 s=3.0 | If she wants to read half of the remaining pages tomorrow, sh..."]
+    n7["n7 | d=2 s=4.0 | If she wants to read half of the remaining pages tomorrow, sh..."]
+    root --> n1
+    root --> n2
+    root --> n3
+    n1 --> n5
+    n2 --> n4
+    n3 --> n6
+    n3 --> n7
+    style root fill:#e8f4ff,stroke:#1976d2,stroke-width:2px
+    style n4 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n5 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px

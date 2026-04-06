@@ -1,0 +1,19 @@
+{
+  "run_id": "qwen3-8b_433_idx00290_00299_20260320_200931",
+  "task": "strategyqa",
+  "split": "train",
+  "storage_tag": "qwen3-8b_433",
+  "storage_group": "Qwen3-8B_433",
+  "start_index": 290,
+  "questions_seen": 10,
+  "successful_questions": 3,
+  "avg_nodes_per_question": 30.7,
+  "raw_pairs": 35,
+  "raw_pairs_after_placeholder_filter": 35,
+  "removed_placeholder_pairs": 0,
+  "filtered_pairs": 24,
+  "model_name": "qwen3-8b",
+  "max_depth": 4,
+  "width": 3,
+  "beam": 3
+}

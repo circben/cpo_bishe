@@ -1,0 +1,23 @@
+graph TD
+    root["root | d=0 s=0.0"]
+    n1["n1 | d=1 s=2.0 | To find out how much Alexis paid for the shoes, we need to su..."]
+    n2["n2 | d=1 s=8.0 | To find out how much Alexis paid for the shoes, we can subtra..."]
+    n3["n3 | d=2 s=8.0 | To find out how much Alexis paid for the shoes, we can subtra..."]
+    n4["n4 | d=2 s=1.0 | To find out how much Alexis paid for the shoes, we first add ..."]
+    n5["n5 | d=2 s=9.0 | To find out how much Alexis paid for the shoes, we first add ..."]
+    n6["n6 | d=3 s=6.0 | Subtract the total spent on other items ($143) and the remain..."]
+    n7["n7 | d=3 s=5.0 | First, calculate the total amount Alexis spent on all items e..."]
+    n8["n8 | d=3 s=9.0 | First, calculate the total amount spent on all items except t..."]
+    n9["n9 | d=3 s=5.0 | The answer is 200 - 143 - 16 = 21."]
+    root --> n1
+    root --> n2
+    n1 --> n4
+    n1 --> n5
+    n2 --> n3
+    n3 --> n7
+    n3 --> n8
+    n4 --> n9
+    n5 --> n6
+    style root fill:#e8f4ff,stroke:#1976d2,stroke-width:2px
+    style n6 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n9 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px

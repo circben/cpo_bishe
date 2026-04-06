@@ -1,0 +1,36 @@
+{
+  "run_id": "stage4_gsm8k_test_s10_totd5w3_20260405_210736",
+  "created_at": "2026-04-05T13:42:48+00:00",
+  "pipeline": "stage4",
+  "modules": [
+    "baselines_4_plus_cpo"
+  ],
+  "config": {
+    "task": "gsm8k",
+    "split": "test",
+    "stage3_manifest": "",
+    "base_model": "/root/autodl-tmp/llm/Qwen3-8B",
+    "ts_sft_model_entry": "outputs/checkpoints/stage3_tssft_20260405_165631",
+    "cpo_model_entry": "outputs/checkpoints/stage3_cpo_20260405_183114",
+    "max_samples": 10,
+    "start_index": 0,
+    "max_new_tokens": 256,
+    "tot_max_depth": 5,
+    "tot_width": 3,
+    "tot_beam": 2,
+    "tot_max_samples": 0,
+    "tot_score_samples": 1,
+    "tot_workers": 1,
+    "tot_adaptive_retry": 1,
+    "tot_retry_max_depth": 7,
+    "tot_retry_width": 4,
+    "tot_retry_beam": 3,
+    "log_interval": 1,
+    "output_prefix": "stage4_pipeline"
+  },
+  "stage3_manifest": "outputs/eval/pipelines/stage4_gsm8k_test_s10_totd5w3_20260405_210736/stage3_manifest_from_direct_entries.json",
+  "run_root": "outputs/eval/pipelines/stage4_gsm8k_test_s10_totd5w3_20260405_210736",
+  "notes": {
+    "result_files": "Per-task JSON/CSV are saved under outputs/eval/runs/ with prefix stage4_pipeline_stage4_gsm8k_test_s10_totd5w3_20260405_210736_*"
+  }
+}

@@ -1,0 +1,39 @@
+graph TD
+    root["root | d=0 s=0.0"]
+    n1["n1 | d=1 s=7.0 | First, calculate the total number of snakes eaten per day by ..."]
+    n2["n2 | d=1 s=2.0 | First, calculate how many snakes are eaten by the jaguars: 6 ..."]
+    n3["n3 | d=1 s=3.0 | First, calculate the number of snakes eaten by all jaguars: 6..."]
+    n4["n4 | d=1 s=3.0 | First, calculate the number of snakes eaten by the jaguars: 6..."]
+    n5["n5 | d=2 s=1.0 | Next, calculate the total number of birds eaten per day by al..."]
+    n6["n6 | d=2 s=7.0 | Next, calculate the number of birds eaten by all snakes: 30 s..."]
+    n7["n7 | d=2 s=7.0 | Next, calculate the number of birds eaten by the snakes: 30 s..."]
+    n8["n8 | d=2 s=6.0 | Next, calculate how many birds are eaten by the snakes: 30 sn..."]
+    n9["n9 | d=3 s=2.0 | Now, calculate the number of beetles eaten by all birds: 90 b..."]
+    n10["n10 | d=3 s=2.0 | Now, calculate the number of beetles eaten by the birds: 90 b..."]
+    n11["n11 | d=3 s=1.0 | Now, calculate how many beetles are eaten by the birds: 90 bi..."]
+    n12["n12 | d=3 s=6.0 | Now, calculate the total number of beetles eaten per day by a..."]
+    n13["n13 | d=4 s=10.0 | The answer is 1080."]
+    n14["n14 | d=4 s=10.0 | The answer is 1080."]
+    n15["n15 | d=4 s=10.0 | The answer is 1080."]
+    n16["n16 | d=4 s=10.0 | The answer is 1080."]
+    root --> n1
+    root --> n2
+    root --> n3
+    root --> n4
+    n1 --> n5
+    n2 --> n8
+    n3 --> n6
+    n4 --> n7
+    n5 --> n12
+    n6 --> n9
+    n7 --> n10
+    n8 --> n11
+    n9 --> n14
+    n10 --> n15
+    n11 --> n16
+    n12 --> n13
+    style root fill:#e8f4ff,stroke:#1976d2,stroke-width:2px
+    style n13 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n14 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n15 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px
+    style n16 fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px

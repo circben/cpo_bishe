@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--http://127.0.0.1:8888/index.html-->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -446,7 +447,7 @@
                         <li>批量生成 PNG 图片</li>
                     </ul>
                     <div class="btn-group">
-                        <a href="tot_trees/tot_viewer.html" class="btn btn-primary">打开查看器</a>
+                        <a href="tot_viewer.html" class="btn btn-primary">打开查看器</a>
                         <button onclick="runVisualization('tot')" class="btn btn-secondary">重新生成</button>
                     </div>
                 </div>
@@ -470,7 +471,7 @@
                         <li>训练数据规模曲线</li>
                     </ul>
                     <div class="btn-group">
-                        <a href="performance/performance_dashboard.html" class="btn btn-primary">打开仪表盘</a>
+                        <a href="performance_viewer.html" class="btn btn-primary">打开仪表盘</a>
                         <button onclick="runVisualization('performance')" class="btn btn-secondary">重新生成</button>
                     </div>
                 </div>
@@ -528,13 +529,13 @@
         <!-- Quick Access -->
         <h2 class="section-title" id="quick">快速访问</h2>
         
-        <div class="quick-links">
-            <a href="tot_trees/tot_viewer.html" class="quick-link">
+        <div class="quick-links" id="quick">
+            <a href="tot_viewer.html" class="quick-link">
                 <div class="icon">🌲</div>
                 <div>思维树</div>
                 <div class="label">交互查看器</div>
             </a>
-            <a href="performance/performance_dashboard.html" class="quick-link">
+            <a href="performance_viewer.html" class="quick-link">
                 <div class="icon">📊</div>
                 <div>性能</div>
                 <div class="label">仪表盘</div>

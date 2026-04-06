@@ -57,6 +57,7 @@ def run_bfs_tot(
                 candidate=g,
                 n_samples=n_score_samples,
                 strict_llm=False,
+                model_name=model_name,
             )
             terminal = is_terminal_state(g, task, goal_text=goal_text)
             rows.append((parent.node_id, depth, g, score, terminal))

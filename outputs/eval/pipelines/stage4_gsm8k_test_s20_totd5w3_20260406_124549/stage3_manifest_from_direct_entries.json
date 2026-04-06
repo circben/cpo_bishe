@@ -1,0 +1,13 @@
+{
+  "run_id": "stage3_direct_entries_2026-04-06t12-45-49-819321",
+  "created_at": "2026-04-06T04:45:49+00:00",
+  "source": "stage4_direct_entries",
+  "task_runs": [
+    {
+      "task": "gsm8k",
+      "base_model": "/root/autodl-tmp/llm/Qwen3-8B",
+      "ts_sft_final_checkpoint": "outputs/checkpoints/stage3_tssft_20260405_165631/gsm8k/tssft_gsm8k_qwen3-8b/final_checkpoint",
+      "cpo_final_checkpoint": "outputs/checkpoints/stage3_cpo_20260405_183114/gsm8k/cpo_gsm8k_qwen3-8b/final_checkpoint"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "task": "gsm8k",
+  "split": "train",
+  "storage_tag": "Qwen3-8B_444",
+  "storage_group": "Qwen3-8B_444",
+  "start_index": 76,
+  "total_samples": 1,
+  "batch_size": 1,
+  "pass1": {
+    "max_depth": 4,
+    "width": 4,
+    "beam": 4,
+    "n_score_samples": 1,
+    "failed_samples": 1
+  },
+  "retry": {
+    "rounds": 1,
+    "max_depth": 6,
+    "width": 6,
+    "beam": 6,
+    "n_score_samples": 2,
+    "history": [
+      {
+        "round": 1,
+        "input_failed": 1,
+        "remaining_failed": 1
+      }
+    ]
+  },
+  "result": {
+    "recovered_failed_samples": 0,
+    "remaining_failed_samples": 1,
+    "remaining_failed_indices": [
+      76
+    ]
+  },
+  "created_at": "2026-04-05T19:02:19"
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 import torch
@@ -28,6 +29,18 @@ class GenerationRuntime:
 
 
 _RUNTIME_CACHE: dict[str, tuple[AutoModelForCausalLM, AutoTokenizer]] = {}
+
+
+def clear_runtime_cache() -> None:
+    for key in list(_RUNTIME_CACHE.keys()):
+        try:
+            model, _ = _RUNTIME_CACHE[key]
+            del model
+        except Exception:
+            pass
+        _RUNTIME_CACHE.pop(key, None)
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
 
 def _runtime_from_env(runtime: GenerationRuntime | None = None) -> GenerationRuntime:
@@ -70,13 +83,35 @@ def _get_runtime(runtime: GenerationRuntime) -> tuple[AutoModelForCausalLM, Auto
     if key in _RUNTIME_CACHE:
         return _RUNTIME_CACHE[key]
 
+    model_path = Path(runtime.model_name)
+
+    dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
+
+    def _load_model(model_name: str, local_only: bool) -> AutoModelForCausalLM:
+        # Adapter checkpoints (LoRA/PEFT) need AutoPeftModelForCausalLM.
+        if model_path.exists() and (model_path / "adapter_config.json").exists():
+            from peft import AutoPeftModelForCausalLM
+
+            return AutoPeftModelForCausalLM.from_pretrained(
+                model_name,
+                local_files_only=local_only,
+                torch_dtype=dtype,
+                low_cpu_mem_usage=True,
+            )
+        return AutoModelForCausalLM.from_pretrained(
+            model_name,
+            local_files_only=local_only,
+            torch_dtype=dtype,
+            low_cpu_mem_usage=True,
+        )
+
     # Prefer local cache first to avoid hub timeouts in unstable networks.
     try:
         tokenizer = AutoTokenizer.from_pretrained(runtime.model_name, local_files_only=True)
-        model = AutoModelForCausalLM.from_pretrained(runtime.model_name, local_files_only=True)
+        model = _load_model(runtime.model_name, local_only=True)
     except Exception:
         tokenizer = AutoTokenizer.from_pretrained(runtime.model_name)
-        model = AutoModelForCausalLM.from_pretrained(runtime.model_name)
+        model = _load_model(runtime.model_name, local_only=False)
     if tokenizer.pad_token is None and tokenizer.eos_token is not None:
         tokenizer.pad_token = tokenizer.eos_token
     model.to(runtime.device)
@@ -119,6 +154,22 @@ def _clean_candidate(text: str) -> str:
     if "\n" in text:
         line = text.strip().splitlines()[0].strip()
     return line[:400]
+
+
+def _is_meta_instruction_candidate(text: str) -> bool:
+    lowered = text.strip().lower()
+    if not lowered:
+        return True
+    blocked_phrases = [
+        "write the next reasoning step",
+        "write a reasoning step",
+        "do not write anything else",
+        "if not, write",
+        "otherwise, write",
+        "if you need to think",
+        "generate one concise next reasoning thought",
+    ]
+    return any(p in lowered for p in blocked_phrases)
 
 
 def _should_skip_inspection_error(exc: Exception) -> bool:
@@ -202,6 +253,8 @@ def generate_candidates(
                     continue
                 raise
             candidate = _clean_candidate(candidate)
+            if _is_meta_instruction_candidate(candidate):
+                continue
             if candidate and candidate not in seen:
                 seen.add(candidate)
                 thoughts.append(candidate)
