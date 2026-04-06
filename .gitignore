@@ -1,0 +1,29 @@
+# 忽略数据文件
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# 模型文件
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+models/
