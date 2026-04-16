@@ -23,6 +23,10 @@ class Stage4Config:
     tot_max_depth: int
     tot_width: int
     tot_beam: int
+    tot_candidates_per_step: int
+    tot_beam_width: int
+    tot_sc_votes: int
+    tot_sc_temperature: float
     tot_max_samples: int
     tot_score_samples: int
     tot_workers: int
@@ -52,7 +56,7 @@ ADVANCED_CONFIG = {
     # CPO 入口（可填 run 根目录 / 模型目录 / final_checkpoint 目录）。
     "cpo_model_entry": "outputs/checkpoints/stage3_cpo_20260405_183114",
     # CoT/TS-SFT/CPO 共用评测切片的样本数。
-    "max_samples": 10,
+    "max_samples": 200,
     # 在指定 split 上的起始偏移。
     "start_index": 0,
     # 每条回答的最大生成长度。
@@ -62,8 +66,12 @@ ADVANCED_CONFIG = {
     "tot_max_depth": 5,
     "tot_width": 3,
     "tot_beam": 2,
+    "tot_candidates_per_step": 10,
+    "tot_beam_width": 5,
+    "tot_sc_votes": 5,
+    "tot_sc_temperature": 0.7,
     # ToT 仅在同一评测切片的子集上运行；0 表示与主评测同样本数。
-    "tot_max_samples": 0,
+    "tot_max_samples": 50,
     # ToT 每次扩展时的打分调用次数。
     "tot_score_samples": 1,
     # ToT 并行 worker 数。
@@ -199,6 +207,10 @@ def main() -> None:
     parser.add_argument("--tot-max-depth", type=int, default=-1, help="ToT 最大搜索深度")
     parser.add_argument("--tot-width", type=int, default=-1, help="ToT 分支宽度")
     parser.add_argument("--tot-beam", type=int, default=-1, help="ToT beam 大小")
+    parser.add_argument("--tot-candidates-per-step", type=int, default=-1, help="SC-ToT 每步候选数")
+    parser.add_argument("--tot-beam-width", type=int, default=-1, help="SC-ToT beam 宽度")
+    parser.add_argument("--tot-sc-votes", type=int, default=-1, help="SC-ToT 投票次数")
+    parser.add_argument("--tot-sc-temperature", type=float, default=-1.0, help="SC-ToT 投票温度")
     parser.add_argument("--tot-max-samples", type=int, default=-1, help="ToT 子集样本数（来自同一评测切片）")
     parser.add_argument("--tot-score-samples", type=int, default=-1, help="ToT 每步打分调用次数")
     parser.add_argument("--tot-workers", type=int, default=-1, help="ToT 并行 worker 数")
@@ -237,6 +249,14 @@ def main() -> None:
         cfg.tot_width = args.tot_width
     if args.tot_beam >= 0:
         cfg.tot_beam = args.tot_beam
+    if args.tot_candidates_per_step >= 0:
+        cfg.tot_candidates_per_step = args.tot_candidates_per_step
+    if args.tot_beam_width >= 0:
+        cfg.tot_beam_width = args.tot_beam_width
+    if args.tot_sc_votes >= 0:
+        cfg.tot_sc_votes = args.tot_sc_votes
+    if args.tot_sc_temperature >= 0:
+        cfg.tot_sc_temperature = args.tot_sc_temperature
     if args.tot_max_samples >= 0:
         cfg.tot_max_samples = args.tot_max_samples
     if args.tot_score_samples >= 0:
@@ -306,6 +326,14 @@ def main() -> None:
         str(cfg.tot_width),
         "--tot-beam",
         str(cfg.tot_beam),
+        "--tot-candidates-per-step",
+        str(cfg.tot_candidates_per_step),
+        "--tot-beam-width",
+        str(cfg.tot_beam_width),
+        "--tot-sc-votes",
+        str(cfg.tot_sc_votes),
+        "--tot-sc-temperature",
+        str(cfg.tot_sc_temperature),
         "--tot-max-samples",
         str(cfg.tot_max_samples),
         "--tot-score-samples",

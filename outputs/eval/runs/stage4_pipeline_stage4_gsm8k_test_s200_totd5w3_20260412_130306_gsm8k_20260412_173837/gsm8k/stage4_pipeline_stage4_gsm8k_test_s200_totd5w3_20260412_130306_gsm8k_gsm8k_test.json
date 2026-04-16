@@ -1,0 +1,5434 @@
+{
+  "task": "gsm8k",
+  "split": "test",
+  "created_at": "2026-04-12T09:38:37+00:00",
+  "summaries": [
+    {
+      "method": "cot",
+      "model": "/root/autodl-tmp/llm/Qwen3-8B",
+      "count": 200,
+      "accuracy": 0.555,
+      "avg_latency_sec": 6.244459700472653
+    },
+    {
+      "method": "tot",
+      "model": "/root/autodl-tmp/llm/Qwen3-8B",
+      "count": 50,
+      "accuracy": 0.64,
+      "avg_latency_sec": 209.52910342358052,
+      "max_depth": 5,
+      "width": 10,
+      "beam": 5,
+      "sc_votes": 5,
+      "subset_of_count": 200
+    },
+    {
+      "method": "ts_sft",
+      "model": "outputs/checkpoints/stage3_tssft_20260405_165631/gsm8k/tssft_gsm8k_qwen3-8b/final_checkpoint",
+      "count": 200,
+      "accuracy": 0.51,
+      "avg_latency_sec": 11.993416523039341
+    },
+    {
+      "method": "cpo",
+      "model": "outputs/checkpoints/stage3_cpo_20260405_183114/gsm8k/cpo_gsm8k_qwen3-8b/final_checkpoint",
+      "count": 200,
+      "accuracy": 0.575,
+      "avg_latency_sec": 12.01134485213086
+    }
+  ],
+  "details": {
+    "cot": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 14.105402700603008
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 5.91158065572381
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 5.842286076396704
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "54",
+        "correct": false,
+        "latency_sec": 5.808777406811714
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 5.898246552795172
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 5.798476867377758
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 5.783830933272839
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 5.759625930339098
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "180",
+        "correct": false,
+        "latency_sec": 5.805663865059614
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "460",
+        "correct": true,
+        "latency_sec": 5.840782728046179
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "366",
+        "correct": true,
+        "latency_sec": 5.77235908806324
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 5.769107300788164
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 5.827094558626413
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 5.808981284499168
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "55",
+        "correct": false,
+        "latency_sec": 5.7540838941931725
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "29",
+        "correct": false,
+        "latency_sec": 5.839768826961517
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "7",
+        "correct": false,
+        "latency_sec": 5.9021956361830235
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "42000",
+        "correct": false,
+        "latency_sec": 5.785238478332758
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 5.788289628922939
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.796806626021862
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 5.79534811899066
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 5.78982051089406
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 5.9517011642456055
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 5.844129502773285
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 5.953438092023134
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "2",
+        "correct": true,
+        "latency_sec": 5.8798182383179665
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 5.816517360508442
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.82285126298666
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 5.810330390930176
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 5.900112710893154
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "109",
+        "correct": true,
+        "latency_sec": 5.813672564923763
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 5.794202167540789
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "360",
+        "correct": false,
+        "latency_sec": 5.773386731743813
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 5.869357239454985
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 5.742558669298887
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 5.7900008372962475
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75",
+        "correct": true,
+        "latency_sec": 5.767824549227953
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.744953963905573
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 5.769234254956245
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "1.5",
+        "correct": false,
+        "latency_sec": 6.010845586657524
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 6.002299461513758
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "200",
+        "correct": true,
+        "latency_sec": 6.1266541332006454
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 7.5866626016795635
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 8.135831121355295
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 6.099743079394102
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 6.11186146736145
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "140",
+        "correct": false,
+        "latency_sec": 6.075336840003729
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 6.316115319728851
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "200000",
+        "correct": false,
+        "latency_sec": 6.162623103708029
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 6.164571143686771
+      },
+      {
+        "index": 50,
+        "gold": "294",
+        "prediction": "294",
+        "correct": true,
+        "latency_sec": 6.239541444927454
+      },
+      {
+        "index": 51,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 6.135852675884962
+      },
+      {
+        "index": 52,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 6.2480438612401485
+      },
+      {
+        "index": 53,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 6.137007057666779
+      },
+      {
+        "index": 54,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 6.050519619137049
+      },
+      {
+        "index": 55,
+        "gold": "14",
+        "prediction": "18",
+        "correct": false,
+        "latency_sec": 6.040450230240822
+      },
+      {
+        "index": 56,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 6.143264386802912
+      },
+      {
+        "index": 57,
+        "gold": "83",
+        "prediction": "5000",
+        "correct": false,
+        "latency_sec": 6.170734979212284
+      },
+      {
+        "index": 58,
+        "gold": "57",
+        "prediction": "51",
+        "correct": false,
+        "latency_sec": 6.042119525372982
+      },
+      {
+        "index": 59,
+        "gold": "187",
+        "prediction": "193",
+        "correct": false,
+        "latency_sec": 6.042065188288689
+      },
+      {
+        "index": 60,
+        "gold": "17",
+        "prediction": "17",
+        "correct": true,
+        "latency_sec": 6.116427838802338
+      },
+      {
+        "index": 61,
+        "gold": "1430",
+        "prediction": "1540",
+        "correct": false,
+        "latency_sec": 6.154965303838253
+      },
+      {
+        "index": 62,
+        "gold": "25000",
+        "prediction": "15000",
+        "correct": false,
+        "latency_sec": 6.377251010388136
+      },
+      {
+        "index": 63,
+        "gold": "1596",
+        "prediction": "8",
+        "correct": false,
+        "latency_sec": 6.095055527985096
+      },
+      {
+        "index": 64,
+        "gold": "300",
+        "prediction": "300",
+        "correct": true,
+        "latency_sec": 6.143436431884766
+      },
+      {
+        "index": 65,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 6.09351022541523
+      },
+      {
+        "index": 66,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 6.050589255988598
+      },
+      {
+        "index": 67,
+        "gold": "595",
+        "prediction": "490",
+        "correct": false,
+        "latency_sec": 6.095070101320744
+      },
+      {
+        "index": 68,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 5.899189654737711
+      },
+      {
+        "index": 69,
+        "gold": "60",
+        "prediction": "6",
+        "correct": false,
+        "latency_sec": 5.773421511054039
+      },
+      {
+        "index": 70,
+        "gold": "7425",
+        "prediction": "74",
+        "correct": false,
+        "latency_sec": 5.6968762911856174
+      },
+      {
+        "index": 71,
+        "gold": "60",
+        "prediction": "72",
+        "correct": false,
+        "latency_sec": 5.78462303802371
+      },
+      {
+        "index": 72,
+        "gold": "221",
+        "prediction": "217",
+        "correct": false,
+        "latency_sec": 5.704789474606514
+      },
+      {
+        "index": 73,
+        "gold": "255",
+        "prediction": "275",
+        "correct": false,
+        "latency_sec": 5.773496393114328
+      },
+      {
+        "index": 74,
+        "gold": "88",
+        "prediction": "88",
+        "correct": true,
+        "latency_sec": 5.887773711234331
+      },
+      {
+        "index": 75,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 5.916202291846275
+      },
+      {
+        "index": 76,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 5.872393291443586
+      },
+      {
+        "index": 77,
+        "gold": "100",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.8118049912154675
+      },
+      {
+        "index": 78,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 5.924270737916231
+      },
+      {
+        "index": 79,
+        "gold": "70",
+        "prediction": "80",
+        "correct": false,
+        "latency_sec": 6.149221569299698
+      },
+      {
+        "index": 80,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 5.95989890396595
+      },
+      {
+        "index": 81,
+        "gold": "17",
+        "prediction": "17",
+        "correct": true,
+        "latency_sec": 5.931684754788876
+      },
+      {
+        "index": 82,
+        "gold": "623",
+        "prediction": "62",
+        "correct": false,
+        "latency_sec": 5.821714922785759
+      },
+      {
+        "index": 83,
+        "gold": "600",
+        "prediction": "48",
+        "correct": false,
+        "latency_sec": 5.801747560501099
+      },
+      {
+        "index": 84,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 5.844393752515316
+      },
+      {
+        "index": 85,
+        "gold": "44",
+        "prediction": "44",
+        "correct": true,
+        "latency_sec": 5.8307721465826035
+      },
+      {
+        "index": 86,
+        "gold": "22",
+        "prediction": "18",
+        "correct": false,
+        "latency_sec": 5.837359230965376
+      },
+      {
+        "index": 87,
+        "gold": "9360",
+        "prediction": "920",
+        "correct": false,
+        "latency_sec": 5.823048818856478
+      },
+      {
+        "index": 88,
+        "gold": "8000",
+        "prediction": "8000",
+        "correct": true,
+        "latency_sec": 6.097349639981985
+      },
+      {
+        "index": 89,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 5.906430073082447
+      },
+      {
+        "index": 90,
+        "gold": "225",
+        "prediction": "225",
+        "correct": true,
+        "latency_sec": 5.91423599421978
+      },
+      {
+        "index": 91,
+        "gold": "28",
+        "prediction": "28",
+        "correct": true,
+        "latency_sec": 5.952396158128977
+      },
+      {
+        "index": 92,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 5.980004671961069
+      },
+      {
+        "index": 93,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 8.49439150467515
+      },
+      {
+        "index": 94,
+        "gold": "348",
+        "prediction": "348",
+        "correct": true,
+        "latency_sec": 6.0761635191738605
+      },
+      {
+        "index": 95,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 5.838049806654453
+      },
+      {
+        "index": 96,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 5.768068116158247
+      },
+      {
+        "index": 97,
+        "gold": "12",
+        "prediction": "12",
+        "correct": true,
+        "latency_sec": 5.775402147322893
+      },
+      {
+        "index": 98,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 5.781750865280628
+      },
+      {
+        "index": 99,
+        "gold": "58",
+        "prediction": "58",
+        "correct": true,
+        "latency_sec": 5.839327897876501
+      },
+      {
+        "index": 100,
+        "gold": "175",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.871350672096014
+      },
+      {
+        "index": 101,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 6.049693550914526
+      },
+      {
+        "index": 102,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 5.8669528141617775
+      },
+      {
+        "index": 103,
+        "gold": "140",
+        "prediction": "140",
+        "correct": true,
+        "latency_sec": 5.890223544090986
+      },
+      {
+        "index": 104,
+        "gold": "500",
+        "prediction": "500",
+        "correct": true,
+        "latency_sec": 5.88131919875741
+      },
+      {
+        "index": 105,
+        "gold": "20",
+        "prediction": "36",
+        "correct": false,
+        "latency_sec": 5.923937406390905
+      },
+      {
+        "index": 106,
+        "gold": "72",
+        "prediction": "300",
+        "correct": false,
+        "latency_sec": 5.807482525706291
+      },
+      {
+        "index": 107,
+        "gold": "3",
+        "prediction": "7",
+        "correct": false,
+        "latency_sec": 5.8378945998847485
+      },
+      {
+        "index": 108,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 5.8803071565926075
+      },
+      {
+        "index": 109,
+        "gold": "28",
+        "prediction": "28.00",
+        "correct": false,
+        "latency_sec": 5.94621030241251
+      },
+      {
+        "index": 110,
+        "gold": "45",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 6.286903500556946
+      },
+      {
+        "index": 111,
+        "gold": "16",
+        "prediction": "80",
+        "correct": false,
+        "latency_sec": 5.8465817756950855
+      },
+      {
+        "index": 112,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 5.816810067743063
+      },
+      {
+        "index": 113,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 6.011606007814407
+      },
+      {
+        "index": 114,
+        "gold": "6",
+        "prediction": "",
+        "correct": false,
+        "latency_sec": 6.627760607749224
+      },
+      {
+        "index": 115,
+        "gold": "90",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 7.8510545045137405
+      },
+      {
+        "index": 116,
+        "gold": "42",
+        "prediction": "42",
+        "correct": true,
+        "latency_sec": 7.575888503342867
+      },
+      {
+        "index": 117,
+        "gold": "360",
+        "prediction": "360",
+        "correct": true,
+        "latency_sec": 8.669121712446213
+      },
+      {
+        "index": 118,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 6.5509749092161655
+      },
+      {
+        "index": 119,
+        "gold": "95200",
+        "prediction": "000",
+        "correct": false,
+        "latency_sec": 5.864900961518288
+      },
+      {
+        "index": 120,
+        "gold": "240",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 5.770997162908316
+      },
+      {
+        "index": 121,
+        "gold": "27",
+        "prediction": "27",
+        "correct": true,
+        "latency_sec": 5.795203015208244
+      },
+      {
+        "index": 122,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 5.821319911628962
+      },
+      {
+        "index": 123,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 5.871388461440802
+      },
+      {
+        "index": 124,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 5.955825936049223
+      },
+      {
+        "index": 125,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 5.8809430077672005
+      },
+      {
+        "index": 126,
+        "gold": "82",
+        "prediction": "82",
+        "correct": true,
+        "latency_sec": 5.778067130595446
+      },
+      {
+        "index": 127,
+        "gold": "120",
+        "prediction": "120",
+        "correct": true,
+        "latency_sec": 5.7909229546785355
+      },
+      {
+        "index": 128,
+        "gold": "880",
+        "prediction": "8",
+        "correct": false,
+        "latency_sec": 5.778736263513565
+      },
+      {
+        "index": 129,
+        "gold": "10000",
+        "prediction": "10000",
+        "correct": true,
+        "latency_sec": 5.87024324759841
+      },
+      {
+        "index": 130,
+        "gold": "30",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 5.822109315544367
+      },
+      {
+        "index": 131,
+        "gold": "940",
+        "prediction": "940",
+        "correct": true,
+        "latency_sec": 8.193973392248154
+      },
+      {
+        "index": 132,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 6.799468617886305
+      },
+      {
+        "index": 133,
+        "gold": "13",
+        "prediction": "13",
+        "correct": true,
+        "latency_sec": 5.910554848611355
+      },
+      {
+        "index": 134,
+        "gold": "720",
+        "prediction": "720",
+        "correct": true,
+        "latency_sec": 5.831081349402666
+      },
+      {
+        "index": 135,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 7.629186749458313
+      },
+      {
+        "index": 136,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 6.20944445207715
+      },
+      {
+        "index": 137,
+        "gold": "29",
+        "prediction": "29.00",
+        "correct": false,
+        "latency_sec": 6.0675059743225574
+      },
+      {
+        "index": 138,
+        "gold": "105",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.865493502467871
+      },
+      {
+        "index": 139,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 6.032137110829353
+      },
+      {
+        "index": 140,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 5.916255075484514
+      },
+      {
+        "index": 141,
+        "gold": "400",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 6.275884002447128
+      },
+      {
+        "index": 142,
+        "gold": "140",
+        "prediction": "140",
+        "correct": true,
+        "latency_sec": 6.708970978856087
+      },
+      {
+        "index": 143,
+        "gold": "16",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 5.925264239311218
+      },
+      {
+        "index": 144,
+        "gold": "20",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 5.8658325262367725
+      },
+      {
+        "index": 145,
+        "gold": "4000",
+        "prediction": "4000",
+        "correct": true,
+        "latency_sec": 5.769566662609577
+      },
+      {
+        "index": 146,
+        "gold": "2",
+        "prediction": "2125",
+        "correct": false,
+        "latency_sec": 5.789394594728947
+      },
+      {
+        "index": 147,
+        "gold": "75",
+        "prediction": "6",
+        "correct": false,
+        "latency_sec": 5.888371109962463
+      },
+      {
+        "index": 148,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 5.770174488425255
+      },
+      {
+        "index": 149,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 5.775013722479343
+      },
+      {
+        "index": 150,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 5.849477875977755
+      },
+      {
+        "index": 151,
+        "gold": "5",
+        "prediction": "5.00",
+        "correct": false,
+        "latency_sec": 6.328242514282465
+      },
+      {
+        "index": 152,
+        "gold": "4",
+        "prediction": "4.00",
+        "correct": false,
+        "latency_sec": 8.10850179567933
+      },
+      {
+        "index": 153,
+        "gold": "48",
+        "prediction": "14",
+        "correct": false,
+        "latency_sec": 9.9559464789927
+      },
+      {
+        "index": 154,
+        "gold": "272",
+        "prediction": "272",
+        "correct": true,
+        "latency_sec": 9.922106876969337
+      },
+      {
+        "index": 155,
+        "gold": "280",
+        "prediction": "280",
+        "correct": true,
+        "latency_sec": 9.261138580739498
+      },
+      {
+        "index": 156,
+        "gold": "1400",
+        "prediction": "1400",
+        "correct": true,
+        "latency_sec": 9.71548317372799
+      },
+      {
+        "index": 157,
+        "gold": "80",
+        "prediction": "8",
+        "correct": false,
+        "latency_sec": 8.361147936433554
+      },
+      {
+        "index": 158,
+        "gold": "34",
+        "prediction": "34",
+        "correct": true,
+        "latency_sec": 6.202823590487242
+      },
+      {
+        "index": 159,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 6.154128197580576
+      },
+      {
+        "index": 160,
+        "gold": "16",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 6.15820811316371
+      },
+      {
+        "index": 161,
+        "gold": "32",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 6.1415627263486385
+      },
+      {
+        "index": 162,
+        "gold": "92",
+        "prediction": "0.2",
+        "correct": false,
+        "latency_sec": 6.173355098813772
+      },
+      {
+        "index": 163,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 6.15338634327054
+      },
+      {
+        "index": 164,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 6.28283491358161
+      },
+      {
+        "index": 165,
+        "gold": "77",
+        "prediction": "77",
+        "correct": true,
+        "latency_sec": 6.230813343077898
+      },
+      {
+        "index": 166,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 6.274004317820072
+      },
+      {
+        "index": 167,
+        "gold": "16",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 6.188138168305159
+      },
+      {
+        "index": 168,
+        "gold": "18",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 6.02096825838089
+      },
+      {
+        "index": 169,
+        "gold": "120",
+        "prediction": "62500",
+        "correct": false,
+        "latency_sec": 5.986239988356829
+      },
+      {
+        "index": 170,
+        "gold": "150",
+        "prediction": "150",
+        "correct": true,
+        "latency_sec": 6.074390854686499
+      },
+      {
+        "index": 171,
+        "gold": "1210",
+        "prediction": "1340",
+        "correct": false,
+        "latency_sec": 5.998698461800814
+      },
+      {
+        "index": 172,
+        "gold": "51",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 6.141438838094473
+      },
+      {
+        "index": 173,
+        "gold": "18000",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 6.399409528821707
+      },
+      {
+        "index": 174,
+        "gold": "95",
+        "prediction": "95",
+        "correct": true,
+        "latency_sec": 6.27341290935874
+      },
+      {
+        "index": 175,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 6.203902721405029
+      },
+      {
+        "index": 176,
+        "gold": "100",
+        "prediction": "120",
+        "correct": false,
+        "latency_sec": 6.1682856269180775
+      },
+      {
+        "index": 177,
+        "gold": "350",
+        "prediction": "",
+        "correct": false,
+        "latency_sec": 8.483020458370447
+      },
+      {
+        "index": 178,
+        "gold": "122",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 6.3834190629422665
+      },
+      {
+        "index": 179,
+        "gold": "130",
+        "prediction": "130",
+        "correct": true,
+        "latency_sec": 6.326161429286003
+      },
+      {
+        "index": 180,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 6.166277788579464
+      },
+      {
+        "index": 181,
+        "gold": "160",
+        "prediction": "160",
+        "correct": true,
+        "latency_sec": 6.297849398106337
+      },
+      {
+        "index": 182,
+        "gold": "23",
+        "prediction": "23",
+        "correct": true,
+        "latency_sec": 6.219346556812525
+      },
+      {
+        "index": 183,
+        "gold": "2",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 8.917401809245348
+      },
+      {
+        "index": 184,
+        "gold": "25",
+        "prediction": "100",
+        "correct": false,
+        "latency_sec": 6.815380744636059
+      },
+      {
+        "index": 185,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 5.9220497496426105
+      },
+      {
+        "index": 186,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 7.901496935635805
+      },
+      {
+        "index": 187,
+        "gold": "106",
+        "prediction": "106.12",
+        "correct": false,
+        "latency_sec": 6.894946709275246
+      },
+      {
+        "index": 188,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 7.598622851073742
+      },
+      {
+        "index": 189,
+        "gold": "34",
+        "prediction": "23",
+        "correct": false,
+        "latency_sec": 6.103338293731213
+      },
+      {
+        "index": 190,
+        "gold": "360",
+        "prediction": "360",
+        "correct": true,
+        "latency_sec": 5.973727110773325
+      },
+      {
+        "index": 191,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 5.872910473495722
+      },
+      {
+        "index": 192,
+        "gold": "91",
+        "prediction": "91",
+        "correct": true,
+        "latency_sec": 5.796820435672998
+      },
+      {
+        "index": 193,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 6.069480072706938
+      },
+      {
+        "index": 194,
+        "gold": "10",
+        "prediction": "9",
+        "correct": false,
+        "latency_sec": 6.065627466887236
+      },
+      {
+        "index": 195,
+        "gold": "12",
+        "prediction": "12.00",
+        "correct": false,
+        "latency_sec": 5.869701221585274
+      },
+      {
+        "index": 196,
+        "gold": "120",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.741059917956591
+      },
+      {
+        "index": 197,
+        "gold": "6277",
+        "prediction": "6277",
+        "correct": true,
+        "latency_sec": 5.775968823581934
+      },
+      {
+        "index": 198,
+        "gold": "320",
+        "prediction": "320",
+        "correct": true,
+        "latency_sec": 5.8503889590501785
+      },
+      {
+        "index": 199,
+        "gold": "7500",
+        "prediction": "1000",
+        "correct": false,
+        "latency_sec": 5.812738783657551
+      }
+    ],
+    "tot": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 40.91461640223861,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n1",
+        "path_node_ids": [
+          "root",
+          "n1"
+        ],
+        "path_thoughts_preview": [
+          "So, the total number of eggs Janet has per day is 16. She uses 3 for breakfast and 4 for muffins, so the total number of..."
+        ],
+        "best_thought_preview": "So, the total number of eggs Janet has per day is 16. She uses 3 for breakfast and 4 for muffins, so the total number of eggs she sells is 16 - 3 - 4 = 9 eggs.",
+        "best_state_preview": "So, the total number of eggs Janet has per day is 16. She uses 3 for breakfast and 4 for muffins, so the total number of eggs she sells is 16 - 3 - 4 = 9 eggs."
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 40.570661406964064,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n4",
+        "path_node_ids": [
+          "root",
+          "n4"
+        ],
+        "path_thoughts_preview": [
+          "So, the robe needs 2 bolts of blue fiber and half that much white fiber. So, half of 2 is 1, so the white fiber is 1 bol..."
+        ],
+        "best_thought_preview": "So, the robe needs 2 bolts of blue fiber and half that much white fiber. So, half of 2 is 1, so the white fiber is 1 bolt. So, the total is 2 + 1 = 3 bolts.",
+        "best_state_preview": "So, the robe needs 2 bolts of blue fiber and half that much white fiber. So, half of 2 is 1, so the white fiber is 1 bolt. So, the total is 2 + 1 = 3 bolts."
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "000",
+        "correct": false,
+        "latency_sec": 44.09495059400797,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 7,
+        "node_count": 10,
+        "best_node_id": "n6",
+        "path_node_ids": [
+          "root",
+          "n6"
+        ],
+        "path_thoughts_preview": [
+          "The total cost is $80,000 + $50,000 = $130,000"
+        ],
+        "best_thought_preview": "The total cost is $80,000 + $50,000 = $130,000",
+        "best_state_preview": "The total cost is $80,000 + $50,000 = $130,000"
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "540",
+        "correct": true,
+        "latency_sec": 40.36908398196101,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n2",
+        "path_node_ids": [
+          "root",
+          "n2"
+        ],
+        "path_thoughts_preview": [
+          "Well, each sprint is 60 meters, and he does 3 sprints. So for each day, he runs 60 * 3 = 180 meters. Then, he does this ..."
+        ],
+        "best_thought_preview": "Well, each sprint is 60 meters, and he does 3 sprints. So for each day, he runs 60 * 3 = 180 meters. Then, he does this 3 times a week. So total meters per week would be 180 * 3 = 540 meters.",
+        "best_state_preview": "Well, each sprint is 60 meters, and he does 3 sprints. So for each day, he runs 60 * 3 = 180 meters. Then, he does this 3 times a week. So total meters per week would be 180 * 3 = 540 meters."
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 58.69030050188303,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 10,
+        "node_count": 11,
+        "best_node_id": "n4",
+        "path_node_ids": [
+          "root",
+          "n4"
+        ],
+        "path_thoughts_preview": [
+          "The total feed given in the morning and afternoon is 15 + 25 = 40 cups."
+        ],
+        "best_thought_preview": "The total feed given in the morning and afternoon is 15 + 25 = 40 cups.",
+        "best_state_preview": "The total feed given in the morning and afternoon is 15 + 25 = 40 cups."
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "64",
+        "correct": true,
+        "latency_sec": 49.877942498773336,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 7,
+        "node_count": 11,
+        "best_node_id": "n10",
+        "path_node_ids": [
+          "root",
+          "n10"
+        ],
+        "path_thoughts_preview": [
+          "The first glass costs $5, so the second glass costs $5 * 60% = $3. So for every pair of glasses, Kylar pays $5 + $3 = $8..."
+        ],
+        "best_thought_preview": "The first glass costs $5, so the second glass costs $5 * 60% = $3. So for every pair of glasses, Kylar pays $5 + $3 = $8. Since Kylar wants to buy 16 glasses, there are 16 / 2 = 8 pairs of glasses. Th...",
+        "best_state_preview": "The first glass costs $5, so the second glass costs $5 * 60% = $3. So for every pair of glasses, Kylar pays $5 + $3 = $8. Since Kylar wants to buy 16 glasses, there are 16 / 2 = 8 pairs of glasses. Th..."
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "260",
+        "correct": true,
+        "latency_sec": 363.44062877446413,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 24,
+        "node_count": 71,
+        "best_node_id": "n8",
+        "path_node_ids": [
+          "root",
+          "n8"
+        ],
+        "path_thoughts_preview": [
+          "Let's figure out how many sheep each city has. We know that Seattle has 20 sheep. Since Charleston has 4 times as many s..."
+        ],
+        "best_thought_preview": "Let's figure out how many sheep each city has. We know that Seattle has 20 sheep. Since Charleston has 4 times as many sheep as Seattle, that means Charleston has 20 * 4 = 80 sheep. Then, since Toulou...",
+        "best_state_preview": "Let's figure out how many sheep each city has. We know that Seattle has 20 sheep. Since Charleston has 4 times as many sheep as Seattle, that means Charleston has 20 * 4 = 80 sheep. Then, since Toulou..."
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 256.6702631339431,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 15,
+        "node_count": 71,
+        "best_node_id": "n33",
+        "path_node_ids": [
+          "root",
+          "n4",
+          "n33"
+        ],
+        "path_thoughts_preview": [
+          "The file is 200 GB, so 40% of the file is 0.4*200 = 80 GB.",
+          "Carla has downloaded 80 GB, but then the restart takes 20 minutes, and she has to restart the download from the beginnin..."
+        ],
+        "best_thought_preview": "Carla has downloaded 80 GB, but then the restart takes 20 minutes, and she has to restart the download from the beginning. So, the time taken to download the first 80 GB is 80 GB / 2 GB per minute = 4...",
+        "best_state_preview": "The file is 200 GB, so 40% of the file is 0.4*200 = 80 GB. Carla has downloaded 80 GB, but then the restart takes 20 minutes, and she has to restart the download from the beginning. So, the time taken..."
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "45",
+        "correct": true,
+        "latency_sec": 235.46204840764403,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 14,
+        "node_count": 60,
+        "best_node_id": "n40",
+        "path_node_ids": [
+          "root",
+          "n4",
+          "n40"
+        ],
+        "path_thoughts_preview": [
+          "John drives for 3 hours at 60 mph. So he travels 3 * 60 = 180 miles. He then turns around and starts driving back home. ...",
+          "So the remaining time is 4 hours - 2 hours - 0.5 hours = 1.5 hours. He drives at 80 mph for 1.5 hours, so that's 1.5 * 8..."
+        ],
+        "best_thought_preview": "So the remaining time is 4 hours - 2 hours - 0.5 hours = 1.5 hours. He drives at 80 mph for 1.5 hours, so that's 1.5 * 80 = 120 miles. So in total, he has driven back 15 + 120 = 135 miles. So he is 18...",
+        "best_state_preview": "John drives for 3 hours at 60 mph. So he travels 3 * 60 = 180 miles. He then turns around and starts driving back home. He tries to get home in 4 hours, but spends the first 2 hours in standstill traf..."
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 185.4036180190742,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 13,
+        "node_count": 46,
+        "best_node_id": "n18",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n18"
+        ],
+        "path_thoughts_preview": [
+          "We need to calculate Eliza's earnings for the week. She worked 45 hours, which is 5 hours more than the regular 40 hours...",
+          "Calculate the regular earnings for the first 40 hours and the overtime earnings for the additional 5 hours, then sum the..."
+        ],
+        "best_thought_preview": "Calculate the regular earnings for the first 40 hours and the overtime earnings for the additional 5 hours, then sum them up to find the total earnings for the week.",
+        "best_state_preview": "We need to calculate Eliza's earnings for the week. She worked 45 hours, which is 5 hours more than the regular 40 hours. So, the first 40 hours are paid at $10 per hour, and the remaining 5 hours are..."
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 172.9442977309227,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 6,
+        "node_count": 49,
+        "best_node_id": "n23",
+        "path_node_ids": [
+          "root",
+          "n2",
+          "n23"
+        ],
+        "path_thoughts_preview": [
+          "Let's break down the problem step by step. In the first month, there were 60 downloads. In the second month, the number ...",
+          "Let's calculate the number of downloads for each month. First month is 60 downloads. Second month is 3 times the first m..."
+        ],
+        "best_thought_preview": "Let's calculate the number of downloads for each month. First month is 60 downloads. Second month is 3 times the first month, which is 3 * 60 = 180 downloads. For the third month, we have a 30% reduct...",
+        "best_state_preview": "Let's break down the problem step by step. In the first month, there were 60 downloads. In the second month, the number of downloads was three times as many as the first month, so that's 3 * 60. Then,..."
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 418.49011394381523,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 15,
+        "node_count": 59,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "The cost of the donuts is 3 x $68 = $204. The cost of the mini cupcakes is 2 x $80 = $160. The cost of the mini cheeseca..."
+        ],
+        "best_thought_preview": "The cost of the donuts is 3 x $68 = $204. The cost of the mini cupcakes is 2 x $80 = $160. The cost of the mini cheesecakes is 6 x $55 = $330. So the total cost is $204 + $160 + $330 = $694.",
+        "best_state_preview": "The cost of the donuts is 3 x $68 = $204. The cost of the mini cupcakes is 2 x $80 = $160. The cost of the mini cheesecakes is 6 x $55 = $330. So the total cost is $204 + $160 + $330 = $694."
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 82.96750993654132,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 10,
+        "node_count": 21,
+        "best_node_id": "n17",
+        "path_node_ids": [
+          "root",
+          "n2",
+          "n17"
+        ],
+        "path_thoughts_preview": [
+          "So the net profit per year is 7 * $1.5 - $3 = $10.5 - $3 = $7.5 per year.",
+          "The initial cost is $90, so he needs to earn back that $90. So $90 / $7.5 = 12 years. So the answer is 12 years."
+        ],
+        "best_thought_preview": "The initial cost is $90, so he needs to earn back that $90. So $90 / $7.5 = 12 years. So the answer is 12 years.",
+        "best_state_preview": "So the net profit per year is 7 * $1.5 - $3 = $10.5 - $3 = $7.5 per year. The initial cost is $90, so he needs to earn back that $90. So $90 / $7.5 = 12 years. So the answer is 12 years."
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 472.4312689304352,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 42,
+        "node_count": 108,
+        "best_node_id": "n72",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n12",
+          "n22",
+          "n72"
+        ],
+        "path_thoughts_preview": [
+          "Let's assume Melanie started with x vacuum cleaners. She sold a third of them at the green house, which is x/3. Then she...",
+          "Let's simplify the equation. Multiply both sides by 2 to eliminate the denominator: 2x - (2x)/3 - 4 - (x - x/3 - 2) = 10...",
+          "6x/3 - 2x/3 - 3x/3 + x/3 = (6x - 2x - 3x + x)/3 = 2x/3. Then -4 + 2 = -2. So, 2x/3 - 2 = 10. Add 2 to both sides: 2x/3 =...",
+          "Let's verify this answer. If she started with 18, she sold 18/3 = 6 at the green house. Then she sold 2 more to the red ..."
+        ],
+        "best_thought_preview": "Let's verify this answer. If she started with 18, she sold 18/3 = 6 at the green house. Then she sold 2 more to the red house, so that's 6 + 2 = 8 sold so far. She had 18 - 8 = 10 left. Then she sold ...",
+        "best_state_preview": "Let's assume Melanie started with x vacuum cleaners. She sold a third of them at the green house, which is x/3. Then she sold 2 more to the red house, so she sold 2 more. Then she sold half of what wa..."
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 42.817718878388405,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n8",
+        "path_node_ids": [
+          "root",
+          "n8"
+        ],
+        "path_thoughts_preview": [
+          "The total number of students in the dance class is 20. First, we need to find out how many students enrolled in contempo..."
+        ],
+        "best_thought_preview": "The total number of students in the dance class is 20. First, we need to find out how many students enrolled in contemporary dance. Since 20% of the students enrolled in contemporary dance, that would...",
+        "best_state_preview": "The total number of students in the dance class is 20. First, we need to find out how many students enrolled in contemporary dance. Since 20% of the students enrolled in contemporary dance, that would..."
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "125",
+        "correct": true,
+        "latency_sec": 642.020436771214,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 15,
+        "node_count": 97,
+        "best_node_id": "n55",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n9",
+          "n55"
+        ],
+        "path_thoughts_preview": [
+          "The merchant has two options to choose from, and each option has a different potential profit based on the market growth...",
+          "The profit for the jewelry purchase would be the value of the jewelry multiplied by the percentage increase, which is $5...",
+          "So the answer is $125."
+        ],
+        "best_thought_preview": "So the answer is $125.",
+        "best_state_preview": "The merchant has two options to choose from, and each option has a different potential profit based on the market growth. The question is asking for the maximum profit he can make by choosing the best..."
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "230",
+        "correct": true,
+        "latency_sec": 46.805735897272825,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 11,
+        "best_node_id": "n5",
+        "path_node_ids": [
+          "root",
+          "n5"
+        ],
+        "path_thoughts_preview": [
+          "The first train travels 80 miles west, then 150 miles north. The second train also travels 80 miles west, then 150 miles..."
+        ],
+        "best_thought_preview": "The first train travels 80 miles west, then 150 miles north. The second train also travels 80 miles west, then 150 miles north. Therefore, the total distance covered by each train is 80 + 150 = 230 mi...",
+        "best_state_preview": "The first train travels 80 miles west, then 150 miles north. The second train also travels 80 miles west, then 150 miles north. Therefore, the total distance covered by each train is 80 + 150 = 230 mi..."
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "35000",
+        "correct": false,
+        "latency_sec": 410.2437365204096,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 33,
+        "node_count": 85,
+        "best_node_id": "n5",
+        "path_node_ids": [
+          "root",
+          "n5"
+        ],
+        "path_thoughts_preview": [
+          "For the teaching job, we need to find the total amount she makes. So, we multiply her hourly rate of $20 by the number o..."
+        ],
+        "best_thought_preview": "For the teaching job, we need to find the total amount she makes. So, we multiply her hourly rate of $20 by the number of hours she works as a teacher. That would be 35 hours per week times 50 weeks. ...",
+        "best_state_preview": "For the teaching job, we need to find the total amount she makes. So, we multiply her hourly rate of $20 by the number of hours she works as a teacher. That would be 35 hours per week times 50 weeks. ..."
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 430.49323346465826,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 10,
+        "node_count": 97,
+        "best_node_id": "n73",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n37",
+          "n73"
+        ],
+        "path_thoughts_preview": [
+          "She uses 3 eggs per omelet. So, for one week, she will use 3 eggs x 7 days = 21 eggs.",
+          "For 4 weeks, she will use 21 eggs x 4 = 84 eggs.",
+          "84 eggs / 12 eggs per dozen = 7 dozens.",
+          "So, the answer is 7 dozens of eggs."
+        ],
+        "best_thought_preview": "So, the answer is 7 dozens of eggs.",
+        "best_state_preview": "She uses 3 eggs per omelet. So, for one week, she will use 3 eggs x 7 days = 21 eggs. For 4 weeks, she will use 21 eggs x 4 = 84 eggs. 84 eggs / 12 eggs per dozen = 7 dozens. So, the answer is 7 dozen..."
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 48.06263813376427,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 11,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "The total distance of the trail is 12 miles. So far, she has walked 4 + 2 = 6 miles. Therefore, the remaining distance i..."
+        ],
+        "best_thought_preview": "The total distance of the trail is 12 miles. So far, she has walked 4 + 2 = 6 miles. Therefore, the remaining distance is 12 - 6 = 6 miles.",
+        "best_state_preview": "The total distance of the trail is 12 miles. So far, she has walked 4 + 2 = 6 miles. Therefore, the remaining distance is 12 - 6 = 6 miles."
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 220.239129755646,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 15,
+        "node_count": 57,
+        "best_node_id": "n49",
+        "path_node_ids": [
+          "root",
+          "n5",
+          "n49"
+        ],
+        "path_thoughts_preview": [
+          "The original amount of water in the orange drink is two-thirds of 10 liters, which is (2/3)*10 = 20/3 liters. After spil...",
+          "The pineapple drink has 15 liters and is three-fifths water, so the amount of water in it is (3/5)*15 = 45/5 = 9 liters...."
+        ],
+        "best_thought_preview": "The pineapple drink has 15 liters and is three-fifths water, so the amount of water in it is (3/5)*15 = 45/5 = 9 liters. Therefore, the total amount of water in both drinks is 6 liters + 9 liters = 15...",
+        "best_state_preview": "The original amount of water in the orange drink is two-thirds of 10 liters, which is (2/3)*10 = 20/3 liters. After spilling one liter of orange drink, the remaining orange drink is 10 - 1 = 9 liters...."
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 331.12295666337013,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 86,
+        "best_node_id": "n7",
+        "path_node_ids": [
+          "root",
+          "n7"
+        ],
+        "path_thoughts_preview": [
+          "Raymond had a son at 23, so he was born 6 years before Samantha, so Samantha is 31, so Raymond is 31 + 6 = 37. So Raymon..."
+        ],
+        "best_thought_preview": "Raymond had a son at 23, so he was born 6 years before Samantha, so Samantha is 31, so Raymond is 31 + 6 = 37. So Raymond's son was born when Raymond was 23, so he is now 37 - 23 = 14. So Raymond's so...",
+        "best_state_preview": "Raymond had a son at 23, so he was born 6 years before Samantha, so Samantha is 31, so Raymond is 31 + 6 = 37. So Raymond's son was born when Raymond was 23, so he is now 37 - 23 = 14. So Raymond's so..."
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "8",
+        "correct": false,
+        "latency_sec": 276.40381510928273,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 12,
+        "node_count": 61,
+        "best_node_id": "n50",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n15",
+          "n50"
+        ],
+        "path_thoughts_preview": [
+          "So, the first 3 customers buy one DVD each. That's 3 x 1 = 3 DVDs.",
+          "The next 2 customers buy 2 DVDs each. That's 2 x 2 = 4 DVDs.",
+          "The last 3 customers don't buy anything, so they contribute 0 DVDs.",
+          "Total DVDs sold is the sum of these amounts: 3 + 4 + 0 = 7."
+        ],
+        "best_thought_preview": "Total DVDs sold is the sum of these amounts: 3 + 4 + 0 = 7.",
+        "best_state_preview": "So, the first 3 customers buy one DVD each. That's 3 x 1 = 3 DVDs. The next 2 customers buy 2 DVDs each. That's 2 x 2 = 4 DVDs. The last 3 customers don't buy anything, so they contribute 0 DVDs. Tota..."
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 214.7074069865048,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 12,
+        "node_count": 51,
+        "best_node_id": "n5",
+        "path_node_ids": [
+          "root",
+          "n5"
+        ],
+        "path_thoughts_preview": [
+          "The time between 1:00 PM and 5:00 PM is 4 hours. So the candle will melt for 4 hours. Since the candle melts by 2 centim..."
+        ],
+        "best_thought_preview": "The time between 1:00 PM and 5:00 PM is 4 hours. So the candle will melt for 4 hours. Since the candle melts by 2 centimeters every hour, we can calculate the total melting by multiplying the number o...",
+        "best_state_preview": "The time between 1:00 PM and 5:00 PM is 4 hours. So the candle will melt for 4 hours. Since the candle melts by 2 centimeters every hour, we can calculate the total melting by multiplying the number o..."
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 505.81545727699995,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 12,
+        "node_count": 105,
+        "best_node_id": "n91",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n39",
+          "n91"
+        ],
+        "path_thoughts_preview": [
+          "Let the original price be P. With a 25% discount, the price is 75% of P. So, 0.75P = $19.50. Therefore, P = 19.50 / 0.75...",
+          "Compute 19.50 divided by 0.75.",
+          "Let me compute that. 19.50 divided by 0.75. Well, 19.50 divided by 0.75 is the same as 19.50 multiplied by (4/3), since ...",
+          "So, the original price of the book was $26. Let me check this. If the original price was $26, then a 25% discount would ..."
+        ],
+        "best_thought_preview": "So, the original price of the book was $26. Let me check this. If the original price was $26, then a 25% discount would be 26 * 0.25 = $6.50. Subtracting that from $26 gives $19.50, which matches the ...",
+        "best_state_preview": "Let the original price be P. With a 25% discount, the price is 75% of P. So, 0.75P = $19.50. Therefore, P = 19.50 / 0.75. Compute 19.50 divided by 0.75. Let me compute that. 19.50 divided by 0.75. Wel..."
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "50",
+        "correct": false,
+        "latency_sec": 41.716580521315336,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n10",
+        "path_node_ids": [
+          "root",
+          "n10"
+        ],
+        "path_thoughts_preview": [
+          "Let's calculate the total cost of the chicken meal, milk, and apples first. The chicken meal costs $12. The milk costs 5..."
+        ],
+        "best_thought_preview": "Let's calculate the total cost of the chicken meal, milk, and apples first. The chicken meal costs $12. The milk costs 5 x $3 = $15. The apples cost 4 x $1.50 = $6. So, the total cost for these items ...",
+        "best_state_preview": "Let's calculate the total cost of the chicken meal, milk, and apples first. The chicken meal costs $12. The milk costs 5 x $3 = $15. The apples cost 4 x $1.50 = $6. So, the total cost for these items ..."
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "243",
+        "correct": true,
+        "latency_sec": 42.47091407328844,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "So the total cost of the shorts is 3 times $16.50, which is $49.50. The total cost of the pants is 3 times $22.50, which..."
+        ],
+        "best_thought_preview": "So the total cost of the shorts is 3 times $16.50, which is $49.50. The total cost of the pants is 3 times $22.50, which is $67.50. The total cost of the shoes is 3 times $42, which is $126. Then, add...",
+        "best_state_preview": "So the total cost of the shorts is 3 times $16.50, which is $49.50. The total cost of the pants is 3 times $22.50, which is $67.50. The total cost of the shoes is 3 times $42, which is $126. Then, add..."
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 176.12689949199557,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 6,
+        "node_count": 41,
+        "best_node_id": "n12",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n12"
+        ],
+        "path_thoughts_preview": [
+          "First, we need to determine how many servings Cynthia will consume in 60 days. Since she eats one serving each night, sh...",
+          "We need to determine how many cartons of ice cream she will need to buy. Since there are 15 servings per carton, we divi..."
+        ],
+        "best_thought_preview": "We need to determine how many cartons of ice cream she will need to buy. Since there are 15 servings per carton, we divide the total servings needed by the servings per carton: 60 servings / 15 servin...",
+        "best_state_preview": "First, we need to determine how many servings Cynthia will consume in 60 days. Since she eats one serving each night, she will consume 60 servings in 60 days. We need to determine how many cartons of ..."
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 48.53086530789733,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 10,
+        "best_node_id": "n2",
+        "path_node_ids": [
+          "root",
+          "n2"
+        ],
+        "path_thoughts_preview": [
+          "So the total trip is 60 miles. The first stop is after 20 miles. So he traveled 20 miles before the first stop. Then, th..."
+        ],
+        "best_thought_preview": "So the total trip is 60 miles. The first stop is after 20 miles. So he traveled 20 miles before the first stop. Then, the second stop is 15 miles before the end. The total trip is 60 miles, so the sec...",
+        "best_state_preview": "So the total trip is 60 miles. The first stop is after 20 miles. So he traveled 20 miles before the first stop. Then, the second stop is 15 miles before the end. The total trip is 60 miles, so the sec..."
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 51.19824863597751,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 11,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "Let's call the cost of the boots B. We know that the total cost of the two pairs of high heels is $33 plus $66, which is..."
+        ],
+        "best_thought_preview": "Let's call the cost of the boots B. We know that the total cost of the two pairs of high heels is $33 plus $66, which is $99. The problem says that the total cost of the heels is five dollars less tha...",
+        "best_state_preview": "Let's call the cost of the boots B. We know that the total cost of the two pairs of high heels is $33 plus $66, which is $99. The problem says that the total cost of the heels is five dollars less tha..."
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "18",
+        "correct": false,
+        "latency_sec": 114.74679300561547,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 31,
+        "best_node_id": "n12",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n12"
+        ],
+        "path_thoughts_preview": [
+          "Let's denote the common ratio factor as x. So, Darrell's age is 7x and Allen's age is 11x.",
+          "The total of their ages is 7x + 11x = 18x. Given that the total age is 162, so 18x = 162."
+        ],
+        "best_thought_preview": "The total of their ages is 7x + 11x = 18x. Given that the total age is 162, so 18x = 162.",
+        "best_state_preview": "Let's denote the common ratio factor as x. So, Darrell's age is 7x and Allen's age is 11x. The total of their ages is 7x + 11x = 18x. Given that the total age is 162, so 18x = 162."
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 338.27156257629395,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 79,
+        "best_node_id": "n55",
+        "path_node_ids": [
+          "root",
+          "n2",
+          "n13",
+          "n55"
+        ],
+        "path_thoughts_preview": [
+          "Let's break down each guess. The first guess is 80. The second guess is 20 more than half the first one. Half of 80 is 4...",
+          "240 ÷ 3 = 80.",
+          "The answer is 80."
+        ],
+        "best_thought_preview": "The answer is 80.",
+        "best_state_preview": "Let's break down each guess. The first guess is 80. The second guess is 20 more than half the first one. Half of 80 is 40, and adding 20 gives us 60. The third guess is 25% more than the first one. 25..."
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "35",
+        "correct": true,
+        "latency_sec": 591.1818346753716,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 52,
+        "node_count": 107,
+        "best_node_id": "n65",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n27",
+          "n49",
+          "n65"
+        ],
+        "path_thoughts_preview": [
+          "Multiply the number of dogs by the time per dog per day.",
+          "Multiply by the number of days in a week.",
+          "10 dogs * .5 hours = 5 hours per day",
+          "5 hours per day * 7 days = 35 hours per week",
+          "35 hours per week. So the answer is 35."
+        ],
+        "best_thought_preview": "35 hours per week. So the answer is 35.",
+        "best_state_preview": "Multiply the number of dogs by the time per dog per day. Multiply by the number of days in a week. 10 dogs * .5 hours = 5 hours per day 5 hours per day * 7 days = 35 hours per week 35 hours per week. ..."
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 49.03866159915924,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 11,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "Let's let the number of silver coins be x. Then the number of gold coins is x + 30. The total number of coins is 110, so..."
+        ],
+        "best_thought_preview": "Let's let the number of silver coins be x. Then the number of gold coins is x + 30. The total number of coins is 110, so x + (x + 30) = 110. Combine like terms: 2x + 30 = 110. Subtract 30 from both si...",
+        "best_state_preview": "Let's let the number of silver coins be x. Then the number of gold coins is x + 30. The total number of coins is 110, so x + (x + 30) = 110. Combine like terms: 2x + 30 = 110. Subtract 30 from both si..."
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "23",
+        "correct": true,
+        "latency_sec": 216.6445636935532,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 14,
+        "node_count": 44,
+        "best_node_id": "n13",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n13"
+        ],
+        "path_thoughts_preview": [
+          "Let's find out how many jewels Aaron has first. Raymond has 40 jewels. Half of Raymond's jewels is 40 / 2 = 20. Then, Aa...",
+          "Siobhan has 2 fewer jewels than Aaron. So, we subtract 2 from Aaron's total. That would be 25 - 2 = 23. Therefore, Siobh..."
+        ],
+        "best_thought_preview": "Siobhan has 2 fewer jewels than Aaron. So, we subtract 2 from Aaron's total. That would be 25 - 2 = 23. Therefore, Siobhan has 23 jewels.",
+        "best_state_preview": "Let's find out how many jewels Aaron has first. Raymond has 40 jewels. Half of Raymond's jewels is 40 / 2 = 20. Then, Aaron has 5 more jewels than that, so 20 + 5 = 25. So, Aaron has 25 jewels. Siobha..."
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 89.903938960284,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 13,
+        "node_count": 21,
+        "best_node_id": "n16",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n16"
+        ],
+        "path_thoughts_preview": [
+          "So, in the first 20 minutes, he scores 4 points. In the next 20 minutes, he scores 25% more points than he did in the fi...",
+          "So, the total points he scored is 4 + 5 = 9 points. Therefore, the answer is 9."
+        ],
+        "best_thought_preview": "So, the total points he scored is 4 + 5 = 9 points. Therefore, the answer is 9.",
+        "best_state_preview": "So, in the first 20 minutes, he scores 4 points. In the next 20 minutes, he scores 25% more points than he did in the first 20 minutes. So, 25% of 4 is 1. So, 4 + 1 = 5 points in the second 20 minutes..."
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75.00",
+        "correct": false,
+        "latency_sec": 593.174074396491,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 12,
+        "node_count": 101,
+        "best_node_id": "n66",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n51",
+          "n66"
+        ],
+        "path_thoughts_preview": [
+          "2 yogurts per day * 30 days = 60 yogurts",
+          "60 yogurts / 4 yogurts per $5.00 = 15",
+          "15 * $5.00 = $75.00",
+          "Terry wants to know the total cost per month. He buys 2 yogurts a day, which are on sale for $5.00 for 4 yogurts. If he ..."
+        ],
+        "best_thought_preview": "Terry wants to know the total cost per month. He buys 2 yogurts a day, which are on sale for $5.00 for 4 yogurts. If he buys 60 yogurts, how much does he pay for the yogurt?",
+        "best_state_preview": "2 yogurts per day * 30 days = 60 yogurts 60 yogurts / 4 yogurts per $5.00 = 15 15 * $5.00 = $75.00 Terry wants to know the total cost per month. He buys 2 yogurts a day, which are on sale for $5.00 fo..."
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "195",
+        "correct": false,
+        "latency_sec": 47.23896786570549,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 11,
+        "best_node_id": "n6",
+        "path_node_ids": [
+          "root",
+          "n6"
+        ],
+        "path_thoughts_preview": [
+          "Let's calculate the total amount of money John got from selling the lego sets. 13 lego sets times $15 each is 13 * 15 = ..."
+        ],
+        "best_thought_preview": "Let's calculate the total amount of money John got from selling the lego sets. 13 lego sets times $15 each is 13 * 15 = $195.",
+        "best_state_preview": "Let's calculate the total amount of money John got from selling the lego sets. 13 lego sets times $15 each is 13 * 15 = $195."
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 47.444176483899355,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 11,
+        "best_node_id": "n6",
+        "path_node_ids": [
+          "root",
+          "n6"
+        ],
+        "path_thoughts_preview": [
+          "To find the average speed, we need to find the total distance divided by the total time. We know that he runs 60 miles a..."
+        ],
+        "best_thought_preview": "To find the average speed, we need to find the total distance divided by the total time. We know that he runs 60 miles a week. He runs 3 days a week. He runs 3 hours the first day and half as much the...",
+        "best_state_preview": "To find the average speed, we need to find the total distance divided by the total time. We know that he runs 60 miles a week. He runs 3 days a week. He runs 3 hours the first day and half as much the..."
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 224.79811330512166,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 14,
+        "node_count": 48,
+        "best_node_id": "n17",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n17"
+        ],
+        "path_thoughts_preview": [
+          "Let's define the rates of Dana's activities. We know she can skip at 3 miles per hour, which is half the speed of runnin...",
+          "4 hours. So, the total distance is (2 hours * 6 mph) + (4 hours * 1.5 mph) = 12 + 6 = 18 miles. So, the answer is 18 mil..."
+        ],
+        "best_thought_preview": "4 hours. So, the total distance is (2 hours * 6 mph) + (4 hours * 1.5 mph) = 12 + 6 = 18 miles. So, the answer is 18 miles.",
+        "best_state_preview": "Let's define the rates of Dana's activities. We know she can skip at 3 miles per hour, which is half the speed of running. So, running speed is 3 * 2 = 6 miles per hour. Then, since she can run four t..."
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 565.7174437940121,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 115,
+        "best_node_id": "n48",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n48"
+        ],
+        "path_thoughts_preview": [
+          "Let's assign variables to each person's iPhone age. Let B be Brandon's iPhone age, Ben's iPhone age be b, and Suzy's iPh...",
+          "Let's create equations based on the information given. Brandon's iPhone is four times as old as Ben's iPhone, so B = 4b....",
+          "Solve the equations to find the answer. We know that s = 1, so we can plug that into the second equation to find b. b = ..."
+        ],
+        "best_thought_preview": "Solve the equations to find the answer. We know that s = 1, so we can plug that into the second equation to find b. b = 2s = 2(1) = 2. Now that we know b = 2, we can plug that into the first equation ...",
+        "best_state_preview": "Let's assign variables to each person's iPhone age. Let B be Brandon's iPhone age, Ben's iPhone age be b, and Suzy's iPhone age be s. Let's create equations based on the information given. Brandon's i..."
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "200",
+        "correct": true,
+        "latency_sec": 209.7836626805365,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 7,
+        "node_count": 60,
+        "best_node_id": "n38",
+        "path_node_ids": [
+          "root",
+          "n3",
+          "n38"
+        ],
+        "path_thoughts_preview": [
+          "The problem says that Polly can throw the gold javelin 400 feet when not holding the gemstone. When she holds the gemsto...",
+          "The dragon can breathe fire up to 1000 feet. So the distance Polly can stand outside the reach of the dragon's flames is..."
+        ],
+        "best_thought_preview": "The dragon can breathe fire up to 1000 feet. So the distance Polly can stand outside the reach of the dragon's flames is the distance she can throw with the gemstone minus the dragon's reach. So the a...",
+        "best_state_preview": "The problem says that Polly can throw the gold javelin 400 feet when not holding the gemstone. When she holds the gemstone, she can throw it three times farther. So the distance when holding the gemst..."
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 52.66439273953438,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 10,
+        "node_count": 11,
+        "best_node_id": "n1",
+        "path_node_ids": [
+          "root",
+          "n1"
+        ],
+        "path_thoughts_preview": [
+          "So the total number of pieces of pie Grandma Jones had to begin with was 5 pies times 8 pieces per pie, which is 40 piec..."
+        ],
+        "best_thought_preview": "So the total number of pieces of pie Grandma Jones had to begin with was 5 pies times 8 pieces per pie, which is 40 pieces. The number of pieces left was 14, so the number of pieces taken by the guest...",
+        "best_state_preview": "So the total number of pieces of pie Grandma Jones had to begin with was 5 pies times 8 pieces per pie, which is 40 pieces. The number of pieces left was 14, so the number of pieces taken by the guest..."
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "180",
+        "correct": false,
+        "latency_sec": 121.24354911595583,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 27,
+        "best_node_id": "n23",
+        "path_node_ids": [
+          "root",
+          "n3",
+          "n23"
+        ],
+        "path_thoughts_preview": [
+          "The bag has 5 servings, so each serving is 300g / 5 = 60g per serving.",
+          "Each serving is 250 calories, so total calories in the bag is 5 * 250 = 1250 calories."
+        ],
+        "best_thought_preview": "Each serving is 250 calories, so total calories in the bag is 5 * 250 = 1250 calories.",
+        "best_state_preview": "The bag has 5 servings, so each serving is 300g / 5 = 60g per serving. Each serving is 250 calories, so total calories in the bag is 5 * 250 = 1250 calories."
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 260.4769617691636,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 15,
+        "node_count": 64,
+        "best_node_id": "n8",
+        "path_node_ids": [
+          "root",
+          "n8"
+        ],
+        "path_thoughts_preview": [
+          "The total number of pounds of beeswax needed to make 20 candles is 20 divided by 10, which is 2 pounds."
+        ],
+        "best_thought_preview": "The total number of pounds of beeswax needed to make 20 candles is 20 divided by 10, which is 2 pounds.",
+        "best_state_preview": "The total number of pounds of beeswax needed to make 20 candles is 20 divided by 10, which is 2 pounds."
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 173.35711595788598,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 7,
+        "node_count": 42,
+        "best_node_id": "n32",
+        "path_node_ids": [
+          "root",
+          "n3",
+          "n32"
+        ],
+        "path_thoughts_preview": [
+          "Let's first determine the number of articles Meredith wrote each day.",
+          "On Monday, she wrote 5 articles. On Tuesday, she wrote 5 + (2/5 * 5) = 5 + 2 = 7 articles. On Wednesday, she wrote 2 * 7..."
+        ],
+        "best_thought_preview": "On Monday, she wrote 5 articles. On Tuesday, she wrote 5 + (2/5 * 5) = 5 + 2 = 7 articles. On Wednesday, she wrote 2 * 7 = 14 articles. Total number of articles is 5 + 7 + 14 = 26. Each article takes ...",
+        "best_state_preview": "Let's first determine the number of articles Meredith wrote each day. On Monday, she wrote 5 articles. On Tuesday, she wrote 5 + (2/5 * 5) = 5 + 2 = 7 articles. On Wednesday, she wrote 2 * 7 = 14 arti..."
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "163",
+        "correct": true,
+        "latency_sec": 45.9951322004199,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 7,
+        "node_count": 11,
+        "best_node_id": "n10",
+        "path_node_ids": [
+          "root",
+          "n10"
+        ],
+        "path_thoughts_preview": [
+          "The total number of Post-it notes she used at work is 220. She had 23 left, so she must have had 220 + 23 = 243 total Po..."
+        ],
+        "best_thought_preview": "The total number of Post-it notes she used at work is 220. She had 23 left, so she must have had 220 + 23 = 243 total Post-it notes after buying the package. Therefore, she had 243 - 80 = 163 Post-it ...",
+        "best_state_preview": "The total number of Post-it notes she used at work is 220. She had 23 left, so she must have had 220 + 23 = 243 total Post-it notes after buying the package. Therefore, she had 243 - 80 = 163 Post-it ..."
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "800",
+        "correct": true,
+        "latency_sec": 496.519549112767,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 39,
+        "node_count": 118,
+        "best_node_id": "n80",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n11",
+          "n25",
+          "n80"
+        ],
+        "path_thoughts_preview": [
+          "The cost of blue ties is $40 each, so the number of blue ties is $200 / $40 = 5.",
+          "Since John buys twice as many red ties as blue ties, the number of red ties is 5 * 2 = 10.",
+          "The red ties cost 50% more than blue ties, so the price of red ties is $40 + ($40 * 50%) = $40 + $20 = $60.",
+          "Total cost is the sum of the cost for blue ties and red ties. The cost for blue ties is $200. The cost for red ties is 1..."
+        ],
+        "best_thought_preview": "Total cost is the sum of the cost for blue ties and red ties. The cost for blue ties is $200. The cost for red ties is 10 * $60 = $600. Total cost is $200 + $600 = $800.",
+        "best_state_preview": "The cost of blue ties is $40 each, so the number of blue ties is $200 / $40 = 5. Since John buys twice as many red ties as blue ties, the number of red ties is 5 * 2 = 10. The red ties cost 50% more t..."
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 196.24023620039225,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 21,
+        "node_count": 39,
+        "best_node_id": "n9",
+        "path_node_ids": [
+          "root",
+          "n9"
+        ],
+        "path_thoughts_preview": [
+          "The length of the wire is 4 feet. Since 1 foot is 12 inches, the total length of the wire in inches is 4 × 12 = 48 inche..."
+        ],
+        "best_thought_preview": "The length of the wire is 4 feet. Since 1 foot is 12 inches, the total length of the wire in inches is 4 × 12 = 48 inches. Each piece of wire is 6 inches long. The number of pieces is 48 ÷ 6 = 8. So, ...",
+        "best_state_preview": "The length of the wire is 4 feet. Since 1 foot is 12 inches, the total length of the wire in inches is 4 × 12 = 48 inches. Each piece of wire is 6 inches long. The number of pieces is 48 ÷ 6 = 8. So, ..."
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "120",
+        "correct": false,
+        "latency_sec": 50.90272992104292,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 10,
+        "node_count": 11,
+        "best_node_id": "n8",
+        "path_node_ids": [
+          "root",
+          "n8"
+        ],
+        "path_thoughts_preview": [
+          "The total number of units in the building is 15 floors × 8 units/floor = 120 units."
+        ],
+        "best_thought_preview": "The total number of units in the building is 15 floors × 8 units/floor = 120 units.",
+        "best_state_preview": "The total number of units in the building is 15 floors × 8 units/floor = 120 units."
+      }
+    ],
+    "ts_sft": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 19.643728848546743
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 11.8938690982759
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "130",
+        "correct": false,
+        "latency_sec": 11.373484447598457
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "540",
+        "correct": true,
+        "latency_sec": 11.758051857352257
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 11.76833040267229
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 11.831681825220585
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.639679607003927
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 11.391172405332327
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "45",
+        "correct": true,
+        "latency_sec": 11.310823936015368
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "460",
+        "correct": true,
+        "latency_sec": 11.36078330501914
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "366",
+        "correct": true,
+        "latency_sec": 11.486947655677795
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 12.07112542539835
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 13.36266915500164
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 15.337848786264658
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "65",
+        "correct": false,
+        "latency_sec": 11.885959208011627
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.664834063500166
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 11.80843747407198
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "42000",
+        "correct": false,
+        "latency_sec": 11.410086579620838
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 11.684616819024086
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 11.847629178315401
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 11.917557448148727
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 11.564340960234404
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 11.311574280261993
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 12.012148290872574
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 11.986133690923452
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "2",
+        "correct": true,
+        "latency_sec": 12.13637812063098
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 12.144147638231516
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 13.939916603267193
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 12.46640607714653
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 11.861892089247704
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "109",
+        "correct": true,
+        "latency_sec": 12.139133460819721
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 11.805668964982033
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "35",
+        "correct": true,
+        "latency_sec": 12.221175830811262
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "110",
+        "correct": false,
+        "latency_sec": 12.130939915776253
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 12.66628210619092
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 13.381106331944466
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75",
+        "correct": true,
+        "latency_sec": 12.064414788037539
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "195",
+        "correct": false,
+        "latency_sec": 12.24983623996377
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 11.226631708443165
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "1.5",
+        "correct": false,
+        "latency_sec": 11.382189348340034
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 12.161466673016548
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "1000",
+        "correct": false,
+        "latency_sec": 12.500474598258734
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 12.390020202845335
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 12.311618845909834
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 12.305458787828684
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 11.841974511742592
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "23",
+        "correct": false,
+        "latency_sec": 12.418919950723648
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 12.131809528917074
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "200000",
+        "correct": false,
+        "latency_sec": 12.150459825992584
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 12.60819136351347
+      },
+      {
+        "index": 50,
+        "gold": "294",
+        "prediction": "294",
+        "correct": true,
+        "latency_sec": 11.311237744987011
+      },
+      {
+        "index": 51,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 11.150941852480173
+      },
+      {
+        "index": 52,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 11.150794230401516
+      },
+      {
+        "index": 53,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 11.55400763452053
+      },
+      {
+        "index": 54,
+        "gold": "40",
+        "prediction": "37",
+        "correct": false,
+        "latency_sec": 13.940804291516542
+      },
+      {
+        "index": 55,
+        "gold": "14",
+        "prediction": "13",
+        "correct": false,
+        "latency_sec": 12.256301671266556
+      },
+      {
+        "index": 56,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 12.3317862264812
+      },
+      {
+        "index": 57,
+        "gold": "83",
+        "prediction": "5000",
+        "correct": false,
+        "latency_sec": 11.398033369332552
+      },
+      {
+        "index": 58,
+        "gold": "57",
+        "prediction": "51",
+        "correct": false,
+        "latency_sec": 11.318397857248783
+      },
+      {
+        "index": 59,
+        "gold": "187",
+        "prediction": "193",
+        "correct": false,
+        "latency_sec": 11.19828661903739
+      },
+      {
+        "index": 60,
+        "gold": "17",
+        "prediction": "17",
+        "correct": true,
+        "latency_sec": 11.31995426863432
+      },
+      {
+        "index": 61,
+        "gold": "1430",
+        "prediction": "1430",
+        "correct": true,
+        "latency_sec": 11.251308098435402
+      },
+      {
+        "index": 62,
+        "gold": "25000",
+        "prediction": "15000",
+        "correct": false,
+        "latency_sec": 11.451033148914576
+      },
+      {
+        "index": 63,
+        "gold": "1596",
+        "prediction": "1050",
+        "correct": false,
+        "latency_sec": 11.294330205768347
+      },
+      {
+        "index": 64,
+        "gold": "300",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 13.739357225596905
+      },
+      {
+        "index": 65,
+        "gold": "36",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 11.771768178790808
+      },
+      {
+        "index": 66,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 11.769963882863522
+      },
+      {
+        "index": 67,
+        "gold": "595",
+        "prediction": "490",
+        "correct": false,
+        "latency_sec": 11.882307156920433
+      },
+      {
+        "index": 68,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 11.763449355959892
+      },
+      {
+        "index": 69,
+        "gold": "60",
+        "prediction": "6",
+        "correct": false,
+        "latency_sec": 12.57207527384162
+      },
+      {
+        "index": 70,
+        "gold": "7425",
+        "prediction": "74",
+        "correct": false,
+        "latency_sec": 12.577790960669518
+      },
+      {
+        "index": 71,
+        "gold": "60",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.761272758245468
+      },
+      {
+        "index": 72,
+        "gold": "221",
+        "prediction": "217",
+        "correct": false,
+        "latency_sec": 12.057268839329481
+      },
+      {
+        "index": 73,
+        "gold": "255",
+        "prediction": "275",
+        "correct": false,
+        "latency_sec": 11.083077169954777
+      },
+      {
+        "index": 74,
+        "gold": "88",
+        "prediction": "88",
+        "correct": true,
+        "latency_sec": 11.919680085033178
+      },
+      {
+        "index": 75,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 11.727487970143557
+      },
+      {
+        "index": 76,
+        "gold": "5",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.698314882814884
+      },
+      {
+        "index": 77,
+        "gold": "100",
+        "prediction": "100",
+        "correct": true,
+        "latency_sec": 11.318761836737394
+      },
+      {
+        "index": 78,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 11.183555193245411
+      },
+      {
+        "index": 79,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 11.950130395591259
+      },
+      {
+        "index": 80,
+        "gold": "10",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 11.450186982750893
+      },
+      {
+        "index": 81,
+        "gold": "17",
+        "prediction": "17",
+        "correct": true,
+        "latency_sec": 12.262285001575947
+      },
+      {
+        "index": 82,
+        "gold": "623",
+        "prediction": "62",
+        "correct": false,
+        "latency_sec": 12.169500771909952
+      },
+      {
+        "index": 83,
+        "gold": "600",
+        "prediction": "80",
+        "correct": false,
+        "latency_sec": 13.653590016067028
+      },
+      {
+        "index": 84,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 14.45002818107605
+      },
+      {
+        "index": 85,
+        "gold": "44",
+        "prediction": "11",
+        "correct": false,
+        "latency_sec": 12.1103156208992
+      },
+      {
+        "index": 86,
+        "gold": "22",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.908636186271906
+      },
+      {
+        "index": 87,
+        "gold": "9360",
+        "prediction": "798.6",
+        "correct": false,
+        "latency_sec": 11.78115814551711
+      },
+      {
+        "index": 88,
+        "gold": "8000",
+        "prediction": "800",
+        "correct": false,
+        "latency_sec": 11.688382484018803
+      },
+      {
+        "index": 89,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 11.974835459142923
+      },
+      {
+        "index": 90,
+        "gold": "225",
+        "prediction": "225",
+        "correct": true,
+        "latency_sec": 11.76006181538105
+      },
+      {
+        "index": 91,
+        "gold": "28",
+        "prediction": "28",
+        "correct": true,
+        "latency_sec": 12.149015333503485
+      },
+      {
+        "index": 92,
+        "gold": "4",
+        "prediction": "9",
+        "correct": false,
+        "latency_sec": 12.090573519468307
+      },
+      {
+        "index": 93,
+        "gold": "36",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.83704212680459
+      },
+      {
+        "index": 94,
+        "gold": "348",
+        "prediction": "348",
+        "correct": true,
+        "latency_sec": 11.908855807036161
+      },
+      {
+        "index": 95,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 11.770930178463459
+      },
+      {
+        "index": 96,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 11.931919075548649
+      },
+      {
+        "index": 97,
+        "gold": "12",
+        "prediction": "12",
+        "correct": true,
+        "latency_sec": 11.149925593286753
+      },
+      {
+        "index": 98,
+        "gold": "5",
+        "prediction": "30",
+        "correct": false,
+        "latency_sec": 11.324505254626274
+      },
+      {
+        "index": 99,
+        "gold": "58",
+        "prediction": "100",
+        "correct": false,
+        "latency_sec": 11.248568903654814
+      },
+      {
+        "index": 100,
+        "gold": "175",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 11.381985440850258
+      },
+      {
+        "index": 101,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 15.442914355546236
+      },
+      {
+        "index": 102,
+        "gold": "26",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 12.061656564474106
+      },
+      {
+        "index": 103,
+        "gold": "140",
+        "prediction": "140",
+        "correct": true,
+        "latency_sec": 11.9279516749084
+      },
+      {
+        "index": 104,
+        "gold": "500",
+        "prediction": "500",
+        "correct": true,
+        "latency_sec": 11.489206407219172
+      },
+      {
+        "index": 105,
+        "gold": "20",
+        "prediction": "36",
+        "correct": false,
+        "latency_sec": 11.502277631312609
+      },
+      {
+        "index": 106,
+        "gold": "72",
+        "prediction": "300",
+        "correct": false,
+        "latency_sec": 11.304354175925255
+      },
+      {
+        "index": 107,
+        "gold": "3",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.909133274108171
+      },
+      {
+        "index": 108,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 11.690789461135864
+      },
+      {
+        "index": 109,
+        "gold": "28",
+        "prediction": "28.00",
+        "correct": false,
+        "latency_sec": 11.74980940669775
+      },
+      {
+        "index": 110,
+        "gold": "45",
+        "prediction": "100",
+        "correct": false,
+        "latency_sec": 11.401956602931023
+      },
+      {
+        "index": 111,
+        "gold": "16",
+        "prediction": "128",
+        "correct": false,
+        "latency_sec": 11.566425833851099
+      },
+      {
+        "index": 112,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 11.660615004599094
+      },
+      {
+        "index": 113,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 11.864729348570108
+      },
+      {
+        "index": 114,
+        "gold": "6",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 11.69426915422082
+      },
+      {
+        "index": 115,
+        "gold": "90",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 11.512500461190939
+      },
+      {
+        "index": 116,
+        "gold": "42",
+        "prediction": "42",
+        "correct": true,
+        "latency_sec": 12.194961223751307
+      },
+      {
+        "index": 117,
+        "gold": "360",
+        "prediction": "360",
+        "correct": true,
+        "latency_sec": 12.372655227780342
+      },
+      {
+        "index": 118,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 15.79830438643694
+      },
+      {
+        "index": 119,
+        "gold": "95200",
+        "prediction": "6",
+        "correct": false,
+        "latency_sec": 12.900683667510748
+      },
+      {
+        "index": 120,
+        "gold": "240",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 12.02532859146595
+      },
+      {
+        "index": 121,
+        "gold": "27",
+        "prediction": "27",
+        "correct": true,
+        "latency_sec": 11.870522655546665
+      },
+      {
+        "index": 122,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 11.7465092651546
+      },
+      {
+        "index": 123,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 11.792936988174915
+      },
+      {
+        "index": 124,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 12.764287047088146
+      },
+      {
+        "index": 125,
+        "gold": "10",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.780437298119068
+      },
+      {
+        "index": 126,
+        "gold": "82",
+        "prediction": "82",
+        "correct": true,
+        "latency_sec": 11.361028254032135
+      },
+      {
+        "index": 127,
+        "gold": "120",
+        "prediction": "120",
+        "correct": true,
+        "latency_sec": 11.294798880815506
+      },
+      {
+        "index": 128,
+        "gold": "880",
+        "prediction": "880",
+        "correct": true,
+        "latency_sec": 11.364326026290655
+      },
+      {
+        "index": 129,
+        "gold": "10000",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 11.200402922928333
+      },
+      {
+        "index": 130,
+        "gold": "30",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 11.50271100923419
+      },
+      {
+        "index": 131,
+        "gold": "940",
+        "prediction": "94",
+        "correct": false,
+        "latency_sec": 11.056382682174444
+      },
+      {
+        "index": 132,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 11.284554570913315
+      },
+      {
+        "index": 133,
+        "gold": "13",
+        "prediction": "13",
+        "correct": true,
+        "latency_sec": 11.28536107391119
+      },
+      {
+        "index": 134,
+        "gold": "720",
+        "prediction": "720",
+        "correct": true,
+        "latency_sec": 11.30730540677905
+      },
+      {
+        "index": 135,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 11.15128069370985
+      },
+      {
+        "index": 136,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 11.360398087650537
+      },
+      {
+        "index": 137,
+        "gold": "29",
+        "prediction": "29.00",
+        "correct": false,
+        "latency_sec": 11.21204236522317
+      },
+      {
+        "index": 138,
+        "gold": "105",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 11.624220434576273
+      },
+      {
+        "index": 139,
+        "gold": "70",
+        "prediction": "22",
+        "correct": false,
+        "latency_sec": 11.864097189158201
+      },
+      {
+        "index": 140,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 12.229623652994633
+      },
+      {
+        "index": 141,
+        "gold": "400",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.971187692135572
+      },
+      {
+        "index": 142,
+        "gold": "140",
+        "prediction": "140",
+        "correct": true,
+        "latency_sec": 11.821881663054228
+      },
+      {
+        "index": 143,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 12.480387032032013
+      },
+      {
+        "index": 144,
+        "gold": "20",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 12.187733560800552
+      },
+      {
+        "index": 145,
+        "gold": "4000",
+        "prediction": "4000",
+        "correct": true,
+        "latency_sec": 12.43996899202466
+      },
+      {
+        "index": 146,
+        "gold": "2",
+        "prediction": "2125",
+        "correct": false,
+        "latency_sec": 11.97756316140294
+      },
+      {
+        "index": 147,
+        "gold": "75",
+        "prediction": "15",
+        "correct": false,
+        "latency_sec": 11.91123666614294
+      },
+      {
+        "index": 148,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 11.872610609978437
+      },
+      {
+        "index": 149,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 11.676313824951649
+      },
+      {
+        "index": 150,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 12.010255467146635
+      },
+      {
+        "index": 151,
+        "gold": "5",
+        "prediction": "5.00",
+        "correct": false,
+        "latency_sec": 12.478685732930899
+      },
+      {
+        "index": 152,
+        "gold": "4",
+        "prediction": "4.00",
+        "correct": false,
+        "latency_sec": 14.904513899236917
+      },
+      {
+        "index": 153,
+        "gold": "48",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 11.459553886204958
+      },
+      {
+        "index": 154,
+        "gold": "272",
+        "prediction": "272",
+        "correct": true,
+        "latency_sec": 11.048066973686218
+      },
+      {
+        "index": 155,
+        "gold": "280",
+        "prediction": "280",
+        "correct": true,
+        "latency_sec": 11.230991143733263
+      },
+      {
+        "index": 156,
+        "gold": "1400",
+        "prediction": "140",
+        "correct": false,
+        "latency_sec": 11.150000989437103
+      },
+      {
+        "index": 157,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 11.108416646718979
+      },
+      {
+        "index": 158,
+        "gold": "34",
+        "prediction": "35",
+        "correct": false,
+        "latency_sec": 11.481135681271553
+      },
+      {
+        "index": 159,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 11.804100804030895
+      },
+      {
+        "index": 160,
+        "gold": "16",
+        "prediction": "17",
+        "correct": false,
+        "latency_sec": 11.371127463877201
+      },
+      {
+        "index": 161,
+        "gold": "32",
+        "prediction": "32",
+        "correct": true,
+        "latency_sec": 11.109953496605158
+      },
+      {
+        "index": 162,
+        "gold": "92",
+        "prediction": "20",
+        "correct": false,
+        "latency_sec": 11.789489783346653
+      },
+      {
+        "index": 163,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 11.788781061768532
+      },
+      {
+        "index": 164,
+        "gold": "15",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 12.024046901613474
+      },
+      {
+        "index": 165,
+        "gold": "77",
+        "prediction": "77",
+        "correct": true,
+        "latency_sec": 11.84639697149396
+      },
+      {
+        "index": 166,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 11.945031985640526
+      },
+      {
+        "index": 167,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 12.156993236392736
+      },
+      {
+        "index": 168,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 11.85456806793809
+      },
+      {
+        "index": 169,
+        "gold": "120",
+        "prediction": "195",
+        "correct": false,
+        "latency_sec": 11.864559546113014
+      },
+      {
+        "index": 170,
+        "gold": "150",
+        "prediction": "150",
+        "correct": true,
+        "latency_sec": 11.758043222129345
+      },
+      {
+        "index": 171,
+        "gold": "1210",
+        "prediction": "1280",
+        "correct": false,
+        "latency_sec": 11.988154400140047
+      },
+      {
+        "index": 172,
+        "gold": "51",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 11.738479774445295
+      },
+      {
+        "index": 173,
+        "gold": "18000",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 12.018915224820375
+      },
+      {
+        "index": 174,
+        "gold": "95",
+        "prediction": "95",
+        "correct": true,
+        "latency_sec": 12.06121464073658
+      },
+      {
+        "index": 175,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 12.068536072969437
+      },
+      {
+        "index": 176,
+        "gold": "100",
+        "prediction": "120",
+        "correct": false,
+        "latency_sec": 11.98281716927886
+      },
+      {
+        "index": 177,
+        "gold": "350",
+        "prediction": "",
+        "correct": false,
+        "latency_sec": 12.049025356769562
+      },
+      {
+        "index": 178,
+        "gold": "122",
+        "prediction": "114",
+        "correct": false,
+        "latency_sec": 11.908888790756464
+      },
+      {
+        "index": 179,
+        "gold": "130",
+        "prediction": "130",
+        "correct": true,
+        "latency_sec": 11.272356055676937
+      },
+      {
+        "index": 180,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 11.573278747498989
+      },
+      {
+        "index": 181,
+        "gold": "160",
+        "prediction": "160",
+        "correct": true,
+        "latency_sec": 11.428314626216888
+      },
+      {
+        "index": 182,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.431568045169115
+      },
+      {
+        "index": 183,
+        "gold": "2",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.503397591412067
+      },
+      {
+        "index": 184,
+        "gold": "25",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.511894017457962
+      },
+      {
+        "index": 185,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 11.802462249994278
+      },
+      {
+        "index": 186,
+        "gold": "5",
+        "prediction": "160",
+        "correct": false,
+        "latency_sec": 12.242643296718597
+      },
+      {
+        "index": 187,
+        "gold": "106",
+        "prediction": "106.12",
+        "correct": false,
+        "latency_sec": 12.388673339039087
+      },
+      {
+        "index": 188,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 12.884096194058657
+      },
+      {
+        "index": 189,
+        "gold": "34",
+        "prediction": "23",
+        "correct": false,
+        "latency_sec": 12.088752806186676
+      },
+      {
+        "index": 190,
+        "gold": "360",
+        "prediction": "360",
+        "correct": true,
+        "latency_sec": 13.130746759474277
+      },
+      {
+        "index": 191,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 12.207625295966864
+      },
+      {
+        "index": 192,
+        "gold": "91",
+        "prediction": "91",
+        "correct": true,
+        "latency_sec": 12.385391544550657
+      },
+      {
+        "index": 193,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 12.496741484850645
+      },
+      {
+        "index": 194,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 12.529204834252596
+      },
+      {
+        "index": 195,
+        "gold": "12",
+        "prediction": "12",
+        "correct": true,
+        "latency_sec": 12.47167318686843
+      },
+      {
+        "index": 196,
+        "gold": "120",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 12.347886610776186
+      },
+      {
+        "index": 197,
+        "gold": "6277",
+        "prediction": "6277",
+        "correct": true,
+        "latency_sec": 11.751148603856564
+      },
+      {
+        "index": 198,
+        "gold": "320",
+        "prediction": "300",
+        "correct": false,
+        "latency_sec": 12.294954873621464
+      },
+      {
+        "index": 199,
+        "gold": "7500",
+        "prediction": "1000",
+        "correct": false,
+        "latency_sec": 11.78474085777998
+      }
+    ],
+    "cpo": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 18.10396806523204
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 11.816090755164623
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.658237628638744
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "540",
+        "correct": true,
+        "latency_sec": 12.407015938311815
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 12.937622368335724
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 12.186982177197933
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.766223084181547
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 11.970227345824242
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "45",
+        "correct": true,
+        "latency_sec": 11.957876343280077
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "460",
+        "correct": true,
+        "latency_sec": 12.001131806522608
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 11.961141489446163
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 11.951323833316565
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "10.5",
+        "correct": false,
+        "latency_sec": 11.87721749022603
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 11.40918255597353
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "65",
+        "correct": false,
+        "latency_sec": 11.374684236943722
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "125",
+        "correct": true,
+        "latency_sec": 11.98728334531188
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 11.962716866284609
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "42000",
+        "correct": false,
+        "latency_sec": 12.154255762696266
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 11.930957723408937
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 12.036832820624113
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 11.666349120438099
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 11.979267448186874
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 11.322430685162544
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 11.193721357733011
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 11.696747697889805
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "2",
+        "correct": true,
+        "latency_sec": 11.489520199596882
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "243",
+        "correct": true,
+        "latency_sec": 11.751044280827045
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 11.690955199301243
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 11.765913095325232
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 12.058750219643116
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "109",
+        "correct": true,
+        "latency_sec": 14.268611714243889
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 14.392809759825468
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "252",
+        "correct": false,
+        "latency_sec": 11.946034505963326
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 11.987485874444246
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.694415058940649
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 11.691065307706594
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75",
+        "correct": true,
+        "latency_sec": 11.453977230936289
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.422564383596182
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 11.45459208637476
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "1.5",
+        "correct": false,
+        "latency_sec": 11.482093192636967
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 11.841295335441828
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "200",
+        "correct": true,
+        "latency_sec": 11.650326047092676
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 11.99148515239358
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 11.997586004436016
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 12.127458710223436
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 11.823538936674595
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "163",
+        "correct": true,
+        "latency_sec": 11.910394433885813
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "200",
+        "correct": false,
+        "latency_sec": 12.079117480665445
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "20000",
+        "correct": false,
+        "latency_sec": 11.94878089055419
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 12.018201187252998
+      },
+      {
+        "index": 50,
+        "gold": "294",
+        "prediction": "294",
+        "correct": true,
+        "latency_sec": 12.010412152856588
+      },
+      {
+        "index": 51,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 11.78605104982853
+      },
+      {
+        "index": 52,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 11.89953600242734
+      },
+      {
+        "index": 53,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 11.949273589998484
+      },
+      {
+        "index": 54,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 11.920269452035427
+      },
+      {
+        "index": 55,
+        "gold": "14",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 14.004952039569616
+      },
+      {
+        "index": 56,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 12.608786776661873
+      },
+      {
+        "index": 57,
+        "gold": "83",
+        "prediction": "5000",
+        "correct": false,
+        "latency_sec": 13.820429868996143
+      },
+      {
+        "index": 58,
+        "gold": "57",
+        "prediction": "51",
+        "correct": false,
+        "latency_sec": 11.83818630501628
+      },
+      {
+        "index": 59,
+        "gold": "187",
+        "prediction": "193",
+        "correct": false,
+        "latency_sec": 11.94413011521101
+      },
+      {
+        "index": 60,
+        "gold": "17",
+        "prediction": "17",
+        "correct": true,
+        "latency_sec": 12.039139527827501
+      },
+      {
+        "index": 61,
+        "gold": "1430",
+        "prediction": "1540",
+        "correct": false,
+        "latency_sec": 11.98368065804243
+      },
+      {
+        "index": 62,
+        "gold": "25000",
+        "prediction": "15000",
+        "correct": false,
+        "latency_sec": 11.974899258464575
+      },
+      {
+        "index": 63,
+        "gold": "1596",
+        "prediction": "75",
+        "correct": false,
+        "latency_sec": 12.242241527885199
+      },
+      {
+        "index": 64,
+        "gold": "300",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 12.255024515092373
+      },
+      {
+        "index": 65,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 12.085700511932373
+      },
+      {
+        "index": 66,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 12.07127196714282
+      },
+      {
+        "index": 67,
+        "gold": "595",
+        "prediction": "59",
+        "correct": false,
+        "latency_sec": 11.626088749617338
+      },
+      {
+        "index": 68,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 11.688439153134823
+      },
+      {
+        "index": 69,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 12.009243670850992
+      },
+      {
+        "index": 70,
+        "gold": "7425",
+        "prediction": "74",
+        "correct": false,
+        "latency_sec": 11.888512469828129
+      },
+      {
+        "index": 71,
+        "gold": "60",
+        "prediction": "72",
+        "correct": false,
+        "latency_sec": 13.626063700765371
+      },
+      {
+        "index": 72,
+        "gold": "221",
+        "prediction": "217",
+        "correct": false,
+        "latency_sec": 12.099807791411877
+      },
+      {
+        "index": 73,
+        "gold": "255",
+        "prediction": "275",
+        "correct": false,
+        "latency_sec": 12.433592606335878
+      },
+      {
+        "index": 74,
+        "gold": "88",
+        "prediction": "88",
+        "correct": true,
+        "latency_sec": 12.074556354433298
+      },
+      {
+        "index": 75,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 11.973687369376421
+      },
+      {
+        "index": 76,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 12.157537642866373
+      },
+      {
+        "index": 77,
+        "gold": "100",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 12.070245031267405
+      },
+      {
+        "index": 78,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 11.904959991574287
+      },
+      {
+        "index": 79,
+        "gold": "70",
+        "prediction": "64",
+        "correct": false,
+        "latency_sec": 12.300578378140926
+      },
+      {
+        "index": 80,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 12.048814613372087
+      },
+      {
+        "index": 81,
+        "gold": "17",
+        "prediction": "17",
+        "correct": true,
+        "latency_sec": 12.898152682930231
+      },
+      {
+        "index": 82,
+        "gold": "623",
+        "prediction": "525",
+        "correct": false,
+        "latency_sec": 15.62116888165474
+      },
+      {
+        "index": 83,
+        "gold": "600",
+        "prediction": "144",
+        "correct": false,
+        "latency_sec": 12.34992354363203
+      },
+      {
+        "index": 84,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 12.133433315902948
+      },
+      {
+        "index": 85,
+        "gold": "44",
+        "prediction": "11",
+        "correct": false,
+        "latency_sec": 12.4871871098876
+      },
+      {
+        "index": 86,
+        "gold": "22",
+        "prediction": "18",
+        "correct": false,
+        "latency_sec": 11.888901356607676
+      },
+      {
+        "index": 87,
+        "gold": "9360",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 12.285324700176716
+      },
+      {
+        "index": 88,
+        "gold": "8000",
+        "prediction": "8000",
+        "correct": true,
+        "latency_sec": 13.070736214518547
+      },
+      {
+        "index": 89,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 12.009851332753897
+      },
+      {
+        "index": 90,
+        "gold": "225",
+        "prediction": "225",
+        "correct": true,
+        "latency_sec": 12.60833264887333
+      },
+      {
+        "index": 91,
+        "gold": "28",
+        "prediction": "28",
+        "correct": true,
+        "latency_sec": 12.10129127651453
+      },
+      {
+        "index": 92,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 14.360218968242407
+      },
+      {
+        "index": 93,
+        "gold": "36",
+        "prediction": "36",
+        "correct": true,
+        "latency_sec": 14.189754951745272
+      },
+      {
+        "index": 94,
+        "gold": "348",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 12.13649308308959
+      },
+      {
+        "index": 95,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 12.411027237772942
+      },
+      {
+        "index": 96,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 12.466159272938967
+      },
+      {
+        "index": 97,
+        "gold": "12",
+        "prediction": "12",
+        "correct": true,
+        "latency_sec": 12.449829250574112
+      },
+      {
+        "index": 98,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 12.647735949605703
+      },
+      {
+        "index": 99,
+        "gold": "58",
+        "prediction": "100",
+        "correct": false,
+        "latency_sec": 12.038418356329203
+      },
+      {
+        "index": 100,
+        "gold": "175",
+        "prediction": "175",
+        "correct": true,
+        "latency_sec": 11.698117699474096
+      },
+      {
+        "index": 101,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 11.439031705260277
+      },
+      {
+        "index": 102,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 12.00369879975915
+      },
+      {
+        "index": 103,
+        "gold": "140",
+        "prediction": "140",
+        "correct": true,
+        "latency_sec": 11.3070611320436
+      },
+      {
+        "index": 104,
+        "gold": "500",
+        "prediction": "500",
+        "correct": true,
+        "latency_sec": 11.796956289559603
+      },
+      {
+        "index": 105,
+        "gold": "20",
+        "prediction": "36",
+        "correct": false,
+        "latency_sec": 12.20176101475954
+      },
+      {
+        "index": 106,
+        "gold": "72",
+        "prediction": "300",
+        "correct": false,
+        "latency_sec": 11.778592742979527
+      },
+      {
+        "index": 107,
+        "gold": "3",
+        "prediction": "7",
+        "correct": false,
+        "latency_sec": 12.452686585485935
+      },
+      {
+        "index": 108,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 12.104564990848303
+      },
+      {
+        "index": 109,
+        "gold": "28",
+        "prediction": "28.00",
+        "correct": false,
+        "latency_sec": 12.032831203192472
+      },
+      {
+        "index": 110,
+        "gold": "45",
+        "prediction": "100",
+        "correct": false,
+        "latency_sec": 12.134590197354555
+      },
+      {
+        "index": 111,
+        "gold": "16",
+        "prediction": "8",
+        "correct": false,
+        "latency_sec": 12.06258000060916
+      },
+      {
+        "index": 112,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 11.897656477987766
+      },
+      {
+        "index": 113,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 11.934813134372234
+      },
+      {
+        "index": 114,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 13.932685241103172
+      },
+      {
+        "index": 115,
+        "gold": "90",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 14.102453634142876
+      },
+      {
+        "index": 116,
+        "gold": "42",
+        "prediction": "42",
+        "correct": true,
+        "latency_sec": 11.984312321990728
+      },
+      {
+        "index": 117,
+        "gold": "360",
+        "prediction": "360",
+        "correct": true,
+        "latency_sec": 11.931200549006462
+      },
+      {
+        "index": 118,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 12.181491997092962
+      },
+      {
+        "index": 119,
+        "gold": "95200",
+        "prediction": "1.3",
+        "correct": false,
+        "latency_sec": 12.056009624153376
+      },
+      {
+        "index": 120,
+        "gold": "240",
+        "prediction": "240",
+        "correct": true,
+        "latency_sec": 11.988049995154142
+      },
+      {
+        "index": 121,
+        "gold": "27",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.474651273339987
+      },
+      {
+        "index": 122,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 13.462882414460182
+      },
+      {
+        "index": 123,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 14.24626087024808
+      },
+      {
+        "index": 124,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 11.948048055171967
+      },
+      {
+        "index": 125,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 11.947314765304327
+      },
+      {
+        "index": 126,
+        "gold": "82",
+        "prediction": "82",
+        "correct": true,
+        "latency_sec": 12.08459047228098
+      },
+      {
+        "index": 127,
+        "gold": "120",
+        "prediction": "120",
+        "correct": true,
+        "latency_sec": 11.83583128452301
+      },
+      {
+        "index": 128,
+        "gold": "880",
+        "prediction": "8",
+        "correct": false,
+        "latency_sec": 11.858048859983683
+      },
+      {
+        "index": 129,
+        "gold": "10000",
+        "prediction": "000",
+        "correct": false,
+        "latency_sec": 11.540372181683779
+      },
+      {
+        "index": 130,
+        "gold": "30",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 11.442002579569817
+      },
+      {
+        "index": 131,
+        "gold": "940",
+        "prediction": "940",
+        "correct": true,
+        "latency_sec": 11.590201575309038
+      },
+      {
+        "index": 132,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 11.372571915388107
+      },
+      {
+        "index": 133,
+        "gold": "13",
+        "prediction": "13",
+        "correct": true,
+        "latency_sec": 11.522078849375248
+      },
+      {
+        "index": 134,
+        "gold": "720",
+        "prediction": "720",
+        "correct": true,
+        "latency_sec": 11.529389724135399
+      },
+      {
+        "index": 135,
+        "gold": "40",
+        "prediction": "40",
+        "correct": true,
+        "latency_sec": 11.510387361049652
+      },
+      {
+        "index": 136,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 11.563132338225842
+      },
+      {
+        "index": 137,
+        "gold": "29",
+        "prediction": "29.00",
+        "correct": false,
+        "latency_sec": 11.763619933277369
+      },
+      {
+        "index": 138,
+        "gold": "105",
+        "prediction": "70",
+        "correct": false,
+        "latency_sec": 11.917477559298277
+      },
+      {
+        "index": 139,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 11.958420887589455
+      },
+      {
+        "index": 140,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 11.970122367143631
+      },
+      {
+        "index": 141,
+        "gold": "400",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.927240908145905
+      },
+      {
+        "index": 142,
+        "gold": "140",
+        "prediction": "140",
+        "correct": true,
+        "latency_sec": 11.958389945328236
+      },
+      {
+        "index": 143,
+        "gold": "16",
+        "prediction": "11",
+        "correct": false,
+        "latency_sec": 11.887592852115631
+      },
+      {
+        "index": 144,
+        "gold": "20",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 12.12587833032012
+      },
+      {
+        "index": 145,
+        "gold": "4000",
+        "prediction": "4000",
+        "correct": true,
+        "latency_sec": 12.20401557162404
+      },
+      {
+        "index": 146,
+        "gold": "2",
+        "prediction": "2125",
+        "correct": false,
+        "latency_sec": 12.012695036828518
+      },
+      {
+        "index": 147,
+        "gold": "75",
+        "prediction": "6",
+        "correct": false,
+        "latency_sec": 11.87599803879857
+      },
+      {
+        "index": 148,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 11.88841999322176
+      },
+      {
+        "index": 149,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 11.555393446236849
+      },
+      {
+        "index": 150,
+        "gold": "4",
+        "prediction": "4",
+        "correct": true,
+        "latency_sec": 11.773895975202322
+      },
+      {
+        "index": 151,
+        "gold": "5",
+        "prediction": "5.00",
+        "correct": false,
+        "latency_sec": 11.65876568108797
+      },
+      {
+        "index": 152,
+        "gold": "4",
+        "prediction": "4.00",
+        "correct": false,
+        "latency_sec": 11.969722267240286
+      },
+      {
+        "index": 153,
+        "gold": "48",
+        "prediction": "14",
+        "correct": false,
+        "latency_sec": 11.96498478576541
+      },
+      {
+        "index": 154,
+        "gold": "272",
+        "prediction": "272",
+        "correct": true,
+        "latency_sec": 11.87192064896226
+      },
+      {
+        "index": 155,
+        "gold": "280",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.948409672826529
+      },
+      {
+        "index": 156,
+        "gold": "1400",
+        "prediction": "1400",
+        "correct": true,
+        "latency_sec": 12.032985083758831
+      },
+      {
+        "index": 157,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 12.021602615714073
+      },
+      {
+        "index": 158,
+        "gold": "34",
+        "prediction": "34",
+        "correct": true,
+        "latency_sec": 11.739425119012594
+      },
+      {
+        "index": 159,
+        "gold": "15",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.518921684473753
+      },
+      {
+        "index": 160,
+        "gold": "16",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 11.63185105100274
+      },
+      {
+        "index": 161,
+        "gold": "32",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 11.293002687394619
+      },
+      {
+        "index": 162,
+        "gold": "92",
+        "prediction": "1.2",
+        "correct": false,
+        "latency_sec": 11.787432130426168
+      },
+      {
+        "index": 163,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 11.313687648624182
+      },
+      {
+        "index": 164,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 11.36466808244586
+      },
+      {
+        "index": 165,
+        "gold": "77",
+        "prediction": "77",
+        "correct": true,
+        "latency_sec": 11.372607860714197
+      },
+      {
+        "index": 166,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 11.298816218972206
+      },
+      {
+        "index": 167,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 12.00478257983923
+      },
+      {
+        "index": 168,
+        "gold": "18",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.314658246934414
+      },
+      {
+        "index": 169,
+        "gold": "120",
+        "prediction": "62500",
+        "correct": false,
+        "latency_sec": 11.536247227340937
+      },
+      {
+        "index": 170,
+        "gold": "150",
+        "prediction": "150",
+        "correct": true,
+        "latency_sec": 11.836546666920185
+      },
+      {
+        "index": 171,
+        "gold": "1210",
+        "prediction": "1340",
+        "correct": false,
+        "latency_sec": 11.837845958769321
+      },
+      {
+        "index": 172,
+        "gold": "51",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 11.300493314862251
+      },
+      {
+        "index": 173,
+        "gold": "18000",
+        "prediction": "1500",
+        "correct": false,
+        "latency_sec": 13.200091063976288
+      },
+      {
+        "index": 174,
+        "gold": "95",
+        "prediction": "95",
+        "correct": true,
+        "latency_sec": 11.423742428421974
+      },
+      {
+        "index": 175,
+        "gold": "15",
+        "prediction": "15",
+        "correct": true,
+        "latency_sec": 11.233586098998785
+      },
+      {
+        "index": 176,
+        "gold": "100",
+        "prediction": "120",
+        "correct": false,
+        "latency_sec": 11.24825944378972
+      },
+      {
+        "index": 177,
+        "gold": "350",
+        "prediction": "",
+        "correct": false,
+        "latency_sec": 11.24880988523364
+      },
+      {
+        "index": 178,
+        "gold": "122",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.04420256614685
+      },
+      {
+        "index": 179,
+        "gold": "130",
+        "prediction": "130",
+        "correct": true,
+        "latency_sec": 11.602141462266445
+      },
+      {
+        "index": 180,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 11.885372173041105
+      },
+      {
+        "index": 181,
+        "gold": "160",
+        "prediction": "160",
+        "correct": true,
+        "latency_sec": 12.245339658111334
+      },
+      {
+        "index": 182,
+        "gold": "23",
+        "prediction": "23",
+        "correct": true,
+        "latency_sec": 11.602815929800272
+      },
+      {
+        "index": 183,
+        "gold": "2",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.519703302532434
+      },
+      {
+        "index": 184,
+        "gold": "25",
+        "prediction": "100",
+        "correct": false,
+        "latency_sec": 11.344498910009861
+      },
+      {
+        "index": 185,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 11.348229620605707
+      },
+      {
+        "index": 186,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 11.300003800541162
+      },
+      {
+        "index": 187,
+        "gold": "106",
+        "prediction": "106.1",
+        "correct": false,
+        "latency_sec": 11.224543582648039
+      },
+      {
+        "index": 188,
+        "gold": "50",
+        "prediction": "50",
+        "correct": true,
+        "latency_sec": 11.111211638897657
+      },
+      {
+        "index": 189,
+        "gold": "34",
+        "prediction": "23",
+        "correct": false,
+        "latency_sec": 11.20452130958438
+      },
+      {
+        "index": 190,
+        "gold": "360",
+        "prediction": "360",
+        "correct": true,
+        "latency_sec": 11.202901858836412
+      },
+      {
+        "index": 191,
+        "gold": "5",
+        "prediction": "5",
+        "correct": true,
+        "latency_sec": 11.096859026700258
+      },
+      {
+        "index": 192,
+        "gold": "91",
+        "prediction": "91",
+        "correct": true,
+        "latency_sec": 11.375250719487667
+      },
+      {
+        "index": 193,
+        "gold": "24",
+        "prediction": "24",
+        "correct": true,
+        "latency_sec": 11.181514032185078
+      },
+      {
+        "index": 194,
+        "gold": "10",
+        "prediction": "9",
+        "correct": false,
+        "latency_sec": 11.328375454992056
+      },
+      {
+        "index": 195,
+        "gold": "12",
+        "prediction": "12.00",
+        "correct": false,
+        "latency_sec": 11.410955559462309
+      },
+      {
+        "index": 196,
+        "gold": "120",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.471374168992043
+      },
+      {
+        "index": 197,
+        "gold": "6277",
+        "prediction": "6277",
+        "correct": true,
+        "latency_sec": 11.5250945687294
+      },
+      {
+        "index": 198,
+        "gold": "320",
+        "prediction": "320",
+        "correct": true,
+        "latency_sec": 11.564640652388334
+      },
+      {
+        "index": 199,
+        "gold": "7500",
+        "prediction": "1000",
+        "correct": false,
+        "latency_sec": 11.175018817186356
+      }
+    ]
+  }
+}
