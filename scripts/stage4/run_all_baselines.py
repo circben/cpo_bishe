@@ -20,7 +20,10 @@ if str(SRC_ROOT) not in sys.path:
 
 from cpo.eval.metrics_gsm8k import exact_match
 from cpo.llm.generation import GenerationRuntime, clear_runtime_cache, complete_text
-from cpo.tot.bfs_search import run_bfs_tot
+from cpo.tot.sc_tot_search import ToTSearchConfig, backtrack_path, extract_final_answer, run_tot_search
+
+
+_CANDIDATE_STEP_RE = re.compile(r"candidate_step_\d+", re.IGNORECASE)
 
 
 def _parse_semver(v: str) -> tuple[int, int, int]:
@@ -64,7 +67,12 @@ def _extract_gsm8k_gold(answer: str) -> str:
 def _extract_gsm8k_pred(text: str) -> str:
     lower = text.lower()
     if "the answer is" in lower:
-        tail = lower.split("the answer is", 1)[1]
+        # Extract number immediately following each explicit answer phrase,
+        # then prefer the final explicit answer in the response.
+        matches = re.findall(r"the answer is\s*[:\-]?\s*([-+]?\d+(?:\.\d+)?)", lower)
+        if matches:
+            return matches[-1]
+        tail = lower.rsplit("the answer is", 1)[1]
         nums = re.findall(r"[-+]?\d+(?:\.\d+)?", tail)
         return nums[0] if nums else tail.strip()
     nums = re.findall(r"[-+]?\d+(?:\.\d+)?", lower)
@@ -95,6 +103,59 @@ def _preview_text(text: str, max_len: int = 200) -> str:
     if len(compact) <= max_len:
         return compact
     return compact[:max_len] + "..."
+
+
+def _is_placeholder_like(text: str) -> bool:
+    s = str(text).strip().lower()
+    if not s:
+        return True
+    if _CANDIDATE_STEP_RE.search(s):
+        return True
+    blocked = [
+        "<expression>",
+        "<number>",
+        "candidate_step",
+        "if you need to think",
+        "write the next reasoning step",
+        "write a reasoning step",
+        "do not write anything else",
+        "generate one concise next reasoning thought",
+    ]
+    return any(k in s for k in blocked)
+
+
+def _node_pred(task: str, thought: str, state: str) -> str:
+    # Stage2-style preference: terminal thought is usually more concise than full state.
+    pred_thought = _extract_pred(task, thought)
+    if pred_thought and not _is_placeholder_like(pred_thought):
+        return pred_thought
+    return _extract_pred(task, state)
+
+
+def _select_tot_node(task: str, tree) -> tuple[Any, list[Any], bool]:
+    all_nodes = [n for n in tree.nodes.values() if n.node_id != "root"]
+    if not all_nodes:
+        return tree.nodes["root"], [], False
+    terminal_nodes = [n for n in all_nodes if n.is_terminal]
+
+    def usable(node: Any) -> bool:
+        if _is_placeholder_like(node.thought) and _is_placeholder_like(node.state):
+            return False
+        pred = _node_pred(task, node.thought, node.state)
+        return bool(pred and not _is_placeholder_like(pred))
+
+    usable_terminals = [n for n in terminal_nodes if usable(n)]
+    if usable_terminals:
+        return max(usable_terminals, key=lambda n: n.score), terminal_nodes, True
+
+    if terminal_nodes:
+        return max(terminal_nodes, key=lambda n: n.score), terminal_nodes, False
+
+    usable_nodes = [n for n in all_nodes if usable(n)]
+    if usable_nodes:
+        return max(usable_nodes, key=lambda n: n.score), terminal_nodes, False
+
+    return max(all_nodes, key=lambda n: n.score), terminal_nodes, False
 
 
 def _is_correct(task: str, pred: str, gold: str) -> bool:
@@ -186,7 +247,8 @@ def _run_cot(
         if _should_log_progress(idx, len(rows), log_interval):
             cnt_avg = ok / (idx + 1)
             print(
-                f"[{method_tag}] idx={idx + 1}/{len(rows)} cnt_avg={cnt_avg:.4f}",
+                f"[{method_tag}] idx={idx + 1}/{len(rows)} cnt_avg={cnt_avg:.4f} "
+                f"sample_latency_sec={latency:.2f}",
                 flush=True,
             )
     total_latency = time.perf_counter() - t0
@@ -205,57 +267,40 @@ def _run_tot(
     model: str,
     rows: list[dict[str, Any]],
     max_depth: int,
-    width: int,
-    beam: int,
-    n_score_samples: int,
-    max_workers: int,
+    candidates_per_step: int,
+    beam_width: int,
+    sc_votes: int,
+    sc_temperature: float,
     log_interval: int,
-    adaptive_retry: bool,
-    retry_max_depth: int,
-    retry_width: int,
-    retry_beam: int,
 ) -> tuple[dict, list[dict[str, Any]]]:
     details: list[dict[str, Any]] = []
     ok = 0
     t0 = time.perf_counter()
+    search_cfg = ToTSearchConfig(
+        max_depth=max_depth,
+        candidates_per_step=candidates_per_step,
+        beam_width=beam_width,
+        model_name=model,
+        strict_llm=True,
+        sc_votes=sc_votes,
+        sc_temperature=sc_temperature,
+    )
     for idx, row in enumerate(rows):
         q, gold = _row_to_qg(task, row)
         p0 = time.perf_counter()
-        tree = run_bfs_tot(
+        result = run_tot_search(
             question=q,
             task=task,
-            max_depth=max_depth,
-            width=width,
-            beam=beam,
-            n_score_samples=n_score_samples,
-            max_workers=max_workers,
-            model_name=model,
-            strict_llm=True,
+            config=search_cfg,
         )
-        retried = False
-        terminal_nodes = [n for n in tree.nodes.values() if n.is_terminal]
-        if adaptive_retry and not terminal_nodes:
-            tree = run_bfs_tot(
-                question=q,
-                task=task,
-                max_depth=retry_max_depth,
-                width=retry_width,
-                beam=retry_beam,
-                n_score_samples=n_score_samples,
-                max_workers=max_workers,
-                model_name=model,
-                strict_llm=True,
-            )
-            retried = True
-            terminal_nodes = [n for n in tree.nodes.values() if n.is_terminal]
-        if terminal_nodes:
-            best = max(terminal_nodes, key=lambda n: n.score)
-        else:
-            best = max(tree.nodes.values(), key=lambda n: n.score)
-        pred = _extract_pred(task, best.state)
+        best = result.best_node
+        pred = extract_final_answer(task, best)
+        best_is_usable = bool(pred)
         latency = time.perf_counter() - p0
         correct = _is_correct(task, pred, gold)
         ok += int(correct)
+        path_nodes = backtrack_path(result.nodes, best.node_id)
+        path_thoughts = [n.thought for n in path_nodes if n.node_id != "root"]
         details.append({
             "index": idx,
             "gold": gold,
@@ -264,15 +309,22 @@ def _run_tot(
             "latency_sec": latency,
             "best_score": best.score,
             "best_is_terminal": best.is_terminal,
-            "terminal_node_count": len(terminal_nodes),
-            "node_count": len(tree.nodes),
-            "adaptive_retry_used": retried,
+            "best_is_usable": best_is_usable,
+            "terminal_node_count": len(result.terminal_nodes),
+            "node_count": result.total_nodes,
+            "best_node_id": best.node_id,
+            "path_node_ids": [n.node_id for n in path_nodes],
+            "path_thoughts_preview": [_preview_text(t, max_len=120) for t in path_thoughts],
             "best_thought_preview": _preview_text(best.thought),
             "best_state_preview": _preview_text(best.state),
         })
         if _should_log_progress(idx, len(rows), log_interval):
             cnt_avg = ok / (idx + 1)
-            print(f"[tot] idx={idx + 1}/{len(rows)} cnt_avg={cnt_avg:.4f}", flush=True)
+            print(
+                f"[tot] idx={idx + 1}/{len(rows)} cnt_avg={cnt_avg:.4f} "
+                f"sample_latency_sec={latency:.2f}",
+                flush=True,
+            )
     total_latency = time.perf_counter() - t0
     summary = {
         "method": "tot",
@@ -281,12 +333,9 @@ def _run_tot(
         "accuracy": (ok / len(rows)) if rows else 0.0,
         "avg_latency_sec": (total_latency / len(rows)) if rows else 0.0,
         "max_depth": max_depth,
-        "width": width,
-        "beam": beam,
-        "adaptive_retry": adaptive_retry,
-        "retry_max_depth": retry_max_depth,
-        "retry_width": retry_width,
-        "retry_beam": retry_beam,
+        "width": candidates_per_step,
+        "beam": beam_width,
+        "sc_votes": sc_votes,
     }
     return summary, details
 
@@ -334,13 +383,17 @@ def main() -> None:
     parser.add_argument("--tot-width", type=int, default=2)
     parser.add_argument("--tot-beam", type=int, default=2)
     parser.add_argument("--tot-max-samples", type=int, default=50, help="ToT runs on the first N rows from the shared slice; 0 means all")
+    parser.add_argument("--tot-candidates-per-step", type=int, default=-1)
+    parser.add_argument("--tot-beam-width", type=int, default=-1)
+    parser.add_argument("--tot-sc-votes", type=int, default=5)
+    parser.add_argument("--tot-sc-temperature", type=float, default=0.7)
     parser.add_argument("--tot-score-samples", type=int, default=1)
     parser.add_argument("--tot-workers", type=int, default=1)
     parser.add_argument("--log-interval", type=int, default=1, help="Progress print interval in examples; 0 to disable")
-    parser.add_argument("--tot-adaptive-retry", type=int, choices=[0, 1], default=1, help="When 1, rerun ToT with larger budget if no terminal node is found")
-    parser.add_argument("--tot-retry-max-depth", type=int, default=7)
-    parser.add_argument("--tot-retry-width", type=int, default=4)
-    parser.add_argument("--tot-retry-beam", type=int, default=3)
+    parser.add_argument("--tot-adaptive-retry", type=int, choices=[0, 1], default=1, help="deprecated")
+    parser.add_argument("--tot-retry-max-depth", type=int, default=7, help="deprecated")
+    parser.add_argument("--tot-retry-width", type=int, default=4, help="deprecated")
+    parser.add_argument("--tot-retry-beam", type=int, default=3, help="deprecated")
 
     parser.add_argument("--output-prefix", default="baselines_all")
     args = parser.parse_args()
@@ -364,20 +417,18 @@ def main() -> None:
 
     tot_rows = rows if args.tot_max_samples <= 0 else rows[: min(args.tot_max_samples, len(rows))]
     print(f"ToT subset size: {len(tot_rows)} / {len(rows)} (from the same shared slice)")
+    tot_candidates_per_step = args.tot_candidates_per_step if args.tot_candidates_per_step > 0 else args.tot_width
+    tot_beam_width = args.tot_beam_width if args.tot_beam_width > 0 else args.tot_beam
     s_tot, d_tot = _run_tot(
         args.task,
         args.base_model,
         tot_rows,
         args.tot_max_depth,
-        args.tot_width,
-        args.tot_beam,
-        args.tot_score_samples,
-        args.tot_workers,
+        tot_candidates_per_step,
+        tot_beam_width,
+        args.tot_sc_votes,
+        args.tot_sc_temperature,
         args.log_interval,
-        bool(args.tot_adaptive_retry),
-        args.tot_retry_max_depth,
-        args.tot_retry_width,
-        args.tot_retry_beam,
     )
     s_tot["subset_of_count"] = len(rows)
     summaries.append(s_tot)

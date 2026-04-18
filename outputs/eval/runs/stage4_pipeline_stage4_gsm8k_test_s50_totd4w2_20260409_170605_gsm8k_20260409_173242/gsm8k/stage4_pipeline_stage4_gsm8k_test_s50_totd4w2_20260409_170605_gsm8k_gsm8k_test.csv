@@ -1,0 +1,5 @@
+method,model,count,accuracy,avg_latency_sec
+cot,/root/autodl-tmp/llm/Qwen3-8B,50,0.52,7.173299921024591
+tot,/root/autodl-tmp/llm/Qwen3-8B,1,0.0,76.60938026104122
+ts_sft,outputs/checkpoints/stage3_tssft_20260405_165631/gsm8k/tssft_gsm8k_qwen3-8b/final_checkpoint,50,0.54,11.501812765980139
+cpo,outputs/checkpoints/stage3_cpo_20260405_183114/gsm8k/cpo_gsm8k_qwen3-8b/final_checkpoint,50,0.54,11.655138347521424

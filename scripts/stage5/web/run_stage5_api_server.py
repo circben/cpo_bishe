@@ -1,6 +1,7 @@
 """
 ToT Tree Data API Server
 提供 ToT 节点数据的 RESTful API
+http://127.0.0.1:8888/web_html/index.html
 """
 import json
 import os
@@ -16,6 +17,18 @@ import urllib.parse
 # 绝对路径
 PROJECT_ROOT = Path(r'D:\001_softwares\VS Code Demo\cpo_project')
 RUNS_ROOT = PROJECT_ROOT / 'outputs' / 'eval' / 'runs'
+
+# 成功路径文件
+SUCCESS_PATH_FILES = {
+    'gsm8k': PROJECT_ROOT / 'data' / 'interim' / 'success_paths' / 'gsm8k_success_paths_sft.jsonl',
+    'strategyqa': PROJECT_ROOT / 'data' / 'interim' / 'success_paths' / 'strategyqa_success_paths_sft.jsonl',
+}
+
+# DPO 偏好数据文件
+DPO_FILES = {
+    'gsm8k': PROJECT_ROOT / 'data' / 'processed' / 'dpo' / 'gsm8k' / 'gsm8k_train.jsonl',
+    'strategyqa': PROJECT_ROOT / 'data' / 'processed' / 'dpo' / 'strategyqa' / 'strategyqa_train.jsonl',
+}
 
 DATASET_SOURCES = {
     'gsm8k': {
@@ -80,6 +93,16 @@ class ToTAPIHandler(SimpleHTTPRequestHandler):
             filename = path[10:]  # 去掉 '/api/tree/'
             filename = urllib.parse.unquote(filename)
             self.send_json(self.get_tree_data(filename))
+            return
+
+        # API: 获取成功路径统计
+        if path == '/api/stats/success-paths' or path == '/api/stats/success-paths/':
+            self.send_json(self.get_success_paths_stats())
+            return
+
+        # API: 获取 DPO 偏好数据统计
+        if path == '/api/stats/dpo-pairs' or path == '/api/stats/dpo-pairs/':
+            self.send_json(self.get_dpo_pairs_stats())
             return
         
         # 静态文件
@@ -284,6 +307,130 @@ class ToTAPIHandler(SimpleHTTPRequestHandler):
         files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
         return files
 
+    def get_success_paths_stats(self):
+        """统计成功路径数据"""
+        results = []
+        total_count = 0
+        total_prompt_len = 0
+        total_response_len = 0
+
+        for dataset_id, file_path in SUCCESS_PATH_FILES.items():
+            if not file_path.exists():
+                results.append({
+                    'dataset': dataset_id,
+                    'count': 0,
+                    'avg_prompt_len': 0,
+                    'avg_response_len': 0,
+                    'error': f'File not found: {file_path}'
+                })
+                continue
+
+            try:
+                count = 0
+                prompt_len_sum = 0
+                response_len_sum = 0
+
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            data = json.loads(line)
+                            prompt_len_sum += len(data.get('prompt', '') or '')
+                            response_len_sum += len(data.get('response', '') or '')
+                            count += 1
+                        except json.JSONDecodeError:
+                            continue
+
+                avg_prompt = round(prompt_len_sum / count) if count > 0 else 0
+                avg_response = round(response_len_sum / count) if count > 0 else 0
+
+                results.append({
+                    'dataset': dataset_id,
+                    'count': count,
+                    'avg_prompt_len': avg_prompt,
+                    'avg_response_len': avg_response,
+                })
+
+                total_count += count
+                total_prompt_len += prompt_len_sum
+                total_response_len += response_len_sum
+
+            except Exception as e:
+                results.append({
+                    'dataset': dataset_id,
+                    'count': 0,
+                    'avg_prompt_len': 0,
+                    'avg_response_len': 0,
+                    'error': str(e)
+                })
+
+        return {
+            'total_count': total_count,
+            'total_avg_prompt_len': round(total_prompt_len / total_count) if total_count > 0 else 0,
+            'total_avg_response_len': round(total_response_len / total_count) if total_count > 0 else 0,
+            'datasets': results
+        }
+
+    def get_dpo_pairs_stats(self):
+        """统计 DPO 偏好数据"""
+        results = []
+
+        for dataset_id, file_path in DPO_FILES.items():
+            if not file_path.exists():
+                results.append({
+                    'dataset': dataset_id,
+                    'pairs': 0,
+                    'questions': 0,
+                    'error': f'File not found: {file_path}'
+                })
+                continue
+
+            try:
+                count = 0
+                questions = set()
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            data = json.loads(line)
+                            count += 1
+                            # 从prompt中提取Question部分
+                            prompt = data.get('prompt', '')
+                            q_start = prompt.find('Question:')
+                            q_end = prompt.find('?', q_start)
+                            if q_start != -1 and q_end != -1:
+                                question = prompt[q_start:q_end+1]
+                                questions.add(question)
+                        except json.JSONDecodeError:
+                            continue
+
+                results.append({
+                    'dataset': dataset_id,
+                    'pairs': count,
+                    'questions': len(questions),
+                })
+
+            except Exception as e:
+                results.append({
+                    'dataset': dataset_id,
+                    'pairs': 0,
+                    'questions': 0,
+                    'error': str(e)
+                })
+
+        total_pairs = sum(r.get('pairs', 0) for r in results)
+        total_questions = sum(r.get('questions', 0) for r in results)
+
+        return {
+            'total_pairs': total_pairs,
+            'total_questions': total_questions,
+            'datasets': results
+        }
+
     def get_performance_runs(self, dataset='all', limit=50):
         """读取 outputs/eval/runs 下评估结果并生成性能对比聚合。"""
         limit = max(1, min(limit, 500))
@@ -393,7 +540,7 @@ def run_server(host='127.0.0.1', port=8888):
     if not check_port_available(host, port):
         print(f"[ERROR] {host}:{port} 已被占用，服务器未启动。")
         print("[HINT] 请先关闭占用进程，或使用 --port 指定新端口。")
-        print("[HINT] 若使用浏览器访问，建议优先使用 http://127.0.0.1:<port>/tot_viewer.html")
+        print("[HINT] 若使用浏览器访问，建议优先使用 http://127.0.0.1:<port>/web_html/index.html")
         return
 
     handler_cls = partial(ToTAPIHandler, directory=str(web_dir))
@@ -401,8 +548,10 @@ def run_server(host='127.0.0.1', port=8888):
     httpd = HTTPServer(server_address, handler_cls)
     print(f"ToT API Server running at http://{host}:{port}")
     print(f"Serving files from: {web_dir}")
-    print(f"Viewer URL: http://{host}:{port}/tot_viewer.html")
-    print(f"Performance URL: http://{host}:{port}/performance_viewer.html")
+    print(f"Viewer URL: http://{host}:{port}/web_html/index.html")
+    print(f"  - ToT Viewer: http://{host}:{port}/web_html/tot_viewer.html")
+    print(f"  - Performance: http://{host}:{port}/web_html/performance_viewer.html")
+    print(f"  - Statistics: http://{host}:{port}/web_html/statistics_report.html")
 
     httpd.serve_forever()
 

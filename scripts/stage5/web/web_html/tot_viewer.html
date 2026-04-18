@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPO ToT 思维树可视化</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --bg: #ffffff;
+            --surface: #e2e8f0;
+            --border: #cbd5e1;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: var(--bg);
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 { font-size: 18px; font-weight: 600; }
+        
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
+        .status-dot.connected { background: var(--success); }
+        .status-dot.error { background: var(--danger); }
+        
+        .main-container { display: flex; height: calc(100vh - 57px); }
+        
+        .sidebar {
+            width: 360px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-section { margin-bottom: 20px; }
+        
+        .sidebar-title {
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            background: var(--primary);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+        
+        .select-row { display: flex; gap: 8px; }
+        
+        select {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        select:hover { border-color: var(--primary); }
+        
+        .file-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+
+        .pagination {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-info { font-size: 11px; color: var(--text-secondary); }
+
+        .page-buttons { display: flex; gap: 4px; }
+
+        .page-btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        
+        .file-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-item:hover { border-color: var(--primary); transform: translateX(3px); }
+        .file-item.active { border-color: var(--primary); background: #eff6ff; }
+        
+        .file-name { color: var(--primary); font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        
+        .file-question {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .file-meta { display: flex; gap: 8px; margin-top: 8px; font-size: 11px; color: var(--text-secondary); }
+        
+        .meta-tag { background: #eff6ff; padding: 2px 8px; border-radius: 4px; color: var(--primary); }
+        
+        .question-panel { background: var(--bg); border-radius: 8px; padding: 12px; border: 1px solid var(--border); }
+        .question-label { color: var(--primary); font-size: 11px; text-transform: uppercase; margin-bottom: 6px; }
+        .question-text { font-size: 13px; line-height: 1.5; color: var(--text); }
+        
+        .answer-row { display: flex; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .answer-item { flex: 1; }
+        .answer-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
+        .answer-value { font-size: 14px; font-weight: 600; }
+        .answer-value.correct { color: var(--success); }
+        .answer-value.wrong { color: var(--danger); }
+        
+        .viz-container { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+
+        .tree-question-bar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            min-height: 50px;
+            display: none;
+        }
+
+        .tree-question-bar.visible { display: block; }
+        .tree-question-label { font-size: 10px; color: var(--primary); text-transform: uppercase; margin-bottom: 4px; }
+        .tree-question-content { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+        .tree-svg-wrapper { flex: 1; position: relative; }
+        #treeSvg { width: 100%; height: 100%; background: var(--surface); }
+        
+        .controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
+        
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .control-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
+        
+        .legend {
+            position: absolute;
+            bottom: 80px;
+            left: 16px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 8px;
+            padding: 12px;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .legend-title { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; }
+        .legend-items { display: flex; gap: 12px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        
+        .tooltip {
+            position: absolute;
+            background: var(--bg);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px;
+            max-width: 400px;
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .tooltip.visible { opacity: 1; }
+        .tooltip-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .tooltip-node-id { color: var(--primary); font-weight: 600; font-size: 13px; }
+        
+        .tooltip-score { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .tooltip-score.high { background: #dcfce7; color: var(--success); }
+        .tooltip-score.med { background: #fef3c7; color: var(--warning); }
+        .tooltip-score.low { background: #fee2e2; color: var(--danger); }
+        
+        .tooltip-content { font-size: 12px; line-height: 1.5; color: var(--text); white-space: pre-wrap; }
+        
+        .stats-panel {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 8px;
+            padding: 12px;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        
+        .stat-box {
+            background: var(--surface);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 70px;
+        }
+        
+        .stat-value { font-size: 18px; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
+        
+        .path-panel {
+            position: absolute;
+            bottom: 80px;
+            right: 16px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 8px;
+            padding: 12px;
+            z-index: 10;
+            max-width: 350px;
+            max-height: 220px;
+            overflow-y: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .path-title { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; }
+        .path-nodes { display: flex; flex-direction: column; gap: 6px; }
+        .path-node { display: flex; align-items: flex-start; gap: 8px; }
+        
+        .path-step {
+            background: var(--primary);
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .path-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .empty-icon { font-size: 60px; margin-bottom: 16px; opacity: 0.3; }
+        .empty-state p { font-size: 14px; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧠 ToT 思维树可视化</h1>
+        <div class="header-right">
+            <div class="status-indicator">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">未连接</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    📂 选择数据集
+                </div>
+                <select id="datasetSelect" onchange="onDatasetChange()">
+                    <option value="">加载中...</option>
+                </select>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    📋 选择问题索引
+                    <span class="badge" id="fileCount">0</span>
+                </div>
+                <div class="file-list" id="fileList">
+                    <div class="empty-state" style="position: static; transform: none; padding: 40px;">
+                        <p>选择数据集后加载问题</p>
+                    </div>
+                </div>
+                <div class="pagination" id="paginationBar" style="display: none;">
+                    <span class="page-info" id="pageInfo">第 1 / 1 页</span>
+                    <div class="page-buttons">
+                        <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">上一页</button>
+                        <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">下一页</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="question-panel" id="questionPanel" style="display: none;">
+                    <div class="question-label">当前问题</div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="answer-row">
+                        <div class="answer-item">
+                            <div class="answer-label">标准答案</div>
+                            <div class="answer-value correct" id="goldAnswer">-</div>
+                        </div>
+                        <div class="answer-item">
+                            <div class="answer-label">文件</div>
+                            <div class="answer-value" id="currentFile" style="color: var(--primary);">-</div>
+                        </div>
+                    </div>
+                    <div class="answer-row">
+                        <div class="answer-item" style="flex: 2;">
+                            <div class="answer-label">可视化脚本状态</div>
+                            <div class="answer-value" id="generateStatus" style="font-size: 12px; color: #ccc;">尚未生成</div>
+                        </div>
+                        <div class="answer-item" style="display: flex; align-items: end; justify-content: end;">
+                            <button class="page-btn" id="generateBtn" onclick="generateCurrentVisualization()">重新生成</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visualization Area -->
+        <div class="viz-container">
+            <div class="tree-question-bar" id="treeQuestionBar">
+                <div class="tree-question-label">当前问题</div>
+                <div class="tree-question-content" id="treeQuestionContent"></div>
+            </div>
+            <div class="tree-svg-wrapper">
+                <svg id="treeSvg"></svg>
+            
+            <!-- Stats Panel -->
+            <div class="stats-panel" id="statsPanel" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalNodes">0</div>
+                        <div class="stat-label">节点数</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="treeDepth">0</div>
+                        <div class="stat-label">树深度</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="branchingFactor">0</div>
+                        <div class="stat-label">分支因子</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="avgScore">0</div>
+                        <div class="stat-label">平均分数</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="controls">
+                <button class="control-btn" onclick="zoomIn()" title="放大">+</button>
+                <button class="control-btn" onclick="zoomOut()" title="缩小">−</button>
+                <button class="control-btn" onclick="resetZoom()" title="重置视图">⟲</button>
+                <button class="control-btn" onclick="toggleLabels()" title="切换标签" id="labelBtn">T</button>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend" id="legendPanel" style="display: none;">
+                <div class="legend-title">节点评分</div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #2ecc71"></div>
+                        <span>高分 (≥7)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #f39c12"></div>
+                        <span>中分 (5-7)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #e74c3c"></div>
+                        <span>低分 (&lt;5)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Path Panel -->
+            <div class="path-panel" id="pathPanel" style="display: none;">
+                <div class="path-title">
+                    <span>🌟</span> 最佳推理路径
+                </div>
+                <div class="path-nodes" id="pathNodes"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">🌳</div>
+                <p>选择左侧一个问题开始可视化</p>
+            </div>
+            
+            <!-- Loading -->
+            <div class="loading" id="loadingState" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>加载中...</p>
+            </div>
+            
+            <!-- Tooltip -->
+            <div class="tooltip" id="tooltip">
+                <div class="tooltip-header">
+                    <span class="tooltip-node-id" id="tooltipNodeId">n1</span>
+                    <span class="tooltip-score" id="tooltipScore">7.0</span>
+                </div>
+                <div class="tooltip-content" id="tooltipContent"></div>
+            </div>
+            </div><!-- End tree-svg-wrapper -->
+        </div>
+    </div>
+
+    <script>
+        const API_CANDIDATES = [
+            'http://127.0.0.1:8888',
+            'http://127.0.0.1:8899',
+            window.location.origin
+        ];
+
+        const PAGE_SIZE = 100;
+
+        let currentData = null;
+        let currentMeta = null;
+        let currentDataset = 'gsm8k';
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalFiles = 0;
+        let currentPageFiles = [];
+        let currentTreePath = '';
+
+        let svg = null;
+        let g = null;
+        let zoom = null;
+        let treeData = null;
+        let showLabels = true;
+        let apiBase = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSvg();
+            checkConnection();
+        });
+
+        async function checkConnection() {
+            const fileList = document.getElementById('fileList');
+            const bases = [...new Set(API_CANDIDATES)];
+
+            for (const base of bases) {
+                try {
+                    const response = await fetch(`${base}/api/datasets`, { cache: 'no-store' });
+                    if (!response.ok) {
+                        continue;
+                    }
+
+                    const payload = await response.json();
+                    if (!payload || !Array.isArray(payload.datasets)) {
+                        continue;
+                    }
+
+                    apiBase = base;
+                    updateStatus(true, `已连接 ${base}`);
+                    await loadDatasets(payload.datasets);
+                    return;
+                } catch (e) {
+                    // ignore and continue
+                }
+            }
+
+            updateStatus(false, '请先启动 run_stage5_api_server.py');
+            fileList.innerHTML = '<div class="empty-state" style="position: static; transform: none; padding: 40px;"><p>无法连接 API。请使用 python scripts/stage5/web/run_stage5_api_server.py 启动服务</p></div>';
+            document.getElementById('paginationBar').style.display = 'none';
+        }
+
+        function updateStatus(connected, text) {
+            const dot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            dot.className = 'status-dot' + (connected ? ' connected' : ' error');
+            statusText.textContent = text;
+        }
+
+        async function loadDatasets(datasets) {
+            const select = document.getElementById('datasetSelect');
+            if (!datasets.length) {
+                select.innerHTML = '<option value="">无可用数据集</option>';
+                return;
+            }
+
+            select.innerHTML = datasets.map(d =>
+                `<option value="${d.id}">${d.name} (${d.model}, ${d.count}题)</option>`
+            ).join('');
+
+            const preferred = datasets.find(d => d.id === 'gsm8k') || datasets[0];
+            currentDataset = preferred.id;
+            select.value = currentDataset;
+            await fetchFilesPage(1);
+        }
+
+        async function onDatasetChange() {
+            currentDataset = document.getElementById('datasetSelect').value;
+            await fetchFilesPage(1);
+        }
+
+        async function changePage(step) {
+            const next = currentPage + step;
+            if (next < 1 || next > totalPages) {
+                return;
+            }
+            await fetchFilesPage(next);
+        }
+
+        async function fetchFilesPage(page) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '<div class="empty-state" style="position: static; transform: none; padding: 40px;"><p>正在加载问题列表...</p></div>';
+
+            try {
+                const url = `${apiBase}/api/files?dataset=${encodeURIComponent(currentDataset)}&page=${page}&page_size=${PAGE_SIZE}`;
+                const response = await fetch(url, { cache: 'no-store' });
+                const payload = await response.json();
+
+                if (!response.ok || payload.error) {
+                    throw new Error(payload.error || `HTTP ${response.status}`);
+                }
+
+                currentDataset = payload.dataset || currentDataset;
+                currentPage = payload.page || page;
+                totalPages = payload.total_pages || 1;
+                totalFiles = payload.total || 0;
+                currentPageFiles = Array.isArray(payload.files) ? payload.files : [];
+
+                document.getElementById('fileCount').textContent = totalFiles;
+                renderCurrentPage();
+            } catch (err) {
+                console.error(err);
+                fileList.innerHTML = `<div class="empty-state" style="position: static; transform: none; padding: 40px;"><p>加载失败: ${err.message}</p></div>`;
+                document.getElementById('paginationBar').style.display = 'none';
+            }
+        }
+
+        function renderCurrentPage() {
+            const fileList = document.getElementById('fileList');
+            const paginationBar = document.getElementById('paginationBar');
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+
+            if (!currentPageFiles.length) {
+                fileList.innerHTML = '<div class="empty-state" style="position: static; transform: none; padding: 40px;"><p>该数据集暂无可视化文件</p></div>';
+                paginationBar.style.display = 'none';
+                return;
+            }
+
+            fileList.innerHTML = currentPageFiles.map((f, idx) => `
+                <div class="file-item" onclick="loadTree('${f.path}', ${idx})" id="file-${idx}">
+                    <div class="file-name">QID: ${f.qid_short || '-'}</div>
+                    <div class="file-question">${f.question || '无问题描述'}</div>
+                    <div class="file-meta">
+                        <span class="meta-tag">${f.model}</span>
+                        ${f.gold ? `<span class="meta-tag" style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">答案: ${f.gold}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            paginationBar.style.display = totalPages > 1 ? 'flex' : 'none';
+            pageInfo.textContent = `第 ${currentPage} / ${totalPages} 页（共 ${totalFiles} 题）`;
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+        }
+
+        function initSvg() {
+            if (typeof d3 === 'undefined') {
+                document.getElementById('emptyState').innerHTML = '<div class="empty-icon">⚠️</div><p>D3 加载失败，当前仅可浏览问题列表。</p>';
+                return;
+            }
+            svg = d3.select('#treeSvg');
+            resizeSvg();
+            g = svg.append('g');
+
+            zoom = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
+            svg.call(zoom);
+
+            window.addEventListener('resize', resizeSvg);
+        }
+
+        function resizeSvg() {
+            if (!svg) return;
+            const container = document.querySelector('.viz-container');
+            svg.attr('width', container.clientWidth).attr('height', container.clientHeight);
+        }
+
+        async function loadTree(filePath, index) {
+            currentTreePath = filePath;
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`file-${index}`)?.classList.add('active');
+
+            try {
+                await triggerGenerate(filePath, true);
+
+                const response = await fetch(`${apiBase}/api/tree/${encodeURIComponent(filePath)}`);
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                currentData = data.nodes;
+                currentMeta = data.meta;
+                updateQuestionPanel();
+                renderTree();
+
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('statsPanel').style.display = 'block';
+                document.getElementById('legendPanel').style.display = 'block';
+                document.getElementById('pathPanel').style.display = 'block';
+            } catch (e) {
+                console.error('Failed to load tree:', e);
+                document.getElementById('emptyState').innerHTML = `<div class="empty-icon">⚠️</div><p>${e.message}</p>`;
+                document.getElementById('emptyState').style.display = 'block';
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        async function triggerGenerate(filePath, silent = false) {
+            const status = document.getElementById('generateStatus');
+            if (!silent) {
+                status.textContent = '正在调用脚本生成 Mermaid...';
+            }
+            const response = await fetch(`${apiBase}/api/generate/${encodeURIComponent(filePath)}`);
+            const payload = await response.json();
+            if (payload.error) {
+                status.textContent = `生成失败：${payload.error}`;
+                return false;
+            }
+            status.textContent = `已生成：${payload.output_path}`;
+            return true;
+        }
+
+        async function generateCurrentVisualization() {
+            if (!currentTreePath) {
+                document.getElementById('generateStatus').textContent = '请先选择一个问题';
+                return;
+            }
+            try {
+                await triggerGenerate(currentTreePath, false);
+            } catch (e) {
+                document.getElementById('generateStatus').textContent = `生成失败：${e.message}`;
+            }
+        }
+        
+        function updateQuestionPanel() {
+            const panel = document.getElementById('questionPanel');
+            panel.style.display = 'block';
+
+            document.getElementById('questionText').textContent = currentMeta?.question || '无问题描述';
+            document.getElementById('goldAnswer').textContent = currentMeta?.gold || '-';
+            document.getElementById('currentFile').textContent = currentMeta?.qid || '-';
+            document.getElementById('generateStatus').textContent = '已触发生成';
+
+            // Update top question bar
+            const questionBar = document.getElementById('treeQuestionBar');
+            const questionContent = document.getElementById('treeQuestionContent');
+            if (currentMeta?.question) {
+                questionBar.classList.add('visible');
+                questionContent.textContent = currentMeta.question;
+            } else {
+                questionBar.classList.remove('visible');
+            }
+        }
+        
+        // Render tree
+        function renderTree() {
+            if (!currentData) return;
+            if (typeof d3 === 'undefined' || !g) return;
+            
+            g.selectAll('*').remove();
+            
+            // Build hierarchy from flat nodes
+            const rootId = findRoot(currentData);
+            if (!rootId) return;
+            
+            const hierarchyData = buildHierarchy(rootId, currentData);
+            const width = document.querySelector('.viz-container').clientWidth;
+            const height = document.querySelector('.viz-container').clientHeight;
+            
+            const root = d3.hierarchy(hierarchyData);
+            
+            // Calculate tree dimensions
+            const nodeCount = Object.keys(currentData).length;
+            const nodeSpacing = Math.max(60, Math.min(120, 800 / nodeCount));
+            
+            const treeLayout = d3.tree()
+                .nodeSize([nodeSpacing, nodeSpacing * 3])
+                .separation((a, b) => (a.parent === b.parent ? 1.2 : 1.8));
+            
+            treeLayout(root);
+            treeData = root;
+            
+            // Update stats
+            updateStats(currentData);
+            
+            // Draw edges
+            g.selectAll('.link')
+                .data(root.links())
+                .enter()
+                .append('path')
+                .attr('class', 'link')
+                .attr('d', d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x))
+                .attr('fill', 'none')
+                .attr('stroke', '#333')
+                .attr('stroke-width', 2)
+                .attr('opacity', 0.6);
+            
+            // Draw nodes
+            const nodes = g.selectAll('.node')
+                .data(root.descendants())
+                .enter()
+                .append('g')
+                .attr('class', 'node')
+                .attr('transform', d => `translate(${d.y},${d.x})`)
+                .style('cursor', 'pointer')
+                .on('mouseover', (event, d) => showTooltip(event, d))
+                .on('mouseout', hideTooltip)
+                .on('click', (event, d) => highlightPath(d));
+            
+            // Node circles
+            nodes.append('circle')
+                .attr('r', 22)
+                .attr('fill', d => getNodeColor(d.data.score))
+                .attr('stroke', d => d.data.score >= 7 ? '#fff' : 'transparent')
+                .attr('stroke-width', 2);
+            
+            // Node labels
+            nodes.append('text')
+                .attr('dy', 4)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#fff')
+                .attr('font-size', '11px')
+                .attr('font-weight', '600')
+                .text(d => d.data.node_id || 'root');
+            
+            // Score badges
+            nodes.append('rect')
+                .attr('x', 12)
+                .attr('y', -10)
+                .attr('width', 28)
+                .attr('height', 16)
+                .attr('rx', 8)
+                .attr('fill', d => getScoreColor(d.data.score))
+                .attr('class', 'score-badge');
+            
+            nodes.append('text')
+                .attr('x', 26)
+                .attr('y', 2)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#fff')
+                .attr('font-size', '9px')
+                .attr('font-weight', '700')
+                .text(d => d.data.score?.toFixed(1) || '0.0');
+            
+            // Center view
+            resetZoom();
+            
+            // Render best path
+            renderBestPath();
+        }
+        
+        // Find root node
+        function findRoot(nodes) {
+            for (const [id, node] of Object.entries(nodes)) {
+                if (node.parent_id === null || id === 'root') {
+                    return id;
+                }
+            }
+            return Object.keys(nodes)[0];
+        }
+        
+        // Build hierarchy from flat nodes
+        function buildHierarchy(nodeId, nodes) {
+            const node = nodes[nodeId];
+            if (!node) return null;
+            
+            const children = (node.children || []).map(childId => buildHierarchy(childId, nodes)).filter(Boolean);
+            
+            return {
+                node_id: nodeId,
+                depth: node.depth || 0,
+                score: node.score || 0,
+                thought: node.thought || node.state || '',
+                children: children.length > 0 ? children : undefined
+            };
+        }
+        
+        // Get node color based on score
+        function getNodeColor(score) {
+            if (score >= 7) return '#2ecc71';
+            if (score >= 5) return '#f39c12';
+            return '#e74c3c';
+        }
+        
+        // Get score badge color
+        function getScoreColor(score) {
+            if (score >= 7) return '#2ecc71';
+            if (score >= 5) return '#f39c12';
+            return '#e74c3c';
+        }
+        
+        // Show tooltip
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('tooltip');
+            document.getElementById('tooltipNodeId').textContent = d.data.node_id;
+            document.getElementById('tooltipScore').textContent = d.data.score?.toFixed(1) || '0.0';
+            document.getElementById('tooltipScore').className = 'tooltip-score ' + 
+                (d.data.score >= 7 ? 'high' : d.data.score >= 5 ? 'med' : 'low');
+            document.getElementById('tooltipContent').textContent = d.data.thought || '(无内容)';
+            
+            const container = document.querySelector('.viz-container');
+            const rect = container.getBoundingClientRect();
+            
+            let x = event.clientX - rect.left + 15;
+            let y = event.clientY - rect.top + 15;
+            
+            // Keep tooltip in bounds
+            if (x + 450 > container.clientWidth) x = event.clientX - rect.left - 465;
+            if (y + 300 > container.clientHeight) y = event.clientY - rect.top - 315;
+            
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+            tooltip.classList.add('visible');
+        }
+        
+        // Hide tooltip
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+        
+        // Highlight path to node
+        function highlightPath(d) {
+            const links = g.selectAll('.link');
+            const pathNodes = new Set();
+            let current = d;
+            
+            while (current.parent) {
+                pathNodes.add(current.parent.data.node_id);
+                pathNodes.add(current.data.node_id);
+                current = current.parent;
+            }
+            
+            links
+                .attr('stroke', link => 
+                    pathNodes.has(link.source.data.node_id) && pathNodes.has(link.target.data.node_id) 
+                        ? '#00d9ff' : '#333')
+                .attr('stroke-width', link => 
+                    pathNodes.has(link.source.data.node_id) && pathNodes.has(link.target.data.node_id) 
+                        ? 4 : 2)
+                .attr('opacity', link => 
+                    pathNodes.has(link.source.data.node_id) || pathNodes.has(link.target.data.node_id) 
+                        ? 1 : 0.3);
+        }
+        
+        // Update stats
+        function updateStats(nodes) {
+            const nodeList = Object.values(nodes);
+            const totalNodes = nodeList.length;
+            const maxDepth = Math.max(...nodeList.map(n => n.depth || 0), 0);
+            const avgScore = nodeList.reduce((sum, n) => sum + (n.score || 0), 0) / totalNodes;
+            
+            const nonLeafNodes = nodeList.filter(n => n.children && n.children.length > 0);
+            const avgBranching = nonLeafNodes.length > 0 
+                ? nodeList.reduce((sum, n) => sum + (n.children?.length || 0), 0) / nonLeafNodes.length 
+                : 0;
+            
+            document.getElementById('totalNodes').textContent = totalNodes;
+            document.getElementById('treeDepth').textContent = maxDepth;
+            document.getElementById('branchingFactor').textContent = avgBranching.toFixed(1);
+            document.getElementById('avgScore').textContent = avgScore.toFixed(1);
+        }
+        
+        // Render best path
+        function renderBestPath() {
+            if (!treeData) return;
+            
+            // Find path with highest average score
+            const findBestPath = (node) => {
+                if (!node.children || node.children.length === 0) {
+                    return { nodes: [node], totalScore: node.data.score || 0 };
+                }
+                
+                let bestChild = null;
+                let bestPath = null;
+                let bestAvg = -Infinity;
+                
+                for (const child of node.children) {
+                    const result = findBestPath(child);
+                    const avgScore = (result.totalScore) / result.nodes.length;
+                    if (avgScore > bestAvg) {
+                        bestAvg = avgScore;
+                        bestChild = child;
+                        bestPath = result;
+                    }
+                }
+                
+                return {
+                    nodes: [node, ...bestPath.nodes],
+                    totalScore: (node.data.score || 0) + bestPath.totalScore
+                };
+            };
+            
+            const bestPath = findBestPath(treeData);
+            
+            const pathNodes = document.getElementById('pathNodes');
+            pathNodes.innerHTML = bestPath.nodes.slice(1).map((n, i) => `
+                <div class="path-node">
+                    <span class="path-step">${i + 1}</span>
+                    <span class="path-text">${(n.data.thought || '').substring(0, 80)}${(n.data.thought || '').length > 80 ? '...' : ''}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Zoom controls
+        function zoomIn() {
+            if (!svg || !zoom) return;
+            svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+        }
+        
+        function zoomOut() {
+            if (!svg || !zoom) return;
+            svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+        }
+        
+        function resetZoom() {
+            if (!svg || !zoom) return;
+            const width = document.querySelector('.viz-container').clientWidth;
+            const height = document.querySelector('.viz-container').clientHeight;
+            svg.transition().duration(500).call(
+                zoom.transform,
+                d3.zoomIdentity.translate(width / 4, height / 2)
+            );
+        }
+        
+        // Toggle labels
+        function toggleLabels() {
+            if (!g) return;
+            showLabels = !showLabels;
+            g.selectAll('.score-badge').style('opacity', showLabels ? 1 : 0);
+            document.getElementById('labelBtn').style.background = showLabels ? 'var(--primary)' : 'var(--card-bg)';
+        }
+    </script>
+</body>
+</html>

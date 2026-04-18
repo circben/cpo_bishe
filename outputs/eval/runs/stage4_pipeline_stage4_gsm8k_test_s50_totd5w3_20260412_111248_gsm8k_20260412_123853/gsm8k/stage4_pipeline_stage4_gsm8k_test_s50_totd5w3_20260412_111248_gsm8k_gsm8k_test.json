@@ -1,0 +1,1570 @@
+{
+  "task": "gsm8k",
+  "split": "test",
+  "created_at": "2026-04-12T04:38:53+00:00",
+  "summaries": [
+    {
+      "method": "cot",
+      "model": "/root/autodl-tmp/llm/Qwen3-8B",
+      "count": 50,
+      "accuracy": 0.48,
+      "avg_latency_sec": 6.180321518108249
+    },
+    {
+      "method": "tot",
+      "model": "/root/autodl-tmp/llm/Qwen3-8B",
+      "count": 20,
+      "accuracy": 0.5,
+      "avg_latency_sec": 184.56595805026592,
+      "max_depth": 5,
+      "width": 10,
+      "beam": 5,
+      "sc_votes": 5,
+      "subset_of_count": 50
+    },
+    {
+      "method": "ts_sft",
+      "model": "outputs/checkpoints/stage3_tssft_20260405_165631/gsm8k/tssft_gsm8k_qwen3-8b/final_checkpoint",
+      "count": 50,
+      "accuracy": 0.52,
+      "avg_latency_sec": 11.389114915952087
+    },
+    {
+      "method": "cpo",
+      "model": "outputs/checkpoints/stage3_cpo_20260405_183114/gsm8k/cpo_gsm8k_qwen3-8b/final_checkpoint",
+      "count": 50,
+      "accuracy": 0.6,
+      "avg_latency_sec": 11.795276496335864
+    }
+  ],
+  "details": {
+    "cot": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 15.323672659695148
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 6.07826155424118
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 6.173558708280325
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "54",
+        "correct": false,
+        "latency_sec": 6.128715544939041
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 6.234504364430904
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 6.1449533104896545
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 5.98791142180562
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 6.036910727620125
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "180",
+        "correct": false,
+        "latency_sec": 6.091804768890142
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "460",
+        "correct": true,
+        "latency_sec": 6.092025842517614
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "366",
+        "correct": true,
+        "latency_sec": 6.086360111832619
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 5.998505253344774
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 6.010669980198145
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 5.994435895234346
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "55",
+        "correct": false,
+        "latency_sec": 5.998304653912783
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "29",
+        "correct": false,
+        "latency_sec": 6.101355973631144
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "7",
+        "correct": false,
+        "latency_sec": 5.9979309514164925
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "42000",
+        "correct": false,
+        "latency_sec": 5.95502357557416
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 5.935892425477505
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.944010801613331
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 5.925343304872513
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 5.945481102913618
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 5.946004014462233
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 5.95572317019105
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 5.917134329676628
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "2",
+        "correct": true,
+        "latency_sec": 5.969318144023418
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 6.119063187390566
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.659128222614527
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 5.621894098818302
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 5.800659406930208
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "109",
+        "correct": true,
+        "latency_sec": 5.680833898484707
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 5.66480166092515
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "360",
+        "correct": false,
+        "latency_sec": 5.810484159737825
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 5.808285228908062
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 5.729385882616043
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 5.722722668200731
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75",
+        "correct": true,
+        "latency_sec": 5.749197695404291
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 5.712658233940601
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 5.748789429664612
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "1.5",
+        "correct": false,
+        "latency_sec": 6.044900890439749
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 5.9679153226315975
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "200",
+        "correct": true,
+        "latency_sec": 6.002784185111523
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 5.924731649458408
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 8.297426421195269
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 5.993946228176355
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 5.990978829562664
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "140",
+        "correct": false,
+        "latency_sec": 5.896726336330175
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 5.970312491059303
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "200000",
+        "correct": false,
+        "latency_sec": 6.051274728029966
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 6.06683985888958
+      }
+    ],
+    "tot": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "16",
+        "correct": false,
+        "latency_sec": 42.29992650076747,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 10,
+        "best_node_id": "n6",
+        "path_node_ids": [
+          "root",
+          "n6"
+        ],
+        "path_thoughts_preview": [
+          "Let's calculate the total number of eggs Janet has each day. She has 16 eggs per day."
+        ],
+        "best_thought_preview": "Let's calculate the total number of eggs Janet has each day. She has 16 eggs per day.",
+        "best_state_preview": "Let's calculate the total number of eggs Janet has each day. She has 16 eggs per day."
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "3",
+        "correct": true,
+        "latency_sec": 91.74419798702002,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 14,
+        "node_count": 21,
+        "best_node_id": "n8",
+        "path_node_ids": [
+          "root",
+          "n8"
+        ],
+        "path_thoughts_preview": [
+          "So, the robe requires 2 bolts of blue fiber and half that much white fiber. Half of 2 is 1, so the white fiber needed is..."
+        ],
+        "best_thought_preview": "So, the robe requires 2 bolts of blue fiber and half that much white fiber. Half of 2 is 1, so the white fiber needed is 1 bolt. Therefore, the total bolts needed for the robe are 2 (blue) + 1 (white)...",
+        "best_state_preview": "So, the robe requires 2 bolts of blue fiber and half that much white fiber. Half of 2 is 1, so the white fiber needed is 1 bolt. Therefore, the total bolts needed for the robe are 2 (blue) + 1 (white)..."
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "000",
+        "correct": false,
+        "latency_sec": 47.65835274755955,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 11,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "So the total cost of the house is 80,000 + 50,000 = 130,000. The value increased by 150% of the original value. So the o..."
+        ],
+        "best_thought_preview": "So the total cost of the house is 80,000 + 50,000 = 130,000. The value increased by 150% of the original value. So the original value is 80,000, and 150% of that is 120,000. So the new value is 80,000...",
+        "best_state_preview": "So the total cost of the house is 80,000 + 50,000 = 130,000. The value increased by 150% of the original value. So the original value is 80,000, and 150% of that is 120,000. So the new value is 80,000..."
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "540",
+        "correct": true,
+        "latency_sec": 148.15115236490965,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 35,
+        "best_node_id": "n14",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n14"
+        ],
+        "path_thoughts_preview": [
+          "Multiply the number of sprints per day by the number of days per week. 3 sprints/day * 3 days/week = 9 sprints/week.",
+          "Multiply the total sprints per week by the distance of each sprint. 9 sprints/week * 60 meters/sprint = 540 meters/week."
+        ],
+        "best_thought_preview": "Multiply the total sprints per week by the distance of each sprint. 9 sprints/week * 60 meters/sprint = 540 meters/week.",
+        "best_state_preview": "Multiply the number of sprints per day by the number of days per week. 3 sprints/day * 3 days/week = 9 sprints/week. Multiply the total sprints per week by the distance of each sprint. 9 sprints/week ..."
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 53.44331407174468,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 9,
+        "node_count": 11,
+        "best_node_id": "n7",
+        "path_node_ids": [
+          "root",
+          "n7"
+        ],
+        "path_thoughts_preview": [
+          "So, the total amount of feed given in the morning and afternoon is 15 cups + 25 cups = 40 cups. So, the amount of feed r..."
+        ],
+        "best_thought_preview": "So, the total amount of feed given in the morning and afternoon is 15 cups + 25 cups = 40 cups. So, the amount of feed remaining to be given in the final meal is 3 * 20 - 40 = 60 - 40 = 20 cups.",
+        "best_state_preview": "So, the total amount of feed given in the morning and afternoon is 15 cups + 25 cups = 40 cups. So, the amount of feed remaining to be given in the final meal is 3 * 20 - 40 = 60 - 40 = 20 cups."
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "64",
+        "correct": true,
+        "latency_sec": 44.15735147148371,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 6,
+        "node_count": 11,
+        "best_node_id": "n1",
+        "path_node_ids": [
+          "root",
+          "n1"
+        ],
+        "path_thoughts_preview": [
+          "So the first glass costs $5, and the second glass is 60% of the price, which is 5 * 0.6 = $3. Then the third glass is ag..."
+        ],
+        "best_thought_preview": "So the first glass costs $5, and the second glass is 60% of the price, which is 5 * 0.6 = $3. Then the third glass is again $5, the fourth is $3, and so on. So for every pair of glasses, Kylar pays $5...",
+        "best_state_preview": "So the first glass costs $5, and the second glass is 60% of the price, which is 5 * 0.6 = $3. Then the third glass is again $5, the fourth is $3, and so on. So for every pair of glasses, Kylar pays $5..."
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "20",
+        "correct": false,
+        "latency_sec": 214.28654440119863,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 49,
+        "best_node_id": "n23",
+        "path_node_ids": [
+          "root",
+          "n2",
+          "n23"
+        ],
+        "path_thoughts_preview": [
+          "Let's denote the number of sheep in Seattle as S, in Charleston as C, and in Toulouse as T.",
+          "From the problem, we know that S = 20. Since Charleston has 4 times as many sheep as Seattle, then C = 4 * S. Then Toulo..."
+        ],
+        "best_thought_preview": "From the problem, we know that S = 20. Since Charleston has 4 times as many sheep as Seattle, then C = 4 * S. Then Toulouse has twice as many sheep as Charleston, so T = 2 * C. Once we find C and T, w...",
+        "best_state_preview": "Let's denote the number of sheep in Seattle as S, in Charleston as C, and in Toulouse as T. From the problem, we know that S = 20. Since Charleston has 4 times as many sheep as Seattle, then C = 4 * S..."
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "200",
+        "correct": false,
+        "latency_sec": 52.42852072045207,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 7,
+        "node_count": 11,
+        "best_node_id": "n9",
+        "path_node_ids": [
+          "root",
+          "n9"
+        ],
+        "path_thoughts_preview": [
+          "The total size of the file is 200 GB. Carla's normal download speed is 2 GB/minute. So normally, the total time without ..."
+        ],
+        "best_thought_preview": "The total size of the file is 200 GB. Carla's normal download speed is 2 GB/minute. So normally, the total time without any interruptions would be 200 / 2 = 100 minutes. However, there's an interrupti...",
+        "best_state_preview": "The total size of the file is 200 GB. Carla's normal download speed is 2 GB/minute. So normally, the total time without any interruptions would be 200 / 2 = 100 minutes. However, there's an interrupti..."
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "45",
+        "correct": true,
+        "latency_sec": 406.28387543559074,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 20,
+        "node_count": 109,
+        "best_node_id": "n73",
+        "path_node_ids": [
+          "root",
+          "n3",
+          "n11",
+          "n21",
+          "n73"
+        ],
+        "path_thoughts_preview": [
+          "He drives for 3 hours at 60 mph, so he traveled 60*3 = 180 miles. That's how far he is from home at the beginning of the...",
+          "He spends the first 2 hours in standstill traffic. That means he doesn't move during those 2 hours, so he is still 180 m...",
+          "He spends the next half-hour driving at 30mph. So he travels 30*(1/2) = 15 miles. So now he's 180 - 15 = 165 miles away ...",
+          "He drives the remaining time of the 4 hours at 80 mph. How long is that remaining time? He already spent 2 hours in stan..."
+        ],
+        "best_thought_preview": "He drives the remaining time of the 4 hours at 80 mph. How long is that remaining time? He already spent 2 hours in standstill traffic and 0.5 hours driving, so total time spent is 2 + 0.5 = 2.5 hours...",
+        "best_state_preview": "He drives for 3 hours at 60 mph, so he traveled 60*3 = 180 miles. That's how far he is from home at the beginning of the return journey. He spends the first 2 hours in standstill traffic. That means h..."
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "1.2",
+        "correct": false,
+        "latency_sec": 154.8650883100927,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 11,
+        "node_count": 41,
+        "best_node_id": "n22",
+        "path_node_ids": [
+          "root",
+          "n2",
+          "n22"
+        ],
+        "path_thoughts_preview": [
+          "First, we need to calculate Eliza's earnings for the first 40 hours. She earns $10 per hour, so that would be 40 hours *...",
+          "Then, we need to calculate the overtime hours. She worked 45 hours in total, so the overtime hours would be 45 - 40 = 5 ..."
+        ],
+        "best_thought_preview": "Then, we need to calculate the overtime hours. She worked 45 hours in total, so the overtime hours would be 45 - 40 = 5 hours.",
+        "best_state_preview": "First, we need to calculate Eliza's earnings for the first 40 hours. She earns $10 per hour, so that would be 40 hours * $10/hour = $400. Then, we need to calculate the overtime hours. She worked 45 h..."
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "366",
+        "correct": true,
+        "latency_sec": 333.63526440784335,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 19,
+        "node_count": 85,
+        "best_node_id": "n56",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n10",
+          "n56"
+        ],
+        "path_thoughts_preview": [
+          "In the second month, the program had 3 times as many downloads as the first month. So, 60 * 3 = 180 downloads.",
+          "In the third month, the number of downloads was reduced by 30% from the second month's downloads. So, the third month's ...",
+          "To find the total downloads over the three months, we add the downloads for each month: 60 + 180 + 126 = 366 downloads."
+        ],
+        "best_thought_preview": "To find the total downloads over the three months, we add the downloads for each month: 60 + 180 + 126 = 366 downloads.",
+        "best_state_preview": "In the second month, the program had 3 times as many downloads as the first month. So, 60 * 3 = 180 downloads. In the third month, the number of downloads was reduced by 30% from the second month's do..."
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 600.2539948225021,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 52,
+        "node_count": 122,
+        "best_node_id": "n9",
+        "path_node_ids": [
+          "root",
+          "n9"
+        ],
+        "path_thoughts_preview": [
+          "The total cost of the donuts is calculated by multiplying the number of dozens by the cost per dozen. For the donuts, th..."
+        ],
+        "best_thought_preview": "The total cost of the donuts is calculated by multiplying the number of dozens by the cost per dozen. For the donuts, that's 3 dozens * $68 per dozen = $204. For the mini cupcakes, it's 2 dozens * $80...",
+        "best_state_preview": "The total cost of the donuts is calculated by multiplying the number of dozens by the cost per dozen. For the donuts, that's 3 dozens * $68 per dozen = $204. For the mini cupcakes, it's 2 dozens * $80..."
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 46.51447477936745,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n2",
+        "path_node_ids": [
+          "root",
+          "n2"
+        ],
+        "path_thoughts_preview": [
+          "To calculate the total revenue per year, we can multiply the number of lemons per year by the price per lemon: 7 * $1.5 ..."
+        ],
+        "best_thought_preview": "To calculate the total revenue per year, we can multiply the number of lemons per year by the price per lemon: 7 * $1.5 = $10.50",
+        "best_state_preview": "To calculate the total revenue per year, we can multiply the number of lemons per year by the price per lemon: 7 * $1.5 = $10.50"
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 43.560283076018095,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n6",
+        "path_node_ids": [
+          "root",
+          "n6"
+        ],
+        "path_thoughts_preview": [
+          "Let's call the total number of vacuum cleaners Melanie had at the start as x. She sold a third of her vacuum cleaners at..."
+        ],
+        "best_thought_preview": "Let's call the total number of vacuum cleaners Melanie had at the start as x. She sold a third of her vacuum cleaners at the green house, so that's x/3. Then she sold 2 more to the red house. After th...",
+        "best_state_preview": "Let's call the total number of vacuum cleaners Melanie had at the start as x. She sold a third of her vacuum cleaners at the green house, so that's x/3. Then she sold 2 more to the red house. After th..."
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "60",
+        "correct": true,
+        "latency_sec": 278.6396209821105,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 23,
+        "node_count": 67,
+        "best_node_id": "n44",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n12",
+          "n44"
+        ],
+        "path_thoughts_preview": [
+          "So, 20% of 20 students is 4 students who enrolled in contemporary dance. That leaves 20 - 4 = 16 students.",
+          "25% of 16 is 4 students who enrolled in jazz dance. So, 16 - 4 = 12 students are left.",
+          "So, the number of students who enrolled in hip-hop dance is 12. To find the percentage, we divide 12 by 20 and multiply ..."
+        ],
+        "best_thought_preview": "So, the number of students who enrolled in hip-hop dance is 12. To find the percentage, we divide 12 by 20 and multiply by 100. That gives 12/20 * 100 = 60%. So, the answer is 60%.",
+        "best_state_preview": "So, 20% of 20 students is 4 students who enrolled in contemporary dance. That leaves 20 - 4 = 16 students. 25% of 16 is 4 students who enrolled in jazz dance. So, 16 - 4 = 12 students are left. So, th..."
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "125",
+        "correct": true,
+        "latency_sec": 753.2357761748135,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 36,
+        "node_count": 150,
+        "best_node_id": "n147",
+        "path_node_ids": [
+          "root",
+          "n1",
+          "n10",
+          "n35",
+          "n82",
+          "n147"
+        ],
+        "path_thoughts_preview": [
+          "The profit from the jewelry is calculated as 5,000 multiplied by the rate of increase, which is 2.5%. Similarly, the pro...",
+          "Find the profit from jewelry and gadgets.",
+          "Find the difference between the two profits to determine which is more profitable.",
+          "So, the profit from jewelry is 5,000 * 2.5% = 125. The profit from gadgets is 8,000 * 1.2% = 96. The jewelry profit is h...",
+          "The merchant can choose the plan with higher profit, which is the jewelry. Hence, the maximum profit is 125."
+        ],
+        "best_thought_preview": "The merchant can choose the plan with higher profit, which is the jewelry. Hence, the maximum profit is 125.",
+        "best_state_preview": "The profit from the jewelry is calculated as 5,000 multiplied by the rate of increase, which is 2.5%. Similarly, the profit from the gadgets is calculated as 8,000 multiplied by the rate of increase, ..."
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "230",
+        "correct": true,
+        "latency_sec": 42.354640293866396,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 5,
+        "node_count": 11,
+        "best_node_id": "n3",
+        "path_node_ids": [
+          "root",
+          "n3"
+        ],
+        "path_thoughts_preview": [
+          "So the first day they travel 80 miles, and the next day 150 miles. So the total distance is 80 + 150 = 230 miles. Theref..."
+        ],
+        "best_thought_preview": "So the first day they travel 80 miles, and the next day 150 miles. So the total distance is 80 + 150 = 230 miles. Therefore, each train has covered a total distance of 230 miles.",
+        "best_state_preview": "So the first day they travel 80 miles, and the next day 150 miles. So the total distance is 80 + 150 = 230 miles. Therefore, each train has covered a total distance of 230 miles."
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "1750",
+        "correct": false,
+        "latency_sec": 123.65569570660591,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 13,
+        "node_count": 21,
+        "best_node_id": "n2",
+        "path_node_ids": [
+          "root",
+          "n2"
+        ],
+        "path_thoughts_preview": [
+          "So, for her teaching job, she works 50 weeks a year, 35 hours a week. So the total hours she works as a teacher is 50 mu..."
+        ],
+        "best_thought_preview": "So, for her teaching job, she works 50 weeks a year, 35 hours a week. So the total hours she works as a teacher is 50 multiplied by 35.",
+        "best_state_preview": "So, for her teaching job, she works 50 weeks a year, 35 hours a week. So the total hours she works as a teacher is 50 multiplied by 35."
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 167.14774179458618,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 31,
+        "best_node_id": "n26",
+        "path_node_ids": [
+          "root",
+          "n5",
+          "n26"
+        ],
+        "path_thoughts_preview": [
+          "She uses 3 eggs per omelet. So in 4 weeks, that's 3 eggs per day * 7 days per week * 4 weeks.",
+          "3*7=21, 21*4=84 eggs in total. Then, to get dozens, divide by 12. 84/12=7. So the answer is 7."
+        ],
+        "best_thought_preview": "3*7=21, 21*4=84 eggs in total. Then, to get dozens, divide by 12. 84/12=7. So the answer is 7.",
+        "best_state_preview": "She uses 3 eggs per omelet. So in 4 weeks, that's 3 eggs per day * 7 days per week * 4 weeks. 3*7=21, 21*4=84 eggs in total. Then, to get dozens, divide by 12. 84/12=7. So the answer is 7."
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 47.000329941511154,
+        "best_score": 10.0,
+        "best_is_terminal": true,
+        "best_is_usable": true,
+        "terminal_node_count": 8,
+        "node_count": 11,
+        "best_node_id": "n7",
+        "path_node_ids": [
+          "root",
+          "n7"
+        ],
+        "path_thoughts_preview": [
+          "The total distance of the trail is 12 miles. So far, she has walked 4 miles + 2 miles = 6 miles. This means there are 12..."
+        ],
+        "best_thought_preview": "The total distance of the trail is 12 miles. So far, she has walked 4 miles + 2 miles = 6 miles. This means there are 12 - 6 = 6 miles left to walk.",
+        "best_state_preview": "The total distance of the trail is 12 miles. So far, she has walked 4 miles + 2 miles = 6 miles. This means there are 12 - 6 = 6 miles left to walk."
+      }
+    ],
+    "ts_sft": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 22.062048882246017
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 11.231552556157112
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "130",
+        "correct": false,
+        "latency_sec": 11.003470160067081
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "540",
+        "correct": true,
+        "latency_sec": 10.994668912142515
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 11.255936373025179
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 11.02036265656352
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.39632435888052
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 11.457942992448807
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "45",
+        "correct": true,
+        "latency_sec": 10.78825443983078
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "460",
+        "correct": true,
+        "latency_sec": 10.9058259986341
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "366",
+        "correct": true,
+        "latency_sec": 10.840978294610977
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 10.895499423146248
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 10.86948188021779
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 10.970628421753645
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "65",
+        "correct": false,
+        "latency_sec": 15.421204850077629
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 10.480805814266205
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 11.188857201486826
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "42000",
+        "correct": false,
+        "latency_sec": 10.798184726387262
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 10.618827875703573
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "6",
+        "correct": true,
+        "latency_sec": 10.581997767090797
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 10.789722569286823
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 10.603934243321419
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 10.661729697138071
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 10.647276695817709
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "34",
+        "correct": false,
+        "latency_sec": 10.871298886835575
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "2",
+        "correct": true,
+        "latency_sec": 10.716029796749353
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.03443705663085
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 10.704258095473051
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 10.707143295556307
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 11.177078761160374
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "109",
+        "correct": true,
+        "latency_sec": 10.863184332847595
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 11.151683773845434
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "35",
+        "correct": true,
+        "latency_sec": 11.015690192580223
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "110",
+        "correct": false,
+        "latency_sec": 11.009840689599514
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.341938972473145
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 11.203231256455183
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75",
+        "correct": true,
+        "latency_sec": 10.76277146115899
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "195",
+        "correct": false,
+        "latency_sec": 13.819359663873911
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 13.162772733718157
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "1.5",
+        "correct": false,
+        "latency_sec": 12.103238336741924
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 10.95687571913004
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "1000",
+        "correct": false,
+        "latency_sec": 11.391229670494795
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "40",
+        "correct": false,
+        "latency_sec": 11.092135801911354
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 11.151117641478777
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.03429289534688
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 11.166779723018408
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "23",
+        "correct": false,
+        "latency_sec": 11.390900876373053
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 10.660353600978851
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "200000",
+        "correct": false,
+        "latency_sec": 10.832575507462025
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 10.643341552466154
+      }
+    ],
+    "cpo": [
+      {
+        "index": 0,
+        "gold": "18",
+        "prediction": "18",
+        "correct": true,
+        "latency_sec": 17.086433213204145
+      },
+      {
+        "index": 1,
+        "gold": "3",
+        "prediction": "12",
+        "correct": false,
+        "latency_sec": 10.949896685779095
+      },
+      {
+        "index": 2,
+        "gold": "70000",
+        "prediction": "4",
+        "correct": false,
+        "latency_sec": 11.180371802300215
+      },
+      {
+        "index": 3,
+        "gold": "540",
+        "prediction": "540",
+        "correct": true,
+        "latency_sec": 10.79408436641097
+      },
+      {
+        "index": 4,
+        "gold": "20",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 10.889110889285803
+      },
+      {
+        "index": 5,
+        "gold": "64",
+        "prediction": "60",
+        "correct": false,
+        "latency_sec": 10.997925147414207
+      },
+      {
+        "index": 6,
+        "gold": "260",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.150624420493841
+      },
+      {
+        "index": 7,
+        "gold": "160",
+        "prediction": "280",
+        "correct": false,
+        "latency_sec": 10.921968571841717
+      },
+      {
+        "index": 8,
+        "gold": "45",
+        "prediction": "45",
+        "correct": true,
+        "latency_sec": 15.443034902215004
+      },
+      {
+        "index": 9,
+        "gold": "460",
+        "prediction": "460",
+        "correct": true,
+        "latency_sec": 10.821740981191397
+      },
+      {
+        "index": 10,
+        "gold": "366",
+        "prediction": "3",
+        "correct": false,
+        "latency_sec": 10.906830377876759
+      },
+      {
+        "index": 11,
+        "gold": "694",
+        "prediction": "694",
+        "correct": true,
+        "latency_sec": 11.023293450474739
+      },
+      {
+        "index": 12,
+        "gold": "13",
+        "prediction": "10.5",
+        "correct": false,
+        "latency_sec": 10.939865313470364
+      },
+      {
+        "index": 13,
+        "gold": "18",
+        "prediction": "5",
+        "correct": false,
+        "latency_sec": 14.964865203946829
+      },
+      {
+        "index": 14,
+        "gold": "60",
+        "prediction": "65",
+        "correct": false,
+        "latency_sec": 14.889209780842066
+      },
+      {
+        "index": 15,
+        "gold": "125",
+        "prediction": "125",
+        "correct": true,
+        "latency_sec": 11.229912903159857
+      },
+      {
+        "index": 16,
+        "gold": "230",
+        "prediction": "10",
+        "correct": false,
+        "latency_sec": 11.43057094886899
+      },
+      {
+        "index": 17,
+        "gold": "57500",
+        "prediction": "42000",
+        "correct": false,
+        "latency_sec": 11.267874926328659
+      },
+      {
+        "index": 18,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 11.554114248603582
+      },
+      {
+        "index": 19,
+        "gold": "6",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.405576135963202
+      },
+      {
+        "index": 20,
+        "gold": "15",
+        "prediction": "24",
+        "correct": false,
+        "latency_sec": 11.423256885260344
+      },
+      {
+        "index": 21,
+        "gold": "14",
+        "prediction": "14",
+        "correct": true,
+        "latency_sec": 11.214431159198284
+      },
+      {
+        "index": 22,
+        "gold": "7",
+        "prediction": "7",
+        "correct": true,
+        "latency_sec": 11.283535689115524
+      },
+      {
+        "index": 23,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 11.45634550973773
+      },
+      {
+        "index": 24,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 11.166000593453646
+      },
+      {
+        "index": 25,
+        "gold": "2",
+        "prediction": "2",
+        "correct": true,
+        "latency_sec": 11.426563791930676
+      },
+      {
+        "index": 26,
+        "gold": "243",
+        "prediction": "243",
+        "correct": true,
+        "latency_sec": 11.57548552006483
+      },
+      {
+        "index": 27,
+        "gold": "16",
+        "prediction": "16",
+        "correct": true,
+        "latency_sec": 11.482488602399826
+      },
+      {
+        "index": 28,
+        "gold": "25",
+        "prediction": "25",
+        "correct": true,
+        "latency_sec": 11.407485488802195
+      },
+      {
+        "index": 29,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 12.466199059039354
+      },
+      {
+        "index": 30,
+        "gold": "109",
+        "prediction": "109",
+        "correct": true,
+        "latency_sec": 12.560372605919838
+      },
+      {
+        "index": 31,
+        "gold": "80",
+        "prediction": "80",
+        "correct": true,
+        "latency_sec": 12.936618030071259
+      },
+      {
+        "index": 32,
+        "gold": "35",
+        "prediction": "252",
+        "correct": false,
+        "latency_sec": 15.054365992546082
+      },
+      {
+        "index": 33,
+        "gold": "70",
+        "prediction": "70",
+        "correct": true,
+        "latency_sec": 11.612351298332214
+      },
+      {
+        "index": 34,
+        "gold": "23",
+        "prediction": "2",
+        "correct": false,
+        "latency_sec": 11.560917466878891
+      },
+      {
+        "index": 35,
+        "gold": "9",
+        "prediction": "9",
+        "correct": true,
+        "latency_sec": 11.652759406715631
+      },
+      {
+        "index": 36,
+        "gold": "75",
+        "prediction": "75",
+        "correct": true,
+        "latency_sec": 11.138751477003098
+      },
+      {
+        "index": 37,
+        "gold": "2",
+        "prediction": "1",
+        "correct": false,
+        "latency_sec": 11.058810018002987
+      },
+      {
+        "index": 38,
+        "gold": "10",
+        "prediction": "10",
+        "correct": true,
+        "latency_sec": 11.003604792058468
+      },
+      {
+        "index": 39,
+        "gold": "18",
+        "prediction": "1.5",
+        "correct": false,
+        "latency_sec": 11.376338135451078
+      },
+      {
+        "index": 40,
+        "gold": "8",
+        "prediction": "8",
+        "correct": true,
+        "latency_sec": 11.335602007806301
+      },
+      {
+        "index": 41,
+        "gold": "200",
+        "prediction": "200",
+        "correct": true,
+        "latency_sec": 11.290325816720724
+      },
+      {
+        "index": 42,
+        "gold": "26",
+        "prediction": "26",
+        "correct": true,
+        "latency_sec": 11.387382119894028
+      },
+      {
+        "index": 43,
+        "gold": "48",
+        "prediction": "48",
+        "correct": true,
+        "latency_sec": 11.479679591953754
+      },
+      {
+        "index": 44,
+        "gold": "20",
+        "prediction": "20",
+        "correct": true,
+        "latency_sec": 11.277264446020126
+      },
+      {
+        "index": 45,
+        "gold": "104",
+        "prediction": "104",
+        "correct": true,
+        "latency_sec": 12.549670871347189
+      },
+      {
+        "index": 46,
+        "gold": "163",
+        "prediction": "163",
+        "correct": true,
+        "latency_sec": 11.293953537940979
+      },
+      {
+        "index": 47,
+        "gold": "800",
+        "prediction": "200",
+        "correct": false,
+        "latency_sec": 11.531970486044884
+      },
+      {
+        "index": 48,
+        "gold": "8",
+        "prediction": "20000",
+        "correct": false,
+        "latency_sec": 11.331129472702742
+      },
+      {
+        "index": 49,
+        "gold": "30",
+        "prediction": "30",
+        "correct": true,
+        "latency_sec": 11.576276738196611
+      }
+    ]
+  }
+}

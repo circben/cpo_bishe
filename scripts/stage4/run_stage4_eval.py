@@ -26,6 +26,10 @@ def main() -> None:
     parser.add_argument("--tot-max-depth", type=int, default=3)
     parser.add_argument("--tot-width", type=int, default=2)
     parser.add_argument("--tot-beam", type=int, default=2)
+    parser.add_argument("--tot-candidates-per-step", type=int, default=-1)
+    parser.add_argument("--tot-beam-width", type=int, default=-1)
+    parser.add_argument("--tot-sc-votes", type=int, default=5)
+    parser.add_argument("--tot-sc-temperature", type=float, default=0.7)
     parser.add_argument("--tot-max-samples", type=int, default=50)
     parser.add_argument("--tot-score-samples", type=int, default=1)
     parser.add_argument("--tot-workers", type=int, default=1)
@@ -95,6 +99,14 @@ def main() -> None:
                 str(args.tot_width),
                 "--tot-beam",
                 str(args.tot_beam),
+                "--tot-candidates-per-step",
+                str(args.tot_candidates_per_step),
+                "--tot-beam-width",
+                str(args.tot_beam_width),
+                "--tot-sc-votes",
+                str(args.tot_sc_votes),
+                "--tot-sc-temperature",
+                str(args.tot_sc_temperature),
                 "--tot-max-samples",
                 str(args.tot_max_samples),
                 "--tot-score-samples",
