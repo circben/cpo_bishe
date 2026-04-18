@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPO 性能对比分析</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -174,7 +175,7 @@
         .method-card:hover { border-color: var(--primary); }
         
         .method-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .method-card-name { font-weight: 600; color: var(--text); font-size: 14px; }
+        .method-card-name { font-weight: 600; color: var(--text); font-size: 18px; }
         .method-card-accuracy { font-size: 20px; font-weight: 700; }
         .method-card-accuracy.high { color: var(--success); }
         .method-card-accuracy.med { color: var(--warning); }
@@ -182,6 +183,58 @@
         
         .method-card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-secondary); }
         .method-stat-label { font-size: 10px; text-transform: uppercase; }
+        
+        /* 散点图样式 */
+        .scatter-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .scatter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .scatter-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .scatter-hint { font-size: 11px; color: var(--text-secondary); }
+        
+        .scatter-chart-container { position: relative; height: 320px; background: var(--bg); border-radius: 8px; overflow: hidden; }
+        .scatter-chart-container svg { width: 100%; height: 100%; display: block; }
+        
+        /* 散点图坐标轴样式 */
+        .scatter-axis line, .scatter-axis path { stroke: var(--border); }
+        .scatter-axis text { fill: var(--text-secondary); font-size: 11px; }
+        
+        .scatter-point { cursor: pointer; transition: all 0.2s; }
+        .scatter-point:hover { filter: brightness(1.2); }
+        
+        .scatter-axis-label { font-size: 11px; fill: var(--text-secondary); }
+        .scatter-axis-title { font-size: 12px; fill: var(--text); font-weight: 500; }
+        
+        .scatter-grid-line { stroke: var(--border); stroke-dasharray: 3,3; }
+        
+        .scatter-tooltip {
+            position: absolute;
+            background: var(--bg);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+        }
+        .scatter-tooltip.visible { opacity: 1; }
+        .scatter-tooltip-name { font-weight: 600; color: var(--primary); margin-bottom: 8px; font-size: 13px; }
+        .scatter-tooltip-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .scatter-tooltip-label { color: var(--text-secondary); }
+        .scatter-tooltip-value { font-weight: 500; }
+        
+        .scatter-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; justify-content: center; }
+        .scatter-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+        .scatter-legend-dot { width: 12px; height: 12px; border-radius: 50%; }
         
         .charts-grid {
             display: grid;
@@ -378,7 +431,36 @@
                         <div class="run-detail-value" id="detailCreatedAt">-</div>
                     </div>
                 </div>
-                <h4 style="margin: 15px 0 10px; font-size: 14px; color: #888;">方法明细</h4>
+                
+                <!-- 散点图区域 -->
+                <div class="scatter-panel" id="scatterPanel">
+                    <div class="scatter-header">
+                        <div class="scatter-title">📈 性能散点图（准确率 vs 延迟）</div>
+                        <div class="scatter-hint">点击数据点可查看详情</div>
+                    </div>
+                    <div class="scatter-chart-container" id="scatterChartContainer">
+                        <svg id="scatterSvg"></svg>
+                        <div class="scatter-tooltip" id="scatterTooltip">
+                            <div class="scatter-tooltip-name" id="tooltipName">-</div>
+                            <div class="scatter-tooltip-row">
+                                <span class="scatter-tooltip-label">准确率</span>
+                                <span class="scatter-tooltip-value" id="tooltipAcc">-</span>
+                            </div>
+                            <div class="scatter-tooltip-row">
+                                <span class="scatter-tooltip-label">延迟</span>
+                                <span class="scatter-tooltip-value" id="tooltipLat">-</span>
+                            </div>
+                            <div class="scatter-tooltip-row">
+                                <span class="scatter-tooltip-label">样本数</span>
+                                <span class="scatter-tooltip-value" id="tooltipCount">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scatter-legend" id="scatterLegend"></div>
+                </div>
+                
+                <!-- 方法明细卡片 -->
+                <h4 style="margin: 15px 0 10px; font-size: 14px; color: #888;">📋 详细数据</h4>
                 <div id="methodCards" class="method-cards"></div>
             </div>
         </div>
@@ -527,7 +609,7 @@
                         <div class="method-card">
                             <div class="method-card-header">
                                 <span class="method-card-name">${m.method}</span>
-                                <span class="method-card-accuracy ${accClass}">${fmtPct(m.accuracy)}</span>
+                                <span class="method-card-accuracy ${accClass}">正确率 ${fmtPct(m.accuracy)}</span>
                             </div>
                             <div class="method-card-stats">
                                 <div class="method-stat-item">
@@ -544,8 +626,173 @@
                 }).join('');
             }
 
+            // 渲染散点图
+            renderScatterChart(methods);
+
             runDetail.style.display = 'block';
         }
+
+        // 散点图颜色映射
+        const methodColors = {
+            'CoT': '#2563eb',
+            'SC': '#16a34a',
+            'ToT': '#dc2626',
+            'CPO': '#8b5cf6',
+            'Random': '#64748b',
+            'greedy': '#f59e0b',
+            'default': '#0ea5e9'
+        };
+
+        function getMethodColor(method) {
+            const m = method.toLowerCase();
+            for (const [key, color] of Object.entries(methodColors)) {
+                if (m.includes(key.toLowerCase())) return color;
+            }
+            return methodColors['default'];
+        }
+
+        function renderScatterChart(methods) {
+            const container = document.getElementById('scatterChartContainer');
+            const svg = d3.select('#scatterSvg');
+            svg.selectAll('*').remove();
+
+            if (!methods || methods.length === 0) {
+                svg.append('text')
+                    .attr('x', '50%').attr('y', '50%')
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#888')
+                    .text('暂无数据');
+                return;
+            }
+
+            const width = container.clientWidth || 600;
+            const height = container.clientHeight || 320;
+            const margin = { top: 25, right: 30, bottom: 45, left: 55 };
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            // 设置 SVG viewBox
+            svg.attr('viewBox', `0 0 ${width} ${height}`).attr('preserveAspectRatio', 'xMidYMid meet');
+
+            // 计算数据范围
+            const accData = methods.map(m => Number(m.accuracy || 0) * 100);
+            const latData = methods.map(m => Number(m.avg_latency_sec || 0));
+            
+            const accMin = 20;  // 横坐标从20%开始
+            const accMax = 80;  // 横坐标到80%结束
+            const latMin = 0;
+            const latMax = Math.max(...latData, 1) * 1.2;
+
+            // 创建比例尺
+            const xScale = d3.scaleLinear().domain([accMin, accMax]).range([0, innerWidth]);
+            const yScale = d3.scaleLinear().domain([latMax, latMin]).range([0, innerHeight]);
+
+            const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+            // 绘制网格线
+            const xTicks = xScale.ticks(6);
+            const yTicks = yScale.ticks(5);
+
+            xTicks.forEach(tick => {
+                g.append('line')
+                    .attr('class', 'scatter-grid-line')
+                    .attr('x1', xScale(tick)).attr('x2', xScale(tick))
+                    .attr('y1', 0).attr('y2', innerHeight);
+            });
+
+            yTicks.forEach(tick => {
+                g.append('line')
+                    .attr('class', 'scatter-grid-line')
+                    .attr('x1', 0).attr('x2', innerWidth)
+                    .attr('y1', yScale(tick)).attr('y2', yScale(tick));
+            });
+
+            // 绘制坐标轴（带样式）
+            const xAxis = g.append('g')
+                .attr('class', 'scatter-axis')
+                .attr('transform', `translate(0,${innerHeight})`)
+                .call(d3.axisBottom(xScale).ticks(6).tickFormat(d => d + '%'));
+
+            const yAxis = g.append('g')
+                .attr('class', 'scatter-axis')
+                .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d + 's'));
+
+            // 坐标轴标题
+            svg.append('text')
+                .attr('class', 'scatter-axis-title')
+                .attr('x', margin.left + innerWidth / 2)
+                .attr('y', height - 8)
+                .attr('text-anchor', 'middle')
+                .text('准确率 (%)');
+
+            svg.append('text')
+                .attr('class', 'scatter-axis-title')
+                .attr('transform', `rotate(-90)`)
+                .attr('x', -(margin.top + innerHeight / 2))
+                .attr('y', 15)
+                .attr('text-anchor', 'middle')
+                .text('延迟 (秒)');
+
+            // 绘制数据点
+            const tooltip = document.getElementById('scatterTooltip');
+            
+            methods.forEach((m, i) => {
+                const acc = Number(m.accuracy || 0) * 100;
+                const lat = Number(m.avg_latency_sec || 0);
+                const color = getMethodColor(m.method);
+                
+                g.append('circle')
+                    .attr('class', 'scatter-point')
+                    .attr('cx', xScale(acc))
+                    .attr('cy', yScale(lat))
+                    .attr('r', 0)
+                    .attr('fill', color)
+                    .attr('opacity', 0.8)
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2)
+                    .on('mouseover', function(event) {
+                        d3.select(this).attr('r', 12).attr('opacity', 1);
+                        document.getElementById('tooltipName').textContent = m.method;
+                        document.getElementById('tooltipAcc').textContent = fmtPct(m.accuracy);
+                        document.getElementById('tooltipLat').textContent = fmtSec(m.avg_latency_sec);
+                        document.getElementById('tooltipCount').textContent = m.count || 0;
+                        tooltip.classList.add('visible');
+                        
+                        const rect = container.getBoundingClientRect();
+                        let x = event.clientX - rect.left + 15;
+                        let y = event.clientY - rect.top - 10;
+                        if (x + 200 > width) x = event.clientX - rect.left - 195;
+                        tooltip.style.left = x + 'px';
+                        tooltip.style.top = y + 'px';
+                    })
+                    .on('mouseout', function() {
+                        d3.select(this).attr('r', 8).attr('opacity', 0.8);
+                        tooltip.classList.remove('visible');
+                    })
+                    .transition()
+                    .delay(i * 50)
+                    .duration(400)
+                    .attr('r', 8);
+            });
+
+            // 渲染图例
+            const legend = document.getElementById('scatterLegend');
+            const uniqueMethods = [...new Set(methods.map(m => m.method))];
+            legend.innerHTML = uniqueMethods.slice(0, 8).map(m => `
+                <div class="scatter-legend-item">
+                    <div class="scatter-legend-dot" style="background: ${getMethodColor(m)}"></div>
+                    <span>${m}</span>
+                </div>
+            `).join('');
+        }
+
+        // 监听窗口大小变化，重新渲染散点图
+        window.addEventListener('resize', () => {
+            const run = allRuns[runSelect.value];
+            if (run && run.methods) {
+                renderScatterChart(run.methods);
+            }
+        });
 
         async function findApiBase() {
             for (const base of API_CANDIDATES) {
