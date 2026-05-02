@@ -17,6 +17,7 @@ import urllib.parse
 # 绝对路径
 PROJECT_ROOT = Path(r'D:\001_softwares\VS Code Demo\cpo_project')
 RUNS_ROOT = PROJECT_ROOT / 'outputs' / 'eval' / 'runs'
+NODES_ROOT = PROJECT_ROOT / 'outputs' / 'eval' / 'nodes'
 
 # 成功路径文件
 SUCCESS_PATH_FILES = {
@@ -104,7 +105,24 @@ class ToTAPIHandler(SimpleHTTPRequestHandler):
         if path == '/api/stats/dpo-pairs' or path == '/api/stats/dpo-pairs/':
             self.send_json(self.get_dpo_pairs_stats())
             return
-        
+
+        # API: 获取 ToT 节点批次列表
+        if path == '/api/nodes/batches' or path == '/api/nodes/batches/':
+            self.send_json(self.get_nodes_batches())
+            return
+
+        # API: 获取批次中的样本列表
+        if path.startswith('/api/nodes/samples/'):
+            batch_path = urllib.parse.unquote(path[len('/api/nodes/samples/'):])
+            self.send_json(self.get_nodes_samples(batch_path))
+            return
+
+        # API: 获取单个样本数据
+        if path.startswith('/api/nodes/sample/'):
+            sample_path = urllib.parse.unquote(path[len('/api/nodes/sample/'):])
+            self.send_json(self.get_node_sample(sample_path))
+            return
+
         # 静态文件
         return super().do_GET()
 
@@ -430,6 +448,106 @@ class ToTAPIHandler(SimpleHTTPRequestHandler):
             'total_questions': total_questions,
             'datasets': results
         }
+
+    def get_nodes_batches(self):
+        """获取 outputs/eval/nodes 下的所有批次列表"""
+        batches = []
+        if not NODES_ROOT.exists():
+            return {'batches': batches, 'error': f'Nodes root not found: {NODES_ROOT}'}
+
+        try:
+            # 遍历 dataset/split/run_name
+            for dataset_dir in sorted(NODES_ROOT.iterdir()):
+                if not dataset_dir.is_dir():
+                    continue
+                dataset_name = dataset_dir.name
+
+                for split_dir in sorted(dataset_dir.iterdir()):
+                    if not split_dir.is_dir():
+                        continue
+                    split_name = split_dir.name
+
+                    for run_dir in sorted(split_dir.iterdir()):
+                        if not run_dir.is_dir():
+                            continue
+                        batch_name = run_dir.name
+
+                        batches.append({
+                            'dataset': dataset_name,
+                            'split': split_name,
+                            'batch_name': batch_name,
+                            'path': f'{dataset_name}/{split_name}/{batch_name}'
+                        })
+        except Exception as e:
+            return {'batches': batches, 'error': str(e)}
+
+        return {'batches': batches}
+
+    def get_nodes_samples(self, batch_path):
+        """获取指定批次中的样本列表，按方法分组"""
+        # batch_path 格式: dataset/split/batch_name
+        parts = batch_path.split('/')
+        if len(parts) != 3:
+            return {'error': f'Invalid batch path: {batch_path}', 'samples_by_method': {}, 'methods': []}
+
+        dataset, split, batch_name = parts
+        batch_dir = NODES_ROOT / dataset / split / batch_name
+
+        if not batch_dir.exists():
+            return {'error': f'Batch not found: {batch_path}', 'samples_by_method': {}, 'methods': []}
+
+        samples_by_method = {}
+        try:
+            for method_dir in sorted(batch_dir.iterdir()):
+                if not method_dir.is_dir():
+                    continue
+                method_name = method_dir.name
+                samples = []
+
+                for sample_file in sorted(method_dir.glob('sample_*.json')):
+                    if sample_file.name.endswith('.meta.json'):
+                        continue
+                    try:
+                        with open(sample_file, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                        samples.append({
+                            'file': sample_file.name,
+                            'index': data.get('index', 0),
+                            'correct': data.get('correct', False),
+                            'prediction': data.get('prediction', ''),
+                        })
+                    except Exception:
+                        continue
+
+                if samples:
+                    samples_by_method[method_name] = samples
+
+        except Exception as e:
+            return {'error': str(e), 'samples_by_method': {}, 'methods': []}
+
+        methods = sorted(samples_by_method.keys())
+        return {
+            'samples_by_method': samples_by_method,
+            'methods': methods
+        }
+
+    def get_node_sample(self, sample_path):
+        """获取单个样本的完整数据"""
+        # sample_path 格式: dataset/split/batch_name/method/sample_xxx.json
+        parts = sample_path.split('/')
+        if len(parts) != 5:
+            return {'error': f'Invalid sample path: {sample_path}', 'data': None}
+
+        file_path = NODES_ROOT / sample_path
+        if not file_path.exists():
+            return {'error': f'Sample not found: {sample_path}', 'data': None}
+
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return {'data': data}
+        except Exception as e:
+            return {'error': str(e), 'data': None}
 
     def get_performance_runs(self, dataset='all', limit=50):
         """读取 outputs/eval/runs 下评估结果并生成性能对比聚合。"""
