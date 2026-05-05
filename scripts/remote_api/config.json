@@ -1,0 +1,13 @@
+{
+  "listen_host": "0.0.0.0",
+  "listen_port": 8088,
+  "jobs_root": "outputs/remote_inference/jobs",
+  "command": [
+    "python",
+    "scripts/stage4/run_stage4_text_infer.py",
+    "--input",
+    "{input_file}",
+    "--output-dir",
+    "{output_dir}"
+  ]
+}

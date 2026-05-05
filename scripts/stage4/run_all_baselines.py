@@ -67,16 +67,16 @@ def _extract_gsm8k_gold(answer: str) -> str:
 def _extract_gsm8k_pred(text: str) -> str:
     lower = text.lower()
     if "the answer is" in lower:
-        # Extract number immediately following each explicit answer phrase,
-        # then prefer the final explicit answer in the response.
+        # Extract number immediately following explicit answer phrase,
+        # and prefer the first explicit final answer to avoid drift overwrite.
         matches = re.findall(r"the answer is\s*[:\-]?\s*([-+]?\d+(?:\.\d+)?)", lower)
         if matches:
-            return matches[-1]
+            return matches[0]
         tail = lower.rsplit("the answer is", 1)[1]
         nums = re.findall(r"[-+]?\d+(?:\.\d+)?", tail)
         return nums[0] if nums else tail.strip()
     nums = re.findall(r"[-+]?\d+(?:\.\d+)?", lower)
-    return nums[-1] if nums else lower.strip()
+    return nums[0] if nums else lower.strip()
 
 
 def _normalize_binary(text: str) -> str:
@@ -96,6 +96,37 @@ def _extract_pred(task: str, text: str) -> str:
     if task == "gsm8k":
         return _extract_gsm8k_pred(text)
     return _normalize_binary(text)
+
+
+def _first_answer_span(task: str, text: str) -> tuple[str, int]:
+    raw = str(text)
+    lower = raw.lower()
+
+    if task == "gsm8k":
+        m = re.search(r"the answer is\s*[:\-]?\s*([-+]?\d+(?:\.\d+)?)", lower)
+        if m:
+            return m.group(1), m.end()
+
+        # Fallback: first complete sentence with a number.
+        for m_sent in re.finditer(r"[^.!?。！？]*[.!?。！？]", raw, flags=re.S):
+            sent = m_sent.group(0)
+            nums = re.findall(r"[-+]?\d+(?:\.\d+)?", sent)
+            if nums:
+                return nums[0], m_sent.end()
+        return "", 0
+
+    m = re.search(r"(?:the answer is|answer\s*:?)\s*(yes|no)\b", lower)
+    if m:
+        return m.group(1), m.end()
+
+    # Fallback: first complete sentence containing explicit yes/no.
+    for m_sent in re.finditer(r"[^.!?。！？]*[.!?。！？]", raw, flags=re.S):
+        sent_lower = m_sent.group(0).lower()
+        if re.search(r"\byes\b", sent_lower):
+            return "yes", m_sent.end()
+        if re.search(r"\bno\b", sent_lower):
+            return "no", m_sent.end()
+    return "", 0
 
 
 def _preview_text(text: str, max_len: int = 200) -> str:
@@ -223,6 +254,99 @@ def _should_log_progress(idx: int, total: int, log_interval: int) -> bool:
     return log_interval > 0 and (idx + 1) % log_interval == 0
 
 
+def _slug(text: str) -> str:
+    out = []
+    for ch in str(text).lower():
+        if ch.isalnum() or ch in {"-", "_"}:
+            out.append(ch)
+        else:
+            out.append("-")
+    return "".join(out).strip("-") or "run"
+
+
+def _write_sample_nodes(method_dir: Path | None, sample_index: int, payload: dict[str, Any]) -> None:
+    if method_dir is None:
+        return
+    method_dir.mkdir(parents=True, exist_ok=True)
+    out = method_dir / f"sample_{sample_index:06d}.json"
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _tot_node_to_dict(node: Any) -> dict[str, Any]:
+    return {
+        "node_id": node.node_id,
+        "parent_id": getattr(node, "parent_id", None),
+        "depth": node.depth,
+        "score": node.score,
+        "is_terminal": node.is_terminal,
+        "state": node.state,
+        "thought": node.thought,
+        "sc_score": getattr(node, "sc_score", 0.0),
+        "sc_answer": getattr(node, "sc_answer", ""),
+        "sc_vote_map": getattr(node, "sc_vote_map", {}),
+        "sc_valid_votes": getattr(node, "sc_valid_votes", 0),
+    }
+
+
+def _split_reasoning_steps(text: str) -> list[str]:
+    lines = [ln.strip() for ln in str(text).splitlines() if ln.strip()]
+    if len(lines) >= 2:
+        return lines
+
+    merged = " ".join(str(text).split())
+    if not merged:
+        return []
+    parts = [p.strip() for p in re.split(r"(?<=[.!?。！？])\s+", merged) if p.strip()]
+    return parts if parts else [merged]
+
+
+def _build_linear_nodes_from_text(text: str) -> list[dict[str, Any]]:
+    steps = _split_reasoning_steps(text)
+    nodes: list[dict[str, Any]] = [
+        {
+            "node_id": "root",
+            "parent_id": None,
+            "depth": 0,
+            "score": None,
+            "is_terminal": False,
+            "state": "",
+            "thought": "",
+        }
+    ]
+
+    running_steps: list[str] = []
+    parent_id = "root"
+    for i, step in enumerate(steps, start=1):
+        node_id = f"step{i}"
+        running_steps.append(step)
+        nodes.append(
+            {
+                "node_id": node_id,
+                "parent_id": parent_id,
+                "depth": i,
+                "score": 1.0,
+                "is_terminal": i == len(steps),
+                "state": "\n".join(running_steps),
+                "thought": step,
+            }
+        )
+        parent_id = node_id
+
+    if len(nodes) == 1:
+        nodes.append(
+            {
+                "node_id": "step1",
+                "parent_id": "root",
+                "depth": 1,
+                "score": 1.0,
+                "is_terminal": True,
+                "state": str(text),
+                "thought": str(text),
+            }
+        )
+    return nodes
+
+
 def _run_cot(
     task: str,
     model: str,
@@ -230,6 +354,7 @@ def _run_cot(
     max_new_tokens: int,
     log_interval: int,
     method_tag: str,
+    node_dump_dir: Path | None = None,
 ) -> tuple[dict, list[dict[str, Any]]]:
     runtime = GenerationRuntime(model_name=model, max_new_tokens=max_new_tokens, temperature=0.0, top_p=1.0)
     details: list[dict[str, Any]] = []
@@ -240,10 +365,27 @@ def _run_cot(
         p0 = time.perf_counter()
         text = complete_text(prompt=_prompt_cot(task, q), runtime=runtime, do_sample=False)
         latency = time.perf_counter() - p0
-        pred = _extract_pred(task, text)
+        first_pred, first_end = _first_answer_span(task, text)
+        pred = first_pred if first_pred else _extract_pred(task, text)
+        chain_text = text[:first_end].strip() if first_end > 0 else text
         correct = _is_correct(task, pred, gold)
         ok += int(correct)
         details.append({"index": idx, "gold": gold, "prediction": pred, "correct": correct, "latency_sec": latency})
+        _write_sample_nodes(
+            node_dump_dir,
+            idx,
+            {
+                "task": task,
+                "method": method_tag,
+                "index": idx,
+                "question": q,
+                "gold": gold,
+                "prediction": pred,
+                "correct": correct,
+                "latency_sec": latency,
+                "nodes": _build_linear_nodes_from_text(chain_text),
+            },
+        )
         if _should_log_progress(idx, len(rows), log_interval):
             cnt_avg = ok / (idx + 1)
             print(
@@ -272,6 +414,7 @@ def _run_tot(
     sc_votes: int,
     sc_temperature: float,
     log_interval: int,
+    node_dump_dir: Path | None = None,
 ) -> tuple[dict, list[dict[str, Any]]]:
     details: list[dict[str, Any]] = []
     ok = 0
@@ -318,6 +461,27 @@ def _run_tot(
             "best_thought_preview": _preview_text(best.thought),
             "best_state_preview": _preview_text(best.state),
         })
+        _write_sample_nodes(
+            node_dump_dir,
+            idx,
+            {
+                "task": task,
+                "method": "tot",
+                "index": idx,
+                "question": q,
+                "gold": gold,
+                "prediction": pred,
+                "correct": correct,
+                "latency_sec": latency,
+                "best_node_id": best.node_id,
+                "best_score": best.score,
+                "best_is_terminal": best.is_terminal,
+                "total_nodes": result.total_nodes,
+                "terminal_node_count": len(result.terminal_nodes),
+                "path_node_ids": [n.node_id for n in path_nodes],
+                "nodes": [_tot_node_to_dict(n) for n in result.nodes],
+            },
+        )
         if _should_log_progress(idx, len(rows), log_interval):
             cnt_avg = ok / (idx + 1)
             print(
@@ -380,20 +544,21 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=256)
 
     parser.add_argument("--tot-max-depth", type=int, default=3)
-    parser.add_argument("--tot-width", type=int, default=2)
-    parser.add_argument("--tot-beam", type=int, default=2)
     parser.add_argument("--tot-max-samples", type=int, default=50, help="ToT runs on the first N rows from the shared slice; 0 means all")
-    parser.add_argument("--tot-candidates-per-step", type=int, default=-1)
-    parser.add_argument("--tot-beam-width", type=int, default=-1)
+    parser.add_argument("--tot-candidates-per-step", type=int, default=10)
+    parser.add_argument("--tot-beam-width", type=int, default=5)
     parser.add_argument("--tot-sc-votes", type=int, default=5)
     parser.add_argument("--tot-sc-temperature", type=float, default=0.7)
     parser.add_argument("--tot-score-samples", type=int, default=1)
     parser.add_argument("--tot-workers", type=int, default=1)
     parser.add_argument("--log-interval", type=int, default=1, help="Progress print interval in examples; 0 to disable")
-    parser.add_argument("--tot-adaptive-retry", type=int, choices=[0, 1], default=1, help="deprecated")
-    parser.add_argument("--tot-retry-max-depth", type=int, default=7, help="deprecated")
-    parser.add_argument("--tot-retry-width", type=int, default=4, help="deprecated")
-    parser.add_argument("--tot-retry-beam", type=int, default=3, help="deprecated")
+    parser.add_argument("--run-cot", type=int, choices=[0, 1], default=1, help="Whether to run CoT baseline")
+    parser.add_argument("--run-tot", type=int, choices=[0, 1], default=1, help="Whether to run ToT baseline")
+    parser.add_argument("--run-ts-sft", type=int, choices=[0, 1], default=1, help="Whether to run TS-SFT baseline")
+    parser.add_argument("--run-cpo", type=int, choices=[0, 1], default=1, help="Whether to run CPO baseline")
+    parser.add_argument("--save-nodes", type=int, choices=[0, 1], default=0, help="Save per-sample inference nodes for all methods")
+    parser.add_argument("--nodes-output-root", default="outputs/eval/nodes", help="Root directory for node dumps")
+    parser.add_argument("--nodes-run-id", default="", help="Optional run id used as node dump directory level")
 
     parser.add_argument("--output-prefix", default="baselines_all")
     args = parser.parse_args()
@@ -401,50 +566,102 @@ def main() -> None:
     rows = _load_eval_examples(args.task, args.split, args.max_samples, args.start_index)
     if not rows:
         raise SystemExit("No evaluation rows loaded.")
+    selected_methods = []
+    if args.run_cot == 1:
+        selected_methods.append("cot")
+    if args.run_tot == 1:
+        selected_methods.append("tot")
+    if args.run_ts_sft == 1:
+        selected_methods.append("ts_sft")
+    if args.run_cpo == 1:
+        selected_methods.append("cpo")
+    if not selected_methods:
+        raise SystemExit("No baseline selected. Enable at least one of --run-cot/--run-tot/--run-ts-sft/--run-cpo.")
+
     _preflight_transformers(args.base_model)
     print(
         f"Using shared sample slice for all baselines: split={args.split}, "
         f"start_index={args.start_index}, count={len(rows)}"
     )
+    print(f"Selected methods: {', '.join(selected_methods)}")
 
     summaries: list[dict] = []
     details: dict[str, list[dict]] = {}
 
-    clear_runtime_cache()
-    s_cot, d_cot = _run_cot(args.task, args.base_model, rows, args.max_new_tokens, args.log_interval, "cot")
-    summaries.append(s_cot)
-    details["cot"] = d_cot
+    save_nodes = args.save_nodes == 1
+    node_dirs: dict[str, Path] = {}
+    if save_nodes:
+        node_run_id = _slug(args.nodes_run_id) if str(args.nodes_run_id).strip() else _slug(args.output_prefix)
+        node_run_dir = Path(args.nodes_output_root) / args.task / args.split / node_run_id
+        node_run_dir.mkdir(parents=True, exist_ok=True)
+        for method in ("cot", "tot", "ts_sft", "cpo"):
+            method_dir = node_run_dir / method
+            method_dir.mkdir(parents=True, exist_ok=True)
+            node_dirs[method] = method_dir
+        print(f"Node dump enabled: {node_run_dir.as_posix()}")
 
-    tot_rows = rows if args.tot_max_samples <= 0 else rows[: min(args.tot_max_samples, len(rows))]
-    print(f"ToT subset size: {len(tot_rows)} / {len(rows)} (from the same shared slice)")
-    tot_candidates_per_step = args.tot_candidates_per_step if args.tot_candidates_per_step > 0 else args.tot_width
-    tot_beam_width = args.tot_beam_width if args.tot_beam_width > 0 else args.tot_beam
-    s_tot, d_tot = _run_tot(
-        args.task,
-        args.base_model,
-        tot_rows,
-        args.tot_max_depth,
-        tot_candidates_per_step,
-        tot_beam_width,
-        args.tot_sc_votes,
-        args.tot_sc_temperature,
-        args.log_interval,
-    )
-    s_tot["subset_of_count"] = len(rows)
-    summaries.append(s_tot)
-    details["tot"] = d_tot
+    if args.run_cot == 1:
+        clear_runtime_cache()
+        s_cot, d_cot = _run_cot(
+            args.task,
+            args.base_model,
+            rows,
+            args.max_new_tokens,
+            args.log_interval,
+            "cot",
+            node_dirs.get("cot"),
+        )
+        summaries.append(s_cot)
+        details["cot"] = d_cot
 
-    clear_runtime_cache()
-    s_tssft, d_tssft = _run_cot(args.task, args.ts_sft_model, rows, args.max_new_tokens, args.log_interval, "ts_sft")
-    s_tssft["method"] = "ts_sft"
-    summaries.append(s_tssft)
-    details["ts_sft"] = d_tssft
+    if args.run_tot == 1:
+        tot_rows = rows if args.tot_max_samples <= 0 else rows[: min(args.tot_max_samples, len(rows))]
+        print(f"ToT subset size: {len(tot_rows)} / {len(rows)} (from the same shared slice)")
+        s_tot, d_tot = _run_tot(
+            args.task,
+            args.base_model,
+            tot_rows,
+            args.tot_max_depth,
+            args.tot_candidates_per_step,
+            args.tot_beam_width,
+            args.tot_sc_votes,
+            args.tot_sc_temperature,
+            args.log_interval,
+            node_dirs.get("tot"),
+        )
+        s_tot["subset_of_count"] = len(rows)
+        summaries.append(s_tot)
+        details["tot"] = d_tot
 
-    clear_runtime_cache()
-    s_cpo, d_cpo = _run_cot(args.task, args.cpo_model, rows, args.max_new_tokens, args.log_interval, "cpo")
-    s_cpo["method"] = "cpo"
-    summaries.append(s_cpo)
-    details["cpo"] = d_cpo
+    if args.run_ts_sft == 1:
+        clear_runtime_cache()
+        s_tssft, d_tssft = _run_cot(
+            args.task,
+            args.ts_sft_model,
+            rows,
+            args.max_new_tokens,
+            args.log_interval,
+            "ts_sft",
+            node_dirs.get("ts_sft"),
+        )
+        s_tssft["method"] = "ts_sft"
+        summaries.append(s_tssft)
+        details["ts_sft"] = d_tssft
+
+    if args.run_cpo == 1:
+        clear_runtime_cache()
+        s_cpo, d_cpo = _run_cot(
+            args.task,
+            args.cpo_model,
+            rows,
+            args.max_new_tokens,
+            args.log_interval,
+            "cpo",
+            node_dirs.get("cpo"),
+        )
+        s_cpo["method"] = "cpo"
+        summaries.append(s_cpo)
+        details["cpo"] = d_cpo
     clear_runtime_cache()
 
     json_path, csv_path = _save_outputs(args.task, args.split, summaries, details, args.output_prefix)

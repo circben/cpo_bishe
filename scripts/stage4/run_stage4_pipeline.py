@@ -17,12 +17,12 @@ class Stage4Config:
     base_model: str
     ts_sft_model_entry: str
     cpo_model_entry: str
+    strategyqa_ts_sft_model_entry: str
+    strategyqa_cpo_model_entry: str
     max_samples: int
     start_index: int
     max_new_tokens: int
     tot_max_depth: int
-    tot_width: int
-    tot_beam: int
     tot_candidates_per_step: int
     tot_beam_width: int
     tot_sc_votes: int
@@ -30,69 +30,81 @@ class Stage4Config:
     tot_max_samples: int
     tot_score_samples: int
     tot_workers: int
-    tot_adaptive_retry: int
-    tot_retry_max_depth: int
-    tot_retry_width: int
-    tot_retry_beam: int
     log_interval: int
+    run_cot: int
+    run_tot: int
+    run_ts_sft: int
+    run_cpo: int
+    save_nodes: int
+    nodes_output_root: str
     output_prefix: str
 
 
 MINIMAL_CONFIG = {
     # 任务选择: gsm8k | strategyqa | both
-    "task": "gsm8k",
+    "task": "strategyqa",
     "split": "test",
 }
 
 
 ADVANCED_CONFIG = {
-    # 置空时自动选择最新的 outputs/checkpoints/stage3_*/stage3_manifest.json。
+    # 置空时自动选择最新的 stage3 manifest（优先新结构 outputs/checkpoints/<task>/stage3_*/stage3_manifest.json）。
     # 若 ts_sft_model_entry 与 cpo_model_entry 同时给出，则优先走这两个入口并自动生成临时 manifest。
     "stage3_manifest": "",
     # 基座模型（用于 direct-entry 模式生成评测 manifest）。
     "base_model": "/root/autodl-tmp/llm/Qwen3-8B",
     # TS-SFT 入口（可填 run 根目录 / 模型目录 / final_checkpoint 目录）。
-    "ts_sft_model_entry": "outputs/checkpoints/stage3_tssft_20260405_165631",
+    "ts_sft_model_entry": "outputs/checkpoints/gsm8k/stage3_tssft_20260405_165631",
     # CPO 入口（可填 run 根目录 / 模型目录 / final_checkpoint 目录）。
-    "cpo_model_entry": "outputs/checkpoints/stage3_cpo_20260405_183114",
+    "cpo_model_entry": "outputs/checkpoints/gsm8k/stage3_cpo_20260405_183114",
+    # StrategyQA 的 TS-SFT 入口（可填 run 根目录 / 模型目录 / final_checkpoint 目录）。
+    "strategyqa_ts_sft_model_entry": "outputs/checkpoints/strategyqa/stage3_tssft_20260421_111833",
+    # StrategyQA 的 CPO 入口（可填 run 根目录 / 模型目录 / final_checkpoint 目录）。
+    "strategyqa_cpo_model_entry": "outputs/checkpoints/strategyqa/stage3_cpo_20260421_102753",
+    
     # CoT/TS-SFT/CPO 共用评测切片的样本数。
-    "max_samples": 200,
+    "max_samples": 5,
+    # ToT 仅在同一评测切片的子集上运行；0 表示与主评测同样本数。
+    "tot_max_samples": 5,
     # 在指定 split 上的起始偏移。
     "start_index": 0,
+
     # 每条回答的最大生成长度。
     "max_new_tokens": 256,
-    # ToT 搜索预算（depth-width-beam = 5-3-2）。
-    # 该组合相对 3-2-2 更容易产生终止节点，同时比 6-3-3 更省时。
-    "tot_max_depth": 5,
-    "tot_width": 3,
-    "tot_beam": 2,
+    # ToT 搜索预算。
+    "tot_max_depth": 4,
     "tot_candidates_per_step": 10,
     "tot_beam_width": 5,
-    "tot_sc_votes": 5,
+    "tot_sc_votes": 3,
     "tot_sc_temperature": 0.7,
-    # ToT 仅在同一评测切片的子集上运行；0 表示与主评测同样本数。
-    "tot_max_samples": 50,
     # ToT 每次扩展时的打分调用次数。
     "tot_score_samples": 1,
     # ToT 并行 worker 数。
     "tot_workers": 1,
-    # 当第一轮 ToT 没有终止节点时，是否自动触发二次扩展。
-    "tot_adaptive_retry": 1,
-    # 二次扩展预算（仅在触发时生效）。
-    "tot_retry_max_depth": 7,
-    "tot_retry_width": 4,
-    "tot_retry_beam": 3,
+    
     # 进度打印间隔；1 表示每条样本都打印。
     "log_interval": 1,
+    # 四种方法运行开关（0=不运行，1=运行）。
+    "run_cot":      1,
+    "run_tot":      1,
+    "run_ts_sft":   1,
+    "run_cpo":      1,
+    # 是否保存四种基线推理节点（0=否，1=是）。
+    "save_nodes": 1,
+    # 节点输出根目录（会在其下按任务/基线分目录）。
+    "nodes_output_root": "outputs/eval/nodes",
     # 输出到 outputs/eval/runs 时的文件名前缀。
     "output_prefix": "stage4_pipeline",
 }
 
 
 def _latest_stage3_manifest() -> Path:
-    candidates = list(Path("outputs/checkpoints").glob("stage3_*/stage3_manifest.json"))
+    root = Path("outputs/checkpoints")
+    candidates = list(root.glob("*/stage3_*/stage3_manifest.json"))
     if not candidates:
-        raise SystemExit("No stage3 manifest found under outputs/checkpoints/stage3_*/stage3_manifest.json")
+        raise SystemExit(
+            "No stage3 manifest found under outputs/checkpoints/<task>/stage3_*/stage3_manifest.json"
+        )
     return max(candidates, key=lambda p: p.stat().st_mtime)
 
 
@@ -115,6 +127,9 @@ def _build_config() -> Stage4Config:
     merged["base_model"] = str(merged.get("base_model", "")).strip()
     merged["ts_sft_model_entry"] = str(merged.get("ts_sft_model_entry", "")).strip()
     merged["cpo_model_entry"] = str(merged.get("cpo_model_entry", "")).strip()
+    merged["strategyqa_ts_sft_model_entry"] = str(merged.get("strategyqa_ts_sft_model_entry", "")).strip()
+    merged["strategyqa_cpo_model_entry"] = str(merged.get("strategyqa_cpo_model_entry", "")).strip()
+    merged["nodes_output_root"] = str(merged.get("nodes_output_root", "outputs/eval/nodes")).strip()
     return Stage4Config(**merged)
 
 
@@ -137,14 +152,24 @@ def _resolve_checkpoint_entry(entry_path: str, tag: str) -> Path:
 
 
 def _build_direct_entry_manifest(cfg: Stage4Config, run_root: Path) -> Path:
-    ts_ckpt = _resolve_checkpoint_entry(cfg.ts_sft_model_entry, "TS-SFT")
-    cpo_ckpt = _resolve_checkpoint_entry(cfg.cpo_model_entry, "CPO")
     if not cfg.base_model.strip():
         raise SystemExit("base_model is required when using direct TS-SFT/CPO entries.")
+
+    def _task_entries(task_name: str) -> tuple[str, str]:
+        if task_name == "strategyqa":
+            ts_entry = cfg.strategyqa_ts_sft_model_entry.strip() or cfg.ts_sft_model_entry.strip()
+            cpo_entry = cfg.strategyqa_cpo_model_entry.strip() or cfg.cpo_model_entry.strip()
+            return ts_entry, cpo_entry
+        return cfg.ts_sft_model_entry.strip(), cfg.cpo_model_entry.strip()
 
     task_runs = []
     tasks = [cfg.task] if cfg.task in {"gsm8k", "strategyqa"} else ["gsm8k", "strategyqa"]
     for task in tasks:
+        ts_entry, cpo_entry = _task_entries(task)
+        if not ts_entry or not cpo_entry:
+            raise SystemExit(f"Missing direct-entry checkpoint path for task={task}")
+        ts_ckpt = _resolve_checkpoint_entry(ts_entry, f"TS-SFT ({task})")
+        cpo_ckpt = _resolve_checkpoint_entry(cpo_entry, f"CPO ({task})")
         task_runs.append(
             {
                 "task": task,
@@ -165,6 +190,23 @@ def _build_direct_entry_manifest(cfg: Stage4Config, run_root: Path) -> Path:
     return out
 
 
+def _task_direct_entries(cfg: Stage4Config, task_name: str) -> tuple[str, str]:
+    if task_name == "strategyqa":
+        ts_entry = cfg.strategyqa_ts_sft_model_entry.strip() or cfg.ts_sft_model_entry.strip()
+        cpo_entry = cfg.strategyqa_cpo_model_entry.strip() or cfg.cpo_model_entry.strip()
+        return ts_entry, cpo_entry
+    return cfg.ts_sft_model_entry.strip(), cfg.cpo_model_entry.strip()
+
+
+def _has_direct_entries(cfg: Stage4Config) -> bool:
+    tasks = [cfg.task] if cfg.task in {"gsm8k", "strategyqa"} else ["gsm8k", "strategyqa"]
+    for task_name in tasks:
+        ts_entry, cpo_entry = _task_direct_entries(cfg, task_name)
+        if not ts_entry or not cpo_entry:
+            return False
+    return True
+
+
 def _slug(text: str) -> str:
     out = []
     for ch in text.lower():
@@ -178,7 +220,10 @@ def _slug(text: str) -> str:
 def _default_run_id(cfg: Stage4Config) -> str:
     samples = str(cfg.max_samples) if cfg.max_samples > 0 else "all"
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return f"stage4_{cfg.task}_{cfg.split}_s{samples}_totd{cfg.tot_max_depth}w{cfg.tot_width}_{ts}"
+    return (
+        f"stage4_{cfg.task}_{cfg.split}_s{samples}_"
+        f"totd{cfg.tot_max_depth}c{cfg.tot_candidates_per_step}b{cfg.tot_beam_width}_{ts}"
+    )
 
 
 def _run(cmd: list[str]) -> None:
@@ -199,14 +244,22 @@ def main() -> None:
     parser.add_argument("--base-model", default="", help="direct-entry 模式下的基座模型路径")
     parser.add_argument("--ts-sft-model-entry", default="", help="TS-SFT 入口路径（支持上层目录自动解析）")
     parser.add_argument("--cpo-model-entry", default="", help="CPO 入口路径（支持上层目录自动解析）")
+    parser.add_argument(
+        "--strategyqa-ts-sft-model-entry",
+        default="",
+        help="StrategyQA 的 TS-SFT 入口路径（支持上层目录自动解析）",
+    )
+    parser.add_argument(
+        "--strategyqa-cpo-model-entry",
+        default="",
+        help="StrategyQA 的 CPO 入口路径（支持上层目录自动解析）",
+    )
 
     parser.add_argument("--max-samples", type=int, default=-1, help="CoT/TS-SFT/CPO 共用样本数")
     parser.add_argument("--start-index", type=int, default=-1, help="评测切片起始偏移")
     parser.add_argument("--max-new-tokens", type=int, default=-1, help="每条回答最大生成 token 数")
 
     parser.add_argument("--tot-max-depth", type=int, default=-1, help="ToT 最大搜索深度")
-    parser.add_argument("--tot-width", type=int, default=-1, help="ToT 分支宽度")
-    parser.add_argument("--tot-beam", type=int, default=-1, help="ToT beam 大小")
     parser.add_argument("--tot-candidates-per-step", type=int, default=-1, help="SC-ToT 每步候选数")
     parser.add_argument("--tot-beam-width", type=int, default=-1, help="SC-ToT beam 宽度")
     parser.add_argument("--tot-sc-votes", type=int, default=-1, help="SC-ToT 投票次数")
@@ -214,11 +267,14 @@ def main() -> None:
     parser.add_argument("--tot-max-samples", type=int, default=-1, help="ToT 子集样本数（来自同一评测切片）")
     parser.add_argument("--tot-score-samples", type=int, default=-1, help="ToT 每步打分调用次数")
     parser.add_argument("--tot-workers", type=int, default=-1, help="ToT 并行 worker 数")
-    parser.add_argument("--tot-adaptive-retry", type=int, choices=[0, 1], default=-1, help="无终止节点时是否自动二次扩展")
-    parser.add_argument("--tot-retry-max-depth", type=int, default=-1, help="ToT 二次扩展最大深度")
-    parser.add_argument("--tot-retry-width", type=int, default=-1, help="ToT 二次扩展宽度")
-    parser.add_argument("--tot-retry-beam", type=int, default=-1, help="ToT 二次扩展 beam")
     parser.add_argument("--log-interval", type=int, default=-1, help="进度打印间隔")
+    parser.add_argument("--run-cot", type=int, choices=[0, 1], default=-1, help="是否运行 CoT")
+    parser.add_argument("--run-tot", type=int, choices=[0, 1], default=-1, help="是否运行 ToT")
+    parser.add_argument("--run-ts-sft", type=int, choices=[0, 1], default=-1, help="是否运行 TS-SFT")
+    parser.add_argument("--run-cpo", type=int, choices=[0, 1], default=-1, help="是否运行 CPO")
+    parser.add_argument("--save-nodes", type=int, choices=[0, 1], default=-1, help="是否保存四种基线的推理节点")
+    parser.add_argument("--nodes-output-root", default="", help="节点输出根目录")
+    parser.add_argument("--nodes-run-id", default="", help="节点输出的运行ID；默认使用本次run-id")
     parser.add_argument("--output-prefix", default="", help="输出文件名前缀")
     args = parser.parse_args()
 
@@ -237,6 +293,10 @@ def main() -> None:
         cfg.ts_sft_model_entry = args.ts_sft_model_entry
     if args.cpo_model_entry:
         cfg.cpo_model_entry = args.cpo_model_entry
+    if args.strategyqa_ts_sft_model_entry:
+        cfg.strategyqa_ts_sft_model_entry = args.strategyqa_ts_sft_model_entry
+    if args.strategyqa_cpo_model_entry:
+        cfg.strategyqa_cpo_model_entry = args.strategyqa_cpo_model_entry
     if args.max_samples >= 0:
         cfg.max_samples = args.max_samples
     if args.start_index >= 0:
@@ -245,10 +305,6 @@ def main() -> None:
         cfg.max_new_tokens = args.max_new_tokens
     if args.tot_max_depth >= 0:
         cfg.tot_max_depth = args.tot_max_depth
-    if args.tot_width >= 0:
-        cfg.tot_width = args.tot_width
-    if args.tot_beam >= 0:
-        cfg.tot_beam = args.tot_beam
     if args.tot_candidates_per_step >= 0:
         cfg.tot_candidates_per_step = args.tot_candidates_per_step
     if args.tot_beam_width >= 0:
@@ -263,18 +319,25 @@ def main() -> None:
         cfg.tot_score_samples = args.tot_score_samples
     if args.tot_workers >= 0:
         cfg.tot_workers = args.tot_workers
-    if args.tot_adaptive_retry >= 0:
-        cfg.tot_adaptive_retry = args.tot_adaptive_retry
-    if args.tot_retry_max_depth >= 0:
-        cfg.tot_retry_max_depth = args.tot_retry_max_depth
-    if args.tot_retry_width >= 0:
-        cfg.tot_retry_width = args.tot_retry_width
-    if args.tot_retry_beam >= 0:
-        cfg.tot_retry_beam = args.tot_retry_beam
     if args.log_interval >= 0:
         cfg.log_interval = args.log_interval
+    if args.run_cot >= 0:
+        cfg.run_cot = args.run_cot
+    if args.run_tot >= 0:
+        cfg.run_tot = args.run_tot
+    if args.run_ts_sft >= 0:
+        cfg.run_ts_sft = args.run_ts_sft
+    if args.run_cpo >= 0:
+        cfg.run_cpo = args.run_cpo
+    if args.save_nodes >= 0:
+        cfg.save_nodes = args.save_nodes
+    if args.nodes_output_root:
+        cfg.nodes_output_root = args.nodes_output_root
     if args.output_prefix:
         cfg.output_prefix = args.output_prefix
+
+    if cfg.run_cot + cfg.run_tot + cfg.run_ts_sft + cfg.run_cpo <= 0:
+        raise SystemExit("At least one method must be enabled among run_cot/run_tot/run_ts_sft/run_cpo")
 
     if args.print_config:
         print("[minimal]")
@@ -289,13 +352,17 @@ def main() -> None:
         return
 
     run_id = args.run_id.strip() or _default_run_id(cfg)
+    nodes_run_id = args.nodes_run_id.strip() or _slug(run_id)
     run_root = Path("outputs/eval/pipelines") / _slug(run_id)
     run_root.mkdir(parents=True, exist_ok=True)
 
-    direct_entry_mode = bool(cfg.ts_sft_model_entry.strip() and cfg.cpo_model_entry.strip())
+    direct_entry_mode = _has_direct_entries(cfg)
     if direct_entry_mode:
         manifest_path = _build_direct_entry_manifest(cfg, run_root)
-        print(f"[stage4] using direct entries: ts_sft={cfg.ts_sft_model_entry}, cpo={cfg.cpo_model_entry}")
+        tasks = [cfg.task] if cfg.task in {"gsm8k", "strategyqa"} else ["gsm8k", "strategyqa"]
+        for task_name in tasks:
+            ts_entry, cpo_entry = _task_direct_entries(cfg, task_name)
+            print(f"[stage4] using direct entries for {task_name}: ts_sft={ts_entry}, cpo={cpo_entry}")
         print(f"[stage4] generated manifest={manifest_path.as_posix()}")
     else:
         stage3_manifest = cfg.stage3_manifest.strip()
@@ -322,10 +389,6 @@ def main() -> None:
         str(cfg.max_new_tokens),
         "--tot-max-depth",
         str(cfg.tot_max_depth),
-        "--tot-width",
-        str(cfg.tot_width),
-        "--tot-beam",
-        str(cfg.tot_beam),
         "--tot-candidates-per-step",
         str(cfg.tot_candidates_per_step),
         "--tot-beam-width",
@@ -340,16 +403,22 @@ def main() -> None:
         str(cfg.tot_score_samples),
         "--tot-workers",
         str(cfg.tot_workers),
-        "--tot-adaptive-retry",
-        str(cfg.tot_adaptive_retry),
-        "--tot-retry-max-depth",
-        str(cfg.tot_retry_max_depth),
-        "--tot-retry-width",
-        str(cfg.tot_retry_width),
-        "--tot-retry-beam",
-        str(cfg.tot_retry_beam),
         "--log-interval",
         str(cfg.log_interval),
+        "--run-cot",
+        str(cfg.run_cot),
+        "--run-tot",
+        str(cfg.run_tot),
+        "--run-ts-sft",
+        str(cfg.run_ts_sft),
+        "--run-cpo",
+        str(cfg.run_cpo),
+        "--save-nodes",
+        str(cfg.save_nodes),
+        "--nodes-output-root",
+        cfg.nodes_output_root,
+        "--nodes-run-id",
+        nodes_run_id,
         "--output-prefix",
         f"{cfg.output_prefix}_{_slug(run_id)}",
     ]

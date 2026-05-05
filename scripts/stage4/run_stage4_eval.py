@@ -24,20 +24,21 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=256)
 
     parser.add_argument("--tot-max-depth", type=int, default=3)
-    parser.add_argument("--tot-width", type=int, default=2)
-    parser.add_argument("--tot-beam", type=int, default=2)
-    parser.add_argument("--tot-candidates-per-step", type=int, default=-1)
-    parser.add_argument("--tot-beam-width", type=int, default=-1)
+    parser.add_argument("--tot-candidates-per-step", type=int, default=10)
+    parser.add_argument("--tot-beam-width", type=int, default=5)
     parser.add_argument("--tot-sc-votes", type=int, default=5)
     parser.add_argument("--tot-sc-temperature", type=float, default=0.7)
     parser.add_argument("--tot-max-samples", type=int, default=50)
     parser.add_argument("--tot-score-samples", type=int, default=1)
     parser.add_argument("--tot-workers", type=int, default=1)
     parser.add_argument("--log-interval", type=int, default=1)
-    parser.add_argument("--tot-adaptive-retry", type=int, choices=[0, 1], default=1)
-    parser.add_argument("--tot-retry-max-depth", type=int, default=7)
-    parser.add_argument("--tot-retry-width", type=int, default=4)
-    parser.add_argument("--tot-retry-beam", type=int, default=3)
+    parser.add_argument("--run-cot", type=int, choices=[0, 1], default=1)
+    parser.add_argument("--run-tot", type=int, choices=[0, 1], default=1)
+    parser.add_argument("--run-ts-sft", type=int, choices=[0, 1], default=1)
+    parser.add_argument("--run-cpo", type=int, choices=[0, 1], default=1)
+    parser.add_argument("--save-nodes", type=int, choices=[0, 1], default=0)
+    parser.add_argument("--nodes-output-root", default="outputs/eval/nodes")
+    parser.add_argument("--nodes-run-id", default="")
 
     parser.add_argument("--task", choices=["gsm8k", "strategyqa"], default="")
     parser.add_argument("--output-prefix", default="stage4_eval")
@@ -95,10 +96,6 @@ def main() -> None:
                 str(args.max_new_tokens),
                 "--tot-max-depth",
                 str(args.tot_max_depth),
-                "--tot-width",
-                str(args.tot_width),
-                "--tot-beam",
-                str(args.tot_beam),
                 "--tot-candidates-per-step",
                 str(args.tot_candidates_per_step),
                 "--tot-beam-width",
@@ -115,14 +112,20 @@ def main() -> None:
                 str(args.tot_workers),
                 "--log-interval",
                 str(args.log_interval),
-                "--tot-adaptive-retry",
-                str(args.tot_adaptive_retry),
-                "--tot-retry-max-depth",
-                str(args.tot_retry_max_depth),
-                "--tot-retry-width",
-                str(args.tot_retry_width),
-                "--tot-retry-beam",
-                str(args.tot_retry_beam),
+                "--run-cot",
+                str(args.run_cot),
+                "--run-tot",
+                str(args.run_tot),
+                "--run-ts-sft",
+                str(args.run_ts_sft),
+                "--run-cpo",
+                str(args.run_cpo),
+                "--save-nodes",
+                str(args.save_nodes),
+                "--nodes-output-root",
+                args.nodes_output_root,
+                "--nodes-run-id",
+                args.nodes_run_id,
                 "--output-prefix",
                 f"{args.output_prefix}_{task}",
             ]

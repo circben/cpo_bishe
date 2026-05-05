@@ -300,6 +300,18 @@
             gap: 12px;
         }
 
+        .chat-log {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--muted);
+            white-space: pre-wrap;
+            max-height: 160px;
+            overflow: auto;
+        }
+
         .chat-bubble {
             padding: 10px 14px;
             border-radius: 14px;
@@ -440,18 +452,19 @@
                     <div>💬</div>
                     <div>
                         <h3>模型对话</h3>
-                        <span>Front-end Only</span>
+                        <span>Remote API</span>
                     </div>
                 </div>
                 <div class="view-body">
-                    <p>展示对话布局与演示流程，当前仅为前端 UI，不接入后端推理服务。</p>
+                    <p>输入文本后将调用远程推理 API，并显示日志与结果。</p>
                     <div class="chat-shell">
                         <div class="chat-bubble bot">你好！我是 CPO 可视化助手，可以帮你解释思维树结构。</div>
                         <div class="chat-bubble user">请给我展示一个 ToT 样例。</div>
-                        <div class="chat-bubble bot">已为你准备示意内容（当前为前端演示）。</div>
+                        <div class="chat-bubble bot">已为你准备示意内容（远程推理未开始）。</div>
+                        <div class="chat-log" id="chatLog">等待发送...</div>
                         <div class="chat-input">
-                            <input type="text" placeholder="后端未接入，暂不可发送" disabled>
-                            <button disabled>发送</button>
+                            <input type="text" id="chatInput" placeholder="输入要测试的文本">
+                            <button id="chatSendBtn">发送</button>
                         </div>
                     </div>
                 </div>
@@ -489,6 +502,121 @@
                     console.log('Button clicked:', viewId);
                     switchView(viewId);
                 });
+            });
+
+            const chatInput = document.getElementById('chatInput');
+            const chatSendBtn = document.getElementById('chatSendBtn');
+            const chatLog = document.getElementById('chatLog');
+
+            function appendBubble(role, text) {
+                const bubble = document.createElement('div');
+                bubble.className = `chat-bubble ${role}`;
+                bubble.textContent = text;
+                document.querySelector('.chat-shell').insertBefore(bubble, chatLog);
+                return bubble;
+            }
+
+            function setLog(text) {
+                chatLog.textContent = text;
+            }
+
+            async function postJson(url, payload) {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    throw new Error(data.error || `HTTP ${res.status}`);
+                }
+                return data;
+            }
+
+            async function getJson(url) {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    throw new Error(data.error || `HTTP ${res.status}`);
+                }
+                return data;
+            }
+
+            async function getText(url) {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                return res.text();
+            }
+
+            async function pollJob(jobId, statusBubble) {
+                for (let i = 0; i < 120; i += 1) {
+                    const status = await getJson(`/api/remote/status/${jobId}`);
+                    statusBubble.textContent = `任务 ${jobId}: ${status.status || 'running'}`;
+                    try {
+                        const logs = await getText(`/api/remote/logs/${jobId}`);
+                        setLog(logs.slice(-2000));
+                    } catch (e) {
+                        setLog(`日志获取失败: ${e.message}`);
+                    }
+
+                    if (status.status === 'completed') {
+                        setLog('远程完成，正在同步到本地...');
+                        try {
+                            await postJson('/api/local/sync', { job_id: jobId });
+                        } catch (e) {
+                            appendBubble('bot', `同步失败: ${e.message}`);
+                            setLog(`同步失败: ${e.message}`);
+                            return;
+                        }
+
+                        try {
+                            const localLogs = await getText(`/api/local/logs/${jobId}`);
+                            setLog(localLogs.slice(-2000));
+                        } catch (e) {
+                            setLog(`本地日志获取失败: ${e.message}`);
+                        }
+
+                        const result = await getJson(`/api/local/result/${jobId}`);
+                        appendBubble('bot', `推理结果: ${result.result || JSON.stringify(result)}`);
+                        return;
+                    }
+                    if (status.status === 'failed') {
+                        appendBubble('bot', '远程推理失败，请查看日志。');
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+                appendBubble('bot', '等待超时，请稍后查看日志。');
+            }
+
+            async function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+                appendBubble('user', text);
+                chatInput.value = '';
+                chatSendBtn.disabled = true;
+                setLog('正在提交任务...');
+
+                try {
+                    const { job_id } = await postJson('/api/remote/infer', { text });
+                    const statusBubble = appendBubble('bot', `任务已提交: ${job_id}`);
+                    await pollJob(job_id, statusBubble);
+                } catch (e) {
+                    appendBubble('bot', `提交失败: ${e.message}`);
+                    setLog(`提交失败: ${e.message}`);
+                } finally {
+                    chatSendBtn.disabled = false;
+                }
+            }
+
+            chatSendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
             });
         });
 

@@ -13,11 +13,17 @@ from functools import partial
 from pathlib import Path
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import urllib.parse
+import urllib.request
+import urllib.error
 
 # 绝对路径
 PROJECT_ROOT = Path(r'D:\001_softwares\VS Code Demo\cpo_project')
 RUNS_ROOT = PROJECT_ROOT / 'outputs' / 'eval' / 'runs'
 NODES_ROOT = PROJECT_ROOT / 'outputs' / 'eval' / 'nodes'
+REMOTE_API_BASE = os.getenv("REMOTE_API_BASE", "http://127.0.0.1:8088").rstrip("/")
+LOCAL_JOBS_ROOT = PROJECT_ROOT / 'outputs' / 'remote_inference' / 'jobs'
+LOCAL_SYNC_SCRIPT = os.getenv("LOCAL_SYNC_SCRIPT", "scripts/local_sync/rsync_pull_wsl.ps1")
+LOCAL_SYNC_ENABLED = os.getenv("LOCAL_SYNC_ENABLED", "1").strip() in {"1", "true", "yes"}
 
 # 成功路径文件
 SUCCESS_PATH_FILES = {
@@ -66,6 +72,31 @@ class ToTAPIHandler(SimpleHTTPRequestHandler):
 
         if path == '/api/datasets' or path == '/api/datasets/':
             self.send_json(self.get_datasets())
+            return
+
+        if path.startswith('/api/remote/status/'):
+            job_id = urllib.parse.unquote(path[len('/api/remote/status/'):])
+            self._proxy_json('GET', f'/status/{job_id}')
+            return
+
+        if path.startswith('/api/remote/logs/'):
+            job_id = urllib.parse.unquote(path[len('/api/remote/logs/'):])
+            self._proxy_text('GET', f'/logs/{job_id}')
+            return
+
+        if path.startswith('/api/remote/result/'):
+            job_id = urllib.parse.unquote(path[len('/api/remote/result/'):])
+            self._proxy_json('GET', f'/result/{job_id}')
+            return
+
+        if path.startswith('/api/local/result/'):
+            job_id = urllib.parse.unquote(path[len('/api/local/result/'):])
+            self._send_local_result(job_id)
+            return
+
+        if path.startswith('/api/local/logs/'):
+            job_id = urllib.parse.unquote(path[len('/api/local/logs/'):])
+            self._send_local_logs(job_id)
             return
 
         if path == '/api/performance/runs' or path == '/api/performance/runs/':
@@ -126,16 +157,131 @@ class ToTAPIHandler(SimpleHTTPRequestHandler):
         # 静态文件
         return super().do_GET()
 
-    def send_json(self, data):
+    def do_POST(self):
+        parsed_path = urllib.parse.urlparse(self.path)
+        path = parsed_path.path
+
+        if path == '/api/remote/infer' or path == '/api/remote/infer/':
+            length = int(self.headers.get('Content-Length', 0))
+            raw = self.rfile.read(length) if length else b''
+            try:
+                payload = json.loads(raw.decode('utf-8')) if raw else {}
+            except json.JSONDecodeError:
+                self.send_json({'error': 'Invalid JSON'}, status=400)
+                return
+            self._proxy_json('POST', '/infer', payload)
+            return
+
+        if path == '/api/local/sync' or path == '/api/local/sync/':
+            if not LOCAL_SYNC_ENABLED:
+                self.send_json({'error': 'Local sync disabled'}, status=400)
+                return
+            ok, detail = self._run_local_sync()
+            if not ok:
+                self.send_json(detail or {'error': 'Local sync failed'}, status=500)
+                return
+            self.send_json({'ok': True})
+            return
+
+        self.send_json({'error': 'Not Found'}, status=404)
+
+    def send_json(self, data, status=200):
         """发送 JSON 响应"""
         response = json.dumps(data, ensure_ascii=False)
         response_bytes = response.encode('utf-8')
-        self.send_response(200)
+        self.send_response(status)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Content-Length', len(response_bytes))
         self.end_headers()
         self.wfile.write(response_bytes)
+
+    def send_text(self, text, status=200, content_type='text/plain; charset=utf-8'):
+        response_bytes = text.encode('utf-8')
+        self.send_response(status)
+        self.send_header('Content-Type', content_type)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Content-Length', len(response_bytes))
+        self.end_headers()
+        self.wfile.write(response_bytes)
+
+    def _remote_url(self, path):
+        return f"{REMOTE_API_BASE}{path}"
+
+    def _proxy_json(self, method, path, payload=None):
+        url = self._remote_url(path)
+        data = None
+        headers = {}
+        if payload is not None:
+            data = json.dumps(payload, ensure_ascii=False).encode('utf-8')
+            headers['Content-Type'] = 'application/json; charset=utf-8'
+        req = urllib.request.Request(url, data=data, headers=headers, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                body = resp.read().decode('utf-8')
+                self.send_json(json.loads(body), status=resp.status)
+        except urllib.error.HTTPError as exc:
+            err_body = exc.read().decode('utf-8') if exc.fp else ''
+            self.send_json({'error': err_body or str(exc)}, status=exc.code)
+        except Exception as exc:
+            self.send_json({'error': str(exc)}, status=500)
+
+    def _proxy_text(self, method, path):
+        url = self._remote_url(path)
+        req = urllib.request.Request(url, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                body = resp.read().decode('utf-8')
+                self.send_text(body, status=resp.status)
+        except urllib.error.HTTPError as exc:
+            err_body = exc.read().decode('utf-8') if exc.fp else ''
+            self.send_text(err_body or str(exc), status=exc.code)
+        except Exception as exc:
+            self.send_text(str(exc), status=500)
+
+    def _local_job_dir(self, job_id: str) -> Path:
+        return LOCAL_JOBS_ROOT / job_id
+
+    def _send_local_result(self, job_id: str) -> None:
+        result_path = self._local_job_dir(job_id) / 'output' / 'result.json'
+        if not result_path.exists():
+            self.send_json({'error': f'Local result not found: {job_id}'}, status=404)
+            return
+        self.send_json(json.loads(result_path.read_text(encoding='utf-8')))
+
+    def _send_local_logs(self, job_id: str) -> None:
+        log_path = self._local_job_dir(job_id) / 'run.log'
+        if not log_path.exists():
+            self.send_text(f'Local log not found: {job_id}', status=404)
+            return
+        self.send_text(log_path.read_text(encoding='utf-8'))
+
+    def _run_local_sync(self):
+        script_path = Path(LOCAL_SYNC_SCRIPT)
+        if not script_path.exists():
+            return False, {'error': f'Local sync script not found: {script_path}'}
+        try:
+            result = subprocess.run(
+                [
+                    'powershell',
+                    '-ExecutionPolicy',
+                    'Bypass',
+                    '-File',
+                    str(script_path),
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                return False, {
+                    'error': 'Local sync failed',
+                    'stderr': (result.stderr or '').strip(),
+                    'stdout': (result.stdout or '').strip(),
+                }
+            return True, None
+        except Exception as exc:
+            return False, {'error': str(exc)}
 
     def _scan_dataset_files(self, dataset_id):
         if dataset_id in self._cache:
