@@ -3,7 +3,6 @@ import json
 import os
 import threading
 import time
-import uuid
 from http import HTTPStatus
 from pathlib import Path
 from typing import Any
@@ -21,6 +20,12 @@ def load_config(config_path: str) -> dict[str, Any]:
 
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
+
+
+def build_job_id(task: str | None) -> str:
+    task_name = str(task or "unknown").strip().lower() or "unknown"
+    stamp = time.strftime("%Y%m%d_%H%M%S")
+    return f"{task_name}_{stamp}"
 
 
 def format_command(template: list[str], input_file: Path, output_dir: Path, job_id: str) -> list[str]:
@@ -73,7 +78,7 @@ def create_app(config: dict[str, Any]) -> FastAPI:
         if task:
             meta["task"] = str(task).strip().lower()
 
-        job_id = payload.get("job_id") or uuid.uuid4().hex
+        job_id = payload.get("job_id") or build_job_id(task)
         job_dir = jobs_root / job_id
         ensure_dir(job_dir)
 

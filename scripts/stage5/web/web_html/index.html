@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPO 毕设可视化平台</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -356,6 +357,154 @@
             color: #0f172a;
         }
 
+        /* 推理节点卡片样式 */
+        .推理-node-card {
+            background: #ffffff;
+            border: 1px solid rgba(14, 165, 164, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .推理-node-card.visible {
+            display: block;
+        }
+
+        .推理-node-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(14, 165, 164, 0.2);
+        }
+
+        .推理-node-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .推理-node-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .推理-stat-item {
+            background: #f0fdfa;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .推理-stat-item .stat-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .推理-stat-item .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0ea5a4;
+        }
+
+        .推理-viz-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .推理-viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #f1f5f9;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .推理-viz-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .推理-viz-controls button {
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .推理-viz-controls button:hover {
+            background: #e2e8f0;
+        }
+
+        .推理-viz-body {
+            position: relative;
+            height: 320px;
+            overflow: auto;
+        }
+
+        .推理-viz-body svg {
+            width: 100%;
+            height: 100%;
+            min-width: 500px;
+            min-height: 300px;
+        }
+
+        .推理-tooltip {
+            position: fixed;
+            background: #ffffff;
+            border: 1px solid #0ea5a4;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 300px;
+            display: none;
+        }
+
+        .推理-tooltip.visible {
+            opacity: 1;
+            display: block;
+        }
+
+        .推理-tooltip-title {
+            font-weight: 600;
+            color: #0ea5a4;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .推理-tooltip-content {
+            color: #1e293b;
+            line-height: 1.4;
+            max-height: 100px;
+            overflow: auto;
+        }
+
+        .推理-node { cursor: pointer; }
+        .推理-node:hover { filter: brightness(1.1); }
+        .推理-node.best circle, .推理-node.best rect { stroke: #0f766e; stroke-width: 3px; }
+        .推理-edge { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+
         .chat-input {
             display: flex;
             gap: 10px;
@@ -496,6 +645,41 @@
                             <button id="chatSendBtn">发送</button>
                         </div>
                     </div>
+
+                    <!-- 推理节点展示卡片 -->
+                    <div class="推理-node-card" id="推理NodeCard">
+                        <div class="推理-node-header">
+                            <div class="推理-node-title">🌳 推理节点可视化</div>
+                            <div class="推理-viz-controls">
+                                <button id="推理ZoomIn" title="放大">🔍+</button>
+                                <button id="推理ZoomOut" title="缩小">🔍-</button>
+                                <button id="推理ResetZoom" title="重置">↺</button>
+                            </div>
+                        </div>
+                        <div class="推理-node-stats" id="推理NodeStats">
+                            <div class="推理-stat-item">
+                                <div class="stat-label">总节点数</div>
+                                <div class="stat-value" id="推理TotalNodes">-</div>
+                            </div>
+                            <div class="推理-stat-item">
+                                <div class="stat-label">终端节点</div>
+                                <div class="stat-value" id="推理TerminalNodes">-</div>
+                            </div>
+                            <div class="推理-stat-item">
+                                <div class="stat-label">最大深度</div>
+                                <div class="stat-value" id="推理MaxDepth">-</div>
+                            </div>
+                        </div>
+                        <div class="推理-viz-container">
+                            <div class="推理-viz-body" id="推理VizContainer">
+                                <svg id="推理Svg"></svg>
+                                <div class="推理-tooltip" id="推理Tooltip">
+                                    <div class="推理-tooltip-title" id="推理TooltipTitle">-</div>
+                                    <div class="推理-tooltip-content" id="推理TooltipContent">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -609,7 +793,12 @@
                         }
 
                         const result = await getJson(`/api/local/result/${jobId}`);
-                        appendBubble('bot', `推理结果: ${result.result || JSON.stringify(result)}`);
+                        appendBubble('bot', `推理结果: ${result.prediction || JSON.stringify(result)}`);
+
+                        // 渲染节点可视化
+                        if (result.nodes && result.nodes.length > 0) {
+                            render推理Nodes(result);
+                        }
                         return;
                     }
                     if (status.status === 'failed') {
@@ -660,6 +849,238 @@
                 alert(`请在终端运行:\npython scripts/stage5/run_visualization.py --skip-${type === 'tot' ? 'performance,stats' : type === 'performance' ? 'tot,stats' : 'tot,performance'}`);
             }
         }
+
+        // ========== 推理节点可视化功能 ==========
+        let 推理Svg = null;
+        let 推理G = null;
+        let 推理ZoomBehavior = null;
+        let 推理Width = 600;
+        let 推理Height = 300;
+
+        function init推理Svg() {
+            推理Svg = d3.select('#推理Svg');
+            resize推理Svg();
+            推理G = 推理Svg.append('g').attr('class', '推理-content');
+
+            推理ZoomBehavior = d3.zoom()
+                .scaleExtent([0.1, 5])
+                .on('zoom', (event) => {
+                    推理G.attr('transform', event.transform);
+                });
+            推理Svg.call(推理ZoomBehavior);
+        }
+
+        function resize推理Svg() {
+            if (!推理Svg) return;
+            const container = document.getElementById('推理VizContainer');
+            推理Width = Math.max(container.clientWidth, 500);
+            推理Height = Math.max(container.clientHeight, 300);
+            推理Svg.attr('width', 推理Width).attr('height', 推理Height);
+        }
+
+        function render推理Nodes(data) {
+            if (typeof d3 === 'undefined') {
+                console.error('D3.js not loaded');
+                return;
+            }
+
+            if (!推理Svg) init推理Svg();
+
+            推理G.selectAll('*').remove();
+            resize推理Svg();
+
+            const card = document.getElementById('推理NodeCard');
+            card.classList.add('visible');
+
+            const nodes = data.nodes || [];
+            if (!nodes.length) {
+                推理G.append('text')
+                    .attr('x', 推理Width / 2)
+                    .attr('y', 推理Height / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#888')
+                    .text('暂无节点数据');
+                return;
+            }
+
+            // 更新统计信息
+            const totalNodes = nodes.length;
+            const terminalNodes = nodes.filter(n => n.is_terminal).length;
+            const maxDepth = Math.max(...nodes.map(n => n.depth || 0));
+            document.getElementById('推理TotalNodes').textContent = totalNodes;
+            document.getElementById('推理TerminalNodes').textContent = terminalNodes;
+            document.getElementById('推理MaxDepth').textContent = maxDepth;
+
+            // 构建节点映射
+            const nodeMap = {};
+            nodes.forEach(n => { nodeMap[n.node_id] = n; });
+
+            // 找到最佳节点（score 最高的终端节点）
+            const terminalWithScore = nodes.filter(n => n.is_terminal && n.score != null);
+            const bestNode = terminalWithScore.length > 0
+                ? terminalWithScore.reduce((best, n) => (n.score > (best.score || 0) ? n : best))
+                : null;
+            const bestNodeId = bestNode ? bestNode.node_id : null;
+
+            // 计算层级信息
+            const levelWidth = {};
+            nodes.forEach(n => {
+                const d = n.depth || 0;
+                if (!levelWidth[d]) levelWidth[d] = 0;
+                levelWidth[d]++;
+            });
+
+            const maxLevel = Math.max(...nodes.map(n => n.depth || 0));
+            const baseWidth = Math.max(推理Width, 600);
+            const svgHeight = Math.max(推理Height, (maxLevel + 2) * 70);
+            const halfSvg = baseWidth / 2;
+
+            // 计算每层节点间距
+            const minSpacing = 60;
+            const levelSpacing = {};
+            Object.keys(levelWidth).forEach(d => {
+                const count = levelWidth[d];
+                levelSpacing[d] = Math.max(minSpacing, Math.floor(300 / count));
+            });
+
+            // 计算每层节点位置
+            const levelPositions = {};
+            Object.keys(levelWidth).forEach(d => { levelPositions[d] = {}; });
+            nodes.forEach(n => {
+                const d = n.depth || 0;
+                if (!levelPositions[d][n.node_id]) {
+                    const sameLevel = nodes.filter(x => x.depth === d);
+                    levelPositions[d][n.node_id] = sameLevel.indexOf(n);
+                }
+            });
+
+            // 计算每层总宽度
+            const levelTotalWidth = {};
+            Object.keys(levelWidth).forEach(d => {
+                levelTotalWidth[d] = (levelWidth[d] - 1) * levelSpacing[d];
+            });
+
+            const maxLevelWidth = Math.max(...Object.values(levelTotalWidth), baseWidth - 100);
+            const svgWidth = Math.max(baseWidth, maxLevelWidth + 150);
+
+            推理Svg.attr('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+
+            const marginTop = 40;
+            const getY = (depth) => marginTop + depth * ((svgHeight - marginTop - 20) / Math.max(maxLevel, 1));
+
+            const getX = (node) => {
+                const depth = node.depth || 0;
+                const count = levelWidth[depth] || 1;
+                const idx = levelPositions[depth][node.node_id] || 0;
+                const levelSpan = (count - 1) * levelSpacing[depth];
+                const levelStartX = halfSvg - levelSpan / 2;
+                return levelStartX + idx * levelSpacing[depth];
+            };
+
+            const tooltip = document.getElementById('推理Tooltip');
+
+            // 绘制连线
+            nodes.forEach(n => {
+                if (n.parent_id && nodeMap[n.parent_id]) {
+                    const parent = nodeMap[n.parent_id];
+                    const isBest = n.node_id === bestNodeId;
+                    推理G.append('line')
+                        .attr('class', '推理-edge')
+                        .attr('x1', getX(parent))
+                        .attr('y1', getY(parent.depth))
+                        .attr('x2', getX(n))
+                        .attr('y2', getY(n.depth));
+                }
+            });
+
+            // 绘制节点
+            nodes.forEach(n => {
+                const x = getX(n);
+                const y = getY(n.depth);
+                const isBest = n.node_id === bestNodeId;
+                const color = isBest ? '#16a34a' : '#64748b';
+
+                const g = 推理G.append('g')
+                    .attr('class', '推理-node' + (isBest ? ' best' : ''))
+                    .attr('transform', `translate(${x},${y})`)
+                    .style('cursor', 'pointer')
+                    .on('mouseover', (event) => {
+                        const content = n.thought || n.state || '';
+                        document.getElementById('推理TooltipTitle').textContent = `${n.node_id} (深度 ${n.depth})`;
+                        document.getElementById('推理TooltipContent').innerHTML = `
+                            <div><strong>得分:</strong> ${(n.score || 0).toFixed(2)}</div>
+                            <div><strong>终态:</strong> ${n.is_terminal ? '是' : '否'}</div>
+                            ${content ? `<div style="margin-top:6px;max-height:80px;overflow:auto;">${content.substring(0, 200)}${content.length > 200 ? '...' : ''}</div>` : ''}
+                        `;
+                        tooltip.classList.add('visible');
+                        tooltip.style.left = (event.clientX + 15) + 'px';
+                        tooltip.style.top = (event.clientY - 10) + 'px';
+                    })
+                    .on('mousemove', (event) => {
+                        tooltip.style.left = (event.clientX + 15) + 'px';
+                        tooltip.style.top = (event.clientY - 10) + 'px';
+                    })
+                    .on('mouseout', () => {
+                        tooltip.classList.remove('visible');
+                    });
+
+                // 节点形状
+                if (n.is_terminal) {
+                    g.append('rect')
+                        .attr('x', -22).attr('y', -13)
+                        .attr('width', 44).attr('height', 26)
+                        .attr('rx', 6)
+                        .attr('fill', color)
+                        .attr('opacity', 0.9);
+                } else {
+                    g.append('circle')
+                        .attr('r', 12)
+                        .attr('fill', color)
+                        .attr('opacity', 0.9);
+                }
+
+                // 节点标签
+                g.append('text')
+                    .attr('dy', 4)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#fff')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', '600')
+                    .text(n.node_id);
+
+                // 得分标签
+                g.append('text')
+                    .attr('dy', -20)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#666')
+                    .attr('font-size', '9px')
+                    .text((n.score || 0).toFixed(1));
+            });
+
+            // 重置缩放
+            if (推理ZoomBehavior) {
+                推理Svg.call(推理ZoomBehavior.transform, d3.zoomIdentity.translate(Math.max(0, (推理Width - svgWidth) / 2), 20));
+            }
+        }
+
+        // 缩放控制
+        document.getElementById('推理ZoomIn').addEventListener('click', () => {
+            if (!推理Svg || !推理ZoomBehavior) return;
+            推理Svg.transition().duration(300).call(推理ZoomBehavior.scaleBy, 1.3);
+        });
+
+        document.getElementById('推理ZoomOut').addEventListener('click', () => {
+            if (!推理Svg || !推理ZoomBehavior) return;
+            推理Svg.transition().duration(300).call(推理ZoomBehavior.scaleBy, 0.7);
+        });
+
+        document.getElementById('推理ResetZoom').addEventListener('click', () => {
+            if (!推理Svg || !推理ZoomBehavior) return;
+            推理Svg.transition().duration(300).call(
+                推理ZoomBehavior.transform,
+                d3.zoomIdentity.translate(推理Width / 4, 20)
+            );
+        });
 
     </script>
 </body>
