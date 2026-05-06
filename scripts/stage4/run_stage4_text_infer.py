@@ -12,6 +12,12 @@ if str(SRC) not in sys.path:
 
 from cpo.llm.generation import GenerationRuntime, complete_text
 
+DEFAULT_MODEL_ENTRY = "outputs/checkpoints/gsm8k/stage3_cpo_20260405_183114"
+TASK_MODEL_ENTRIES = {
+    "gsm8k": "outputs/checkpoints/gsm8k/stage3_cpo_20260405_183114",
+    "strategyqa": "outputs/checkpoints/strategyqa/stage3_cpo_20260421_102753",
+}
+
 
 def _resolve_checkpoint_entry(entry_path: str) -> Path:
     path = Path(entry_path)
@@ -35,12 +41,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Stage4 text inference runner (local model)")
     parser.add_argument("--input", required=True, help="Path to input JSON with {text, meta}")
     parser.add_argument("--output-dir", required=True, help="Output directory")
-    parser.add_argument("--model", default="outputs/checkpoints/gsm8k/stage3_cpo_20260405_183114")
+    parser.add_argument("--model", default=DEFAULT_MODEL_ENTRY)
     parser.add_argument("--device", default="")
     parser.add_argument("--do-sample", type=int, choices=[0, 1], default=0)
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--top-p", type=float, default=0.9)
-    parser.add_argument("--max-new-tokens", type=int, default=128)
+    parser.add_argument("--max-new-tokens", type=int, default=256)
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -55,7 +61,13 @@ def main() -> None:
     if not text:
         raise SystemExit("Input JSON missing 'text'")
 
-    model_path = _resolve_checkpoint_entry(args.model).as_posix()
+    meta = payload.get("meta", {}) or {}
+    task = str(meta.get("task", "")).strip().lower()
+    model_entry = args.model.strip()
+    if "--model" not in sys.argv and task in TASK_MODEL_ENTRIES:
+        model_entry = TASK_MODEL_ENTRIES[task]
+
+    model_path = _resolve_checkpoint_entry(model_entry).as_posix()
 
     runtime_kwargs = {
         "model_name": model_path,
@@ -78,7 +90,7 @@ def main() -> None:
 
     output_payload = {
         "input": text,
-        "meta": payload.get("meta", {}),
+        "meta": meta,
         "model": model_path,
         "result": result,
     }

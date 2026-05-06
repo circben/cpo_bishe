@@ -68,13 +68,18 @@ def create_app(config: dict[str, Any]) -> FastAPI:
         if not text:
             raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="text is required")
 
+        meta = payload.get("meta", {}) or {}
+        task = payload.get("task") or meta.get("task")
+        if task:
+            meta["task"] = str(task).strip().lower()
+
         job_id = payload.get("job_id") or uuid.uuid4().hex
         job_dir = jobs_root / job_id
         ensure_dir(job_dir)
 
         input_file = job_dir / "input.json"
         input_file.write_text(
-            json.dumps({"text": text, "meta": payload.get("meta", {})}, ensure_ascii=False, indent=2),
+            json.dumps({"text": text, "meta": meta}, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
 

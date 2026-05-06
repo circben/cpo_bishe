@@ -1,8 +1,8 @@
 param(
     [string]$RemoteHost = "root@connect.westb.seetacloud.com",
     [string]$RemotePort = "50734",
-    [string]$TunnelPort = "8088",
-    [string]$ApiBase = "http://127.0.0.1:8088",
+    [string]$TunnelPort = "18088",
+    [string]$ApiBase = "http://127.0.0.1:18088",
     [string]$ApiScript = "scripts/stage5/web/run_stage5_api_server.py"
 )
 

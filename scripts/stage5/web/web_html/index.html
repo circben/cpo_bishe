@@ -300,6 +300,32 @@
             gap: 12px;
         }
 
+        .chat-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .chat-controls label {
+            font-weight: 600;
+            color: var(--ink-2);
+        }
+
+        .chat-controls select {
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            background: #ffffff;
+            color: var(--ink-2);
+        }
+
         .chat-log {
             background: #f8fafc;
             border: 1px solid var(--border);
@@ -456,11 +482,14 @@
                     </div>
                 </div>
                 <div class="view-body">
-                    <p>输入文本后将调用远程推理 API，并显示日志与结果。</p>
                     <div class="chat-shell">
-                        <div class="chat-bubble bot">你好！我是 CPO 可视化助手，可以帮你解释思维树结构。</div>
-                        <div class="chat-bubble user">请给我展示一个 ToT 样例。</div>
-                        <div class="chat-bubble bot">已为你准备示意内容（远程推理未开始）。</div>
+                        <div class="chat-controls">
+                            <label for="taskSelect">任务选择</label>
+                            <select id="taskSelect">
+                                <option value="gsm8k" selected>GSM8K</option>
+                                <option value="strategyqa">StrategyQA</option>
+                            </select>
+                        </div>
                         <div class="chat-log" id="chatLog">等待发送...</div>
                         <div class="chat-input">
                             <input type="text" id="chatInput" placeholder="输入要测试的文本">
@@ -507,6 +536,7 @@
             const chatInput = document.getElementById('chatInput');
             const chatSendBtn = document.getElementById('chatSendBtn');
             const chatLog = document.getElementById('chatLog');
+            const taskSelect = document.getElementById('taskSelect');
 
             function appendBubble(role, text) {
                 const bubble = document.createElement('div');
@@ -600,7 +630,11 @@
                 setLog('正在提交任务...');
 
                 try {
-                    const { job_id } = await postJson('/api/remote/infer', { text });
+                    const task = taskSelect ? taskSelect.value : 'gsm8k';
+                    const { job_id } = await postJson('/api/remote/infer', {
+                        text,
+                        meta: { task }
+                    });
                     const statusBubble = appendBubble('bot', `任务已提交: ${job_id}`);
                     await pollJob(job_id, statusBubble);
                 } catch (e) {
